@@ -1,3 +1,6 @@
+canvas {
+  --cursorMode: auto;
+}
 html,
 body {
   background-color: black;
@@ -8,4 +11,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+canvas:hover {
+  cursor: var(--cursorMode);
 }
