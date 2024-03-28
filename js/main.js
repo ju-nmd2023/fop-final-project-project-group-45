@@ -1,14 +1,16 @@
 let player = { health: 100, lives: 3, sprite: "" }; //player ship object. Stores all important information about the player.
-let playerBaseSprite;
-let playerEngineIdle;
-let testBackground;
+let playerBaseShipImg; //sprite of base ship
+let playerEngineFireIdle; //idle engine fire sprite 
+let shipBaseEngineImg; //standard engine sprite
+let shipBaseEngine; //standard engine variable
+let testBackground2; //background image
 let y1 = -650;
 let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
 let gameIsPaused = false; //if a stage is currently being played but the player has paused it. Used to set if the cursor should be showned.
 function preload() {
-  playerBaseSprite = loadImage("./assets/sprites/player/base_ship/base_ship_full_health.png");
-  testBackground = loadImage("./assets/backgrounds/space_background_test.png");
+  playerBaseShipImg = loadImage("./assets/sprites/player/base_ship/base_ship_full_health.png");
+  shipBaseEngineImg = loadImage("./assets/sprites/player/engine/ship_base_engine.png");
   testBackground2 = loadImage("./assets/backgrounds/space_background_test2.png");
 }
 function setup() {
@@ -23,12 +25,26 @@ function setup() {
   allSprites.overlaps(canvasRightCollider);
   allSprites.overlaps(canvasLeftCollider);*/
   frameRate(60);
+  shipBaseEngine = new Sprite(32,32,32,32);
+  shipBaseEngine.img = shipBaseEngineImg;
+  shipBaseEngine.offset.y = 2;
+
   player.sprite = new Sprite(32, 32, 32, 32); //creates the sprite object
-  player.sprite.img = playerBaseSprite; //loads the sprite image
-  playerEngineIdle = new Sprite();
-  playerEngineIdle.spriteSheet = "./assets/sprites/player/engine/engine_idle.png";
-  playerEngineIdle.anis.offset.x = 2;
-  playerEngineIdle.anis.frameDelay = 8;
+  player.sprite.img = playerBaseShipImg; //loads the sprite image
+  
+  playerEngineFireIdle = new Sprite(32,32,48,48);
+  playerEngineFireIdle.spriteSheet = "./assets/sprites/player/engine/engine_idle.png";
+  
+  playerEngineFireIdle.anis.frameDelay = 8;
+  playerEngineFireIdle.anis.looping = true;
+  
+  playerEngineFireIdle.addAnis({
+    idle: {row:0, frames: 4}
+  })
+  
+  playerEngineFireIdle.overlaps(allSprites);
+  new GlueJoint(player.sprite, playerEngineFireIdle);
+  new GlueJoint(player.sprite, shipBaseEngine);
 }
 
 function draw() {
@@ -74,8 +90,9 @@ function backgroundMovement() {
   }
 }
 function playerMovement() {
-  player.sprite.rotation = 0;
+  player.sprite.rotationLock = true;
   player.sprite.moveTowards(mouse, 0.1);
+  playerEngineFireIdle.debug = mouse.pressing();
   /*if (mouse.x >= 14 && mouse.x <= 186) {
     player.sprite.moveTowards(mouse, 1);
   } else {
