@@ -1,6 +1,6 @@
 let player = { health: 100, lives: 3, sprite: "" }; //player ship object. Stores all important information about the player.
-let canvasHtml = document.getElementsByTagName("canvas");
 let playerBaseSprite;
+let playerEngineIdle;
 let testBackground;
 let y1 = -650;
 let y2 = -1650;
@@ -12,19 +12,23 @@ function preload() {
   testBackground2 = loadImage("./assets/backgrounds/space_background_test2.png");
 }
 function setup() {
-  new Canvas(200, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
+  new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
+  allSprites.pixelPerfect = true;
   canvasLeftCollider = new Sprite(-1, 0, 1, 700, "static"); //colliders to keep the character inside th ecanvas
-  canvasTopCollider = new Sprite(-1, 0, 400, 1, "static");
-  canvasRightCollider = new Sprite(201, 0, 1, 700, "static");
-  canvasBottomCollider = new Sprite(0, 351, 400, 1, "static");
+  canvasTopCollider = new Sprite(-1, 0, 450, 1, "static");
+  canvasRightCollider = new Sprite(226, 0, 1, 700, "static");
+  canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
   /*allSprites.overlaps(canvasBottomCollider);
   allSprites.overlaps(canvasTopCollider);
   allSprites.overlaps(canvasRightCollider);
   allSprites.overlaps(canvasLeftCollider);*/
-  allSprites.pixelPerfect = true;
   frameRate(60);
   player.sprite = new Sprite(32, 32, 32, 32); //creates the sprite object
   player.sprite.img = playerBaseSprite; //loads the sprite image
+  playerEngineIdle = new Sprite();
+  playerEngineIdle.spriteSheet = "./assets/sprites/player/engine/engine_idle.png";
+  playerEngineIdle.anis.offset.x = 2;
+  playerEngineIdle.anis.frameDelay = 8;
 }
 
 function draw() {
@@ -57,8 +61,8 @@ function playscreen() {
   }
 }
 function backgroundMovement() {
-  image(testBackground2, 0, y1, 200, 1000);
-  image(testBackground2, 0, y2, 200, 1000);
+  image(testBackground2, 0, y1, 225, 1000);
+  image(testBackground2, 0, y2, 225, 1000);
   y1 += 1;
   y2 += 1;
 
