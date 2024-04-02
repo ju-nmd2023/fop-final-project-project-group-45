@@ -18,7 +18,7 @@ function preload() {
   shipBaseEngineImg = loadImage("./assets/sprites/player/engine/ship_base_engine.png");
   testBackground2 = loadImage("./assets/backgrounds/space_background_test2.png");
   hudbackgroundImg = loadImage("./assets/sprites/GUI/hud_background.png");
-  pauseButtonImg = loadImage("./assets/sprites/icons/pauseButton.png");
+  pauseButtonImg = loadImage("./assets/sprites/GUI/pauseButton.png");
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
