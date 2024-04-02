@@ -6,6 +6,8 @@ let shipBaseEngine; //standard engine variable
 let testBackground2; //background image
 let hudbackground; //hud background image
 let hudbackgroundImg; //hud background image
+let healthBarBorderSprite; //sprite sheet for the healthbar border
+let healthBarSprite; // sprite sheet for the healthbar
 
 let pauseButtonImg;
 let pauseButtonSprite;
@@ -35,19 +37,26 @@ function setup() {
 
   //Player Sprites
   loadPlayer();
-  
+
   //GUI
   loadGUI();
-  
 }
 
-function loadGUI(){
+function loadGUI() {
   hudbackground = new Sprite(112, 334, 225, 32, "static");
   hudbackground.img = hudbackgroundImg;
+  healthBarBorderSprite = new Sprite(64, 334, 96, 16, "none");
+  healthBarBorderSprite.spriteSheet = "./assets/sprites/GUI/healthbar.png";
+  healthBarBorderSprite.addAnis({
+    border: { column: 0, frames: 1 },
+  });
+  healthBarBorderSprite.anis.looping = false;
+
+  healthBarSprite;
 }
 
-function loadPlayer(){
-  shipBaseEngine = new Sprite(32,32,32,32);
+function loadPlayer() {
+  shipBaseEngine = new Sprite(32, 32, 32, 32);
   shipBaseEngine.img = shipBaseEngineImg;
   shipBaseEngine.offset.y = 2;
 
@@ -61,8 +70,8 @@ function loadPlayer(){
   playerEngineFireIdle.anis.looping = true;
 
   playerEngineFireIdle.addAnis({
-    idle: {row:0, frames: 4}
-  })
+    idle: { row: 0, frames: 4 },
+  });
 
   playerEngineFireIdle.overlaps(allSprites);
   new GlueJoint(player.sprite, playerEngineFireIdle);
