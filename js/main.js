@@ -1,9 +1,11 @@
 let player = { health: 100, lives: 3, sprite: "" }; //player ship object. Stores all important information about the player.
 let playerBaseShipImg; //sprite of base ship
-let playerEngineFireIdle; //idle engine fire sprite 
+let playerEngineFireIdle; //idle engine fire sprite
 let shipBaseEngineImg; //standard engine sprite
 let shipBaseEngine; //standard engine variable
 let testBackground2; //background image
+let pauseButtonImg;
+let pauseButtonSprite;
 let y1 = -650;
 let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
@@ -12,11 +14,12 @@ function preload() {
   playerBaseShipImg = loadImage("./assets/sprites/player/base_ship/base_ship_full_health.png");
   shipBaseEngineImg = loadImage("./assets/sprites/player/engine/ship_base_engine.png");
   testBackground2 = loadImage("./assets/backgrounds/space_background_test2.png");
+  pauseButtonImg = loadImage("./assets/sprites/icons/pauseButton.png");
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
   allSprites.pixelPerfect = true;
-  canvasLeftCollider = new Sprite(-1, 0, 1, 700, "static"); //colliders to keep the character inside th ecanvas
+  canvasLeftCollider = new Sprite(-1, 0, 1, 700, "static"); //colliders to keep the character inside the canvas
   canvasTopCollider = new Sprite(-1, 0, 450, 1, "static");
   canvasRightCollider = new Sprite(226, 0, 1, 700, "static");
   canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
@@ -25,26 +28,30 @@ function setup() {
   allSprites.overlaps(canvasRightCollider);
   allSprites.overlaps(canvasLeftCollider);*/
   frameRate(60);
-  shipBaseEngine = new Sprite(32,32,32,32);
+  shipBaseEngine = new Sprite(32, 32, 32, 32);
   shipBaseEngine.img = shipBaseEngineImg;
   shipBaseEngine.offset.y = 2;
 
   player.sprite = new Sprite(32, 32, 32, 32); //creates the sprite object
   player.sprite.img = playerBaseShipImg; //loads the sprite image
-  
-  playerEngineFireIdle = new Sprite(32,32,48,48);
+
+  playerEngineFireIdle = new Sprite(32, 32, 48, 48);
   playerEngineFireIdle.spriteSheet = "./assets/sprites/player/engine/engine_idle.png";
-  
+
   playerEngineFireIdle.anis.frameDelay = 8;
   playerEngineFireIdle.anis.looping = true;
-  
+
   playerEngineFireIdle.addAnis({
-    idle: {row:0, frames: 4}
-  })
-  
+    idle: { row: 0, frames: 4 },
+  });
+
   playerEngineFireIdle.overlaps(allSprites);
   new GlueJoint(player.sprite, playerEngineFireIdle);
   new GlueJoint(player.sprite, shipBaseEngine);
+
+  pauseButtonSprite = new Sprite(200, 25, 32, 32, "none");
+  pauseButtonSprite.img = pauseButtonImg;
+  pauseButtonSprite.scale = 1;
 }
 
 function draw() {
