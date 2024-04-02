@@ -127,7 +127,7 @@ function backgroundMovement() {
 function playerMovement() {
   player.sprite.rotationLock = true;
   player.sprite.moveTowards(mouse, 0.1);
-  playerEngineFireIdle.debug = mouse.pressing();
+ 
   /*if (mouse.x >= 14 && mouse.x <= 186) {
     player.sprite.moveTowards(mouse, 1);
   } else {
