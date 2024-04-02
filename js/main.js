@@ -4,6 +4,9 @@ let playerEngineFireIdle; //idle engine fire sprite
 let shipBaseEngineImg; //standard engine sprite
 let shipBaseEngine; //standard engine variable
 let testBackground2; //background image
+let hudbackground; //hud background image
+let hudbackgroundImg; //hud background image
+
 let y1 = -650;
 let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
@@ -12,6 +15,7 @@ function preload() {
   playerBaseShipImg = loadImage("./assets/sprites/player/base_ship/base_ship_full_health.png");
   shipBaseEngineImg = loadImage("./assets/sprites/player/engine/ship_base_engine.png");
   testBackground2 = loadImage("./assets/backgrounds/space_background_test2.png");
+  hudbackgroundImg = loadImage("./assets/sprites/GUI/hud_background.png");
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
@@ -25,6 +29,21 @@ function setup() {
   allSprites.overlaps(canvasRightCollider);
   allSprites.overlaps(canvasLeftCollider);*/
   frameRate(60);
+
+  //Player Sprites
+  loadPlayer();
+  
+  //GUI
+  loadGUI();
+  
+}
+
+function loadGUI(){
+  hudbackground = new Sprite(112, 334, 225, 32, "static");
+  hudbackground.img = hudbackgroundImg;
+}
+
+function loadPlayer(){
   shipBaseEngine = new Sprite(32,32,32,32);
   shipBaseEngine.img = shipBaseEngineImg;
   shipBaseEngine.offset.y = 2;
@@ -41,7 +60,7 @@ function setup() {
   playerEngineFireIdle.addAnis({
     idle: {row:0, frames: 4}
   })
-  
+
   playerEngineFireIdle.overlaps(allSprites);
   new GlueJoint(player.sprite, playerEngineFireIdle);
   new GlueJoint(player.sprite, shipBaseEngine);
