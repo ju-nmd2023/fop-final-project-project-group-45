@@ -8,6 +8,8 @@ let hudbackground; //hud background image
 let hudbackgroundImg; //hud background image
 let healthBarBorderSprite; //sprite sheet for the healthbar border
 let healthBarSprite; // sprite sheet for the healthbar
+let livesSprite;
+let coinSprite;
 
 let pauseButtonImg;
 let pauseButtonSprite;
@@ -43,16 +45,53 @@ function setup() {
 }
 
 function loadGUI() {
-  hudbackground = new Sprite(112, 334, 225, 32, "static");
+  hudbackground = new Sprite(112, 334, 225, 32, "static"); //hud background sprite
   hudbackground.img = hudbackgroundImg;
-  healthBarBorderSprite = new Sprite(64, 334, 96, 16, "none");
+
+  healthBarBorderSprite = new Sprite(66, 334, 96, 16, "none"); //healthbarborder sprite
   healthBarBorderSprite.spriteSheet = "./assets/sprites/GUI/healthbar.png";
   healthBarBorderSprite.addAnis({
-    border: { column: 0, frames: 1 },
+    border: { col: 0, frames: 1 },
   });
-  healthBarBorderSprite.anis.looping = false;
 
-  healthBarSprite;
+  healthBarSprite = new Sprite(66, 334, 96, 16, "none"); //healthbar sprite
+  healthBarSprite.spriteSheet = "./assets/sprites/GUI/healthbar.png";
+  healthBarSprite.addAnis({
+    //adding a state for every sprite
+    health100: { col: 1, frames: 1 },
+    health94: { col: 2, frames: 1 },
+    health88: { col: 3, frames: 1 },
+    health81: { col: 4, frames: 1 },
+    health75: { col: 5, frames: 1 },
+    health69: { col: 6, frames: 1 },
+    health63: { col: 7, frames: 1 },
+    health56: { col: 8, frames: 1 },
+    health50: { col: 9, frames: 1 },
+    health44: { col: 10, frames: 1 },
+    health38: { col: 11, frames: 1 },
+    health31: { col: 12, frames: 1 },
+    health25: { col: 13, frames: 1 },
+    health19: { col: 14, frames: 1 },
+    health13: { col: 15, frames: 1 },
+    health6: { col: 16, frames: 1 },
+  });
+  healthBarSprite.changeAni("health100");
+
+  livesSprite = new Sprite(140, 334, 48, 16, "none"); //lives sprite
+  livesSprite.spriteSheet = "./assets/sprites/GUI/hearts.png";
+  livesSprite.addAnis({
+    lives3: { col: 0, frames: 1 },
+    lives2: { col: 1, frames: 1 },
+    lives1: { col: 2, frames: 1 },
+  });
+  livesSprite.changeAni("lives3");
+
+  coinSprite = new Sprite(180, 334, 16, 16, "none");
+  coinSprite.spriteSheet = "./assets/sprites/GUI/ingot.png";
+  coinSprite.scale = 1;
+  coinSprite.addAnis({
+    lives3: { col: 0, frames: 1 },
+  });
 }
 
 function loadPlayer() {
@@ -127,7 +166,7 @@ function backgroundMovement() {
 function playerMovement() {
   player.sprite.rotationLock = true;
   player.sprite.moveTowards(mouse, 0.1);
- 
+
   /*if (mouse.x >= 14 && mouse.x <= 186) {
     player.sprite.moveTowards(mouse, 1);
   } else {
