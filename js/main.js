@@ -9,20 +9,26 @@ let hudbackgroundImg; //hud background image
 let healthBarBorderSprite; //sprite sheet for the healthbar border
 let healthBarSprite; // sprite sheet for the healthbar
 let livesSprite;
-let coinSprite;
+let creditsSprite;
+let creditsValue = 100;
+let smallFont;
+
+let creditsTextSprite;
 
 let pauseButtonImg;
 let pauseButtonSprite;
 let y1 = -650;
 let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
-let gameIsPaused = false; //if a stage is currently being played but the player has paused it. Used to set if the cursor should be showned.
+let gameIsPaused = false; //if a stage is currently being played but the player has paused it. Used to set if the cursor should be showed.
+
 function preload() {
   playerBaseShipImg = loadImage("./assets/sprites/player/base_ship/base_ship_full_health.png");
   shipBaseEngineImg = loadImage("./assets/sprites/player/engine/ship_base_engine.png");
   testBackground2 = loadImage("./assets/backgrounds/space_background_test2.png");
   hudbackgroundImg = loadImage("./assets/sprites/GUI/hud_background.png");
   pauseButtonImg = loadImage("./assets/sprites/GUI/pauseButton.png");
+  smallFont = loadFont("./assets/fonts/small_font.ttf");
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
@@ -47,7 +53,6 @@ function setup() {
 function loadGUI() {
   hudbackground = new Sprite(112, 334, 225, 32, "static"); //hud background sprite
   hudbackground.img = hudbackgroundImg;
-
   healthBarBorderSprite = new Sprite(66, 334, 96, 16, "none"); //healthbarborder sprite
   healthBarBorderSprite.spriteSheet = "./assets/sprites/GUI/healthbar.png";
   healthBarBorderSprite.addAnis({
@@ -86,12 +91,20 @@ function loadGUI() {
   });
   livesSprite.changeAni("lives3");
 
-  coinSprite = new Sprite(180, 334, 16, 16, "none");
-  coinSprite.spriteSheet = "./assets/sprites/GUI/ingot.png";
-  coinSprite.scale = 1;
-  coinSprite.addAnis({
+  creditsSprite = new Sprite(180, 334, 16, 16, "none");
+  creditsSprite.spriteSheet = "./assets/sprites/GUI/ingot.png";
+  creditsSprite.scale = 1;
+  
+  creditsSprite.addAnis({
     lives3: { col: 0, frames: 1 },
   });
+
+  creditsTextSprite = new Sprite(160, 334, 16, 16, "none");
+  creditsTextSprite.text = creditsValue;
+  creditsTextSprite.textSize = 8;
+  creditsTextSprite.textFont = smallFont;
+  creditsTextSprite.textColor = "white";
+
 }
 
 function loadPlayer() {
@@ -123,7 +136,10 @@ function loadPlayer() {
 
 function draw() {
   clear();
+  
   playscreen();
+  allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
+  updateCredits();  
   //Main Menu Screen
   //Shop
   //Playbutton
@@ -134,10 +150,18 @@ function draw() {
   //Waves
   //Level 2...
 }
+function updateCredits(){
+  fill(255,255,255);
+  textSize(10);
+  textFont(smallFont);
+  text(creditsValue, 180, 334);
+}
 
 function playscreen() {
+  
   backgroundMovement();
   playerMovement();
+
   if (kb.presses("escape")) {
     //turn on and off pause screen.
     gameIsPaused = !gameIsPaused;
@@ -149,6 +173,7 @@ function playscreen() {
     // a stage isn't being played or it's paused.
     canvas.style.setProperty("--cursorMode", "auto");
   }
+  
 }
 function backgroundMovement() {
   image(testBackground2, 0, y1, 225, 1000);
