@@ -1,6 +1,10 @@
 canvas {
   --cursorMode: auto;
 }
+@font-face {
+  font-family: smallFont;
+  src: url("../assets/fonts/small_font.TTF");
+}
 html,
 body {
   background-color: black;
@@ -14,4 +18,16 @@ body {
 }
 canvas:hover {
   cursor: var(--cursorMode);
+}
+
+/*all credits containers are display none by default and are shown individually by their ID's*/
+.credits-container{
+  display:none;
+  position: absolute;
+  top:673px;
+  left:567px;
+  color:white;
+  font-family: 'smallFont';
+  font-size: large;
+  text-align: center;
 }

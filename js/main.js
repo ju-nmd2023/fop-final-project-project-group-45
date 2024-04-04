@@ -10,11 +10,13 @@ let healthBarBorderSprite; //sprite sheet for the healthbar border
 let healthBarSprite; // sprite sheet for the healthbar
 let livesSprite;
 let creditsSprite;
+let allCreditContainers;
 let creditsValue = 100;
+let asteroids = {base:"", flame:"", explosion:""};
+/*
 let smallFont;
-
 let creditsTextSprite;
-
+*/
 let pauseButtonImg;
 let pauseButtonSprite;
 let y1 = -650;
@@ -28,7 +30,8 @@ function preload() {
   testBackground2 = loadImage("./assets/backgrounds/space_background_test2.png");
   hudbackgroundImg = loadImage("./assets/sprites/GUI/hud_background.png");
   pauseButtonImg = loadImage("./assets/sprites/GUI/pauseButton.png");
-  smallFont = loadFont("./assets/fonts/small_font.ttf");
+  
+  //smallFont = loadFont("./assets/fonts/small_font.ttf");
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
@@ -48,6 +51,9 @@ function setup() {
 
   //GUI
   loadGUI();
+
+  //load enemies
+  loadEnemies();
 }
 
 function loadGUI() {
@@ -99,11 +105,11 @@ function loadGUI() {
     lives3: { col: 0, frames: 1 },
   });
 
-  creditsTextSprite = new Sprite(160, 334, 16, 16, "none");
+  /*creditsTextSprite = new Sprite(160, 334, 16, 16, "none");
   creditsTextSprite.text = creditsValue;
   creditsTextSprite.textSize = 8;
   creditsTextSprite.textFont = smallFont;
-  creditsTextSprite.textColor = "white";
+  creditsTextSprite.textColor = "white";*/
 
 }
 
@@ -134,12 +140,17 @@ function loadPlayer() {
   pauseButtonSprite.scale = 1;
 }
 
+function loadEnemies(){
+  asteroids.base = new Sprite(32,32,32,32, "static");
+  asteroids.base.spriteSheet = "./assets/sprites/enemies/asteroid_base.png";
+}
+
 function draw() {
   clear();
   
   playscreen();
   allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
-  updateCredits();  
+   
   //Main Menu Screen
   //Shop
   //Playbutton
@@ -151,16 +162,21 @@ function draw() {
   //Level 2...
 }
 function updateCredits(){
-  fill(255,255,255);
+  /*fill(255,255,255);
   textSize(10);
   textFont(smallFont);
-  text(creditsValue, 180, 334);
+  text(creditsValue, 180, 334);*/
+  
+  allCreditContainers = document.querySelector(".credits-container");
+  allCreditContainers.innerHTML = creditsValue;
 }
 
 function playscreen() {
   
   backgroundMovement();
   playerMovement();
+  document.getElementById("credits-playscreen").style.display = "block";
+  updateCredits();
 
   if (kb.presses("escape")) {
     //turn on and off pause screen.
@@ -173,6 +189,7 @@ function playscreen() {
     // a stage isn't being played or it's paused.
     canvas.style.setProperty("--cursorMode", "auto");
   }
+  
   
 }
 function backgroundMovement() {
@@ -192,6 +209,9 @@ function playerMovement() {
   player.sprite.rotationLock = true;
   player.sprite.moveTowards(mouse, 0.1);
 
+
+  //shooting
+
   /*if (mouse.x >= 14 && mouse.x <= 186) {
     player.sprite.moveTowards(mouse, 1);
   } else {
@@ -200,6 +220,8 @@ function playerMovement() {
   }
   player.sprite.debug = mouse.pressing();*/
 }
+
+
 //Make a playscreen, start coding level 1
 
 //Ship function restores health, etc.
