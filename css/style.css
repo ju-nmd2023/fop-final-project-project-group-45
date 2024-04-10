@@ -21,13 +21,17 @@ canvas:hover {
 }
 
 /*all credits containers are display none by default and are shown individually by their ID's*/
-.credits-container{
-  display:none;
+.credits-container {
+  display: none;
   position: absolute;
-  top:673px;
-  left:567px;
-  color:white;
-  font-family: 'smallFont';
+  color: white;
+  font-family: "smallFont";
   font-size: large;
   text-align: center;
+  height: 700px;
+  width: 450px;
+}
+.credits-container p {
+  margin-left: 358px;
+  margin-top: 658px;
 }

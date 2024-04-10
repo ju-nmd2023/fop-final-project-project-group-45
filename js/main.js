@@ -12,7 +12,7 @@ let livesSprite;
 let creditsSprite;
 let allCreditContainers;
 let creditsValue = 100;
-let asteroids = {base:"", flame:"", explosion:""};
+let asteroids = { base: "", flame: "", explosion: "" };
 /*
 let smallFont;
 let creditsTextSprite;
@@ -23,6 +23,7 @@ let y1 = -650;
 let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
 let gameIsPaused = false; //if a stage is currently being played but the player has paused it. Used to set if the cursor should be showed.
+let creditText;
 
 function preload() {
   playerBaseShipImg = loadImage("./assets/sprites/player/base_ship/base_ship_full_health.png");
@@ -30,7 +31,7 @@ function preload() {
   testBackground2 = loadImage("./assets/backgrounds/space_background_test2.png");
   hudbackgroundImg = loadImage("./assets/sprites/GUI/hud_background.png");
   pauseButtonImg = loadImage("./assets/sprites/GUI/pauseButton.png");
-  
+
   //smallFont = loadFont("./assets/fonts/small_font.ttf");
 }
 function setup() {
@@ -100,17 +101,19 @@ function loadGUI() {
   creditsSprite = new Sprite(180, 334, 16, 16, "none");
   creditsSprite.spriteSheet = "./assets/sprites/GUI/ingot.png";
   creditsSprite.scale = 1;
-  
+
   creditsSprite.addAnis({
     lives3: { col: 0, frames: 1 },
   });
 
+  allCreditContainers = document.querySelector(".credits-container");
+  creditText = document.createElement("p");
+  allCreditContainers.appendChild(creditText);
   /*creditsTextSprite = new Sprite(160, 334, 16, 16, "none");
   creditsTextSprite.text = creditsValue;
   creditsTextSprite.textSize = 8;
   creditsTextSprite.textFont = smallFont;
   creditsTextSprite.textColor = "white";*/
-
 }
 
 function loadPlayer() {
@@ -140,17 +143,17 @@ function loadPlayer() {
   pauseButtonSprite.scale = 1;
 }
 
-function loadEnemies(){
-  asteroids.base = new Sprite(32,32,32,32, "static");
+function loadEnemies() {
+  asteroids.base = new Sprite(32, 32, 32, 32, "static");
   asteroids.base.spriteSheet = "./assets/sprites/enemies/asteroid_base.png";
 }
 
 function draw() {
   clear();
-  
+
   playscreen();
   allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
-   
+
   //Main Menu Screen
   //Shop
   //Playbutton
@@ -161,18 +164,16 @@ function draw() {
   //Waves
   //Level 2...
 }
-function updateCredits(){
+function updateCredits() {
   /*fill(255,255,255);
   textSize(10);
   textFont(smallFont);
   text(creditsValue, 180, 334);*/
-  
-  allCreditContainers = document.querySelector(".credits-container");
-  allCreditContainers.innerHTML = creditsValue;
+
+  creditText.innerHTML = creditsValue;
 }
 
 function playscreen() {
-  
   backgroundMovement();
   playerMovement();
   document.getElementById("credits-playscreen").style.display = "block";
@@ -181,6 +182,7 @@ function playscreen() {
   if (kb.presses("escape")) {
     //turn on and off pause screen.
     gameIsPaused = !gameIsPaused;
+    console.log(gameIsPaused);
   }
   if (gameIsRunning && gameIsPaused === false) {
     // a stage is being played and isn't paused.
@@ -189,8 +191,6 @@ function playscreen() {
     // a stage isn't being played or it's paused.
     canvas.style.setProperty("--cursorMode", "auto");
   }
-  
-  
 }
 function backgroundMovement() {
   image(testBackground2, 0, y1, 225, 1000);
@@ -209,7 +209,6 @@ function playerMovement() {
   player.sprite.rotationLock = true;
   player.sprite.moveTowards(mouse, 0.1);
 
-
   //shooting
 
   /*if (mouse.x >= 14 && mouse.x <= 186) {
@@ -220,7 +219,6 @@ function playerMovement() {
   }
   player.sprite.debug = mouse.pressing();*/
 }
-
 
 //Make a playscreen, start coding level 1
 
