@@ -12,7 +12,8 @@ let livesSprite;
 let creditsSprite;
 let allCreditContainers;
 let creditsValue = 100;
-let asteroids = { base: "", flame: "", explosion: "" };
+let asteroidObject = { base: "", flame: "", collider: "" };
+let asteroids = [];
 /*
 let smallFont;
 let creditsTextSprite;
@@ -50,11 +51,11 @@ function setup() {
   //Player Sprites
   loadPlayer();
 
-  //GUI
-  loadGUI();
-
   //load enemies
   loadEnemies();
+
+  //GUI
+  loadGUI();
 }
 
 function loadGUI() {
@@ -123,6 +124,8 @@ function loadPlayer() {
 
   player.sprite = new Sprite(32, 32, 32, 32); //creates the sprite object
   player.sprite.img = playerBaseShipImg; //loads the sprite image
+  player.sprite.addSensor(0, 0, 32, 32); //adds a sensor to the sprite
+  player.sprite.debug = true; //turns on the debug mode for the sprite
 
   playerEngineFireIdle = new Sprite(32, 32, 48, 48);
   playerEngineFireIdle.spriteSheet = "./assets/sprites/player/engine/engine_idle.png";
@@ -144,14 +147,45 @@ function loadPlayer() {
 }
 
 function loadEnemies() {
-  asteroids.base = new Sprite(32, 32, 32, 32, "static");
-  asteroids.base.spriteSheet = "./assets/sprites/enemies/asteroid_base.png";
+  asteroidObject.flame = new Sprite(90, 50, 96, 96, "none");
+  asteroidObject.flame.spriteSheet = "./assets/sprites/enemies/asteroid/asteroid_flame.png";
+  asteroidObject.flame.addAnis({
+    flame: { col: 0, frames: 3 },
+  });
+  asteroidObject.flame.changeAni("flame");
+  asteroidObject.flame.anis.frameDelay = 8;
+  asteroidObject.flame.anis.rotation = -90;
+  asteroidObject.flame.anis.looping = true;
+
+  asteroidObject.base = new Sprite(90, 50, 96, 96, "dynamic");
+  asteroidObject.base.scale = 1;
+  asteroidObject.base.spriteSheet = "./assets/sprites/enemies/asteroid/asteroid_explode.png";
+  asteroidObject.base.addAnis({
+    base: { col: 0, frames: 1 },
+    explosion: { col: 1, frames: 6 },
+  });
+  asteroidObject.base.changeAni("base");
+  asteroidObject.base.addSensor(0, 0, 48, 48);
+  //asteroidObject.base.offset.x = 20;
+  asteroidObject.base.width = 96;
+  asteroidObject.base.height = 96;
+  asteroidObject.base.overlaps(allSprites);
+
+  asteroidObject.flame.overlaps(allSprites);
+  new GlueJoint(asteroidObject.base, asteroidObject.flame);
+
+  asteroidObject.collider = new Sprite(90, 50, 38, 36, "dynamic");
+  asteroidObject.collider.color = "blue";
+  asteroidObject.collider.visible = false;
+  asteroidObject.collider.overlaps(allSprites);
+  new GlueJoint(asteroidObject.base, asteroidObject.collider);
 }
 
 function draw() {
   clear();
-
   playscreen();
+  playerCollision();
+  enemySpawner();
   allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
 
   //Main Menu Screen
@@ -178,11 +212,9 @@ function playscreen() {
   playerMovement();
   document.getElementById("credits-playscreen").style.display = "block";
   updateCredits();
-
   if (kb.presses("escape")) {
     //turn on and off pause screen.
     gameIsPaused = !gameIsPaused;
-    console.log(gameIsPaused);
   }
   if (gameIsRunning && gameIsPaused === false) {
     // a stage is being played and isn't paused.
@@ -223,3 +255,45 @@ function playerMovement() {
 //Make a playscreen, start coding level 1
 
 //Ship function restores health, etc.
+
+function playerCollision() {
+  asteroidObject.base.vel.y = 1.6;
+  /*player.sprite.overlaps(asteroidObject.base, function (player, asteroid) {
+    asteroid.changeAni("explosion");
+    asteroid.anis.looping = false;
+    asteroid.anis.frameDelay = 8;
+    asteroid.onAnimationEnd = function () {
+      asteroid.remove();
+    };
+    player.remove();
+  });*/
+  if (player.sprite.overlaps(asteroidObject.collider)) {
+    console.log("collision");
+    asteroidObject.base.changeAni("explosion");
+    asteroidObject.base.anis.looping = false;
+    asteroidObject.base.anis.frameDelay = 6;
+    killAsteroid(asteroidObject.base, asteroidObject.collider, asteroidObject.flame);
+  }
+  if (canvasBottomCollider.overlapped(asteroidObject.collider)) {
+    asteroidObject.base.remove();
+    asteroidObject.collider.remove();
+    asteroidObject.flame.remove();
+    print("hit");
+  }
+}
+async function killAsteroid(base, collider, flame) {
+  flame.remove();
+  collider.remove();
+  await delay(600);
+  base.remove();
+}
+
+function enemySpawner() {
+  let randomFrameCOunt = Math.floor(random(180, 600));
+  if (frameCount % randomFrameCOunt === 0) {
+    createAsteroid(random(50, 200), 50);
+  }
+}
+function createAsteroid(x, y) {
+  console.log("created asteroid");
+}
