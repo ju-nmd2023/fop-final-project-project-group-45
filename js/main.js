@@ -1,4 +1,5 @@
-let player = { health: 100, lives: 3, sprite: "" }; //player ship object. Stores all important information about the player.
+let player = { maxHealth: 100, lives: 3, sprite: "" }; //player ship object. Stores all important information about the player.
+let playerHealth; //player health variable. Used while the game is playing.
 let playerBaseShipImg; //sprite of base ship
 let playerEngineFireIdle; //idle engine fire sprite
 let shipBaseEngineImg; //standard engine sprite
@@ -13,11 +14,6 @@ let creditsSprite;
 let allCreditContainers;
 let creditsValue = 100;
 let asteroidObject = { base: "", flame: "", collider: "" };
-let asteroids = [];
-/*
-let smallFont;
-let creditsTextSprite;
-*/
 let pauseButtonImg;
 let pauseButtonSprite;
 let y1 = -650;
@@ -115,6 +111,10 @@ function loadGUI() {
   creditsTextSprite.textSize = 8;
   creditsTextSprite.textFont = smallFont;
   creditsTextSprite.textColor = "white";*/
+
+  pauseButtonSprite = new Sprite(200, 25, 32, 32, "none");
+  pauseButtonSprite.img = pauseButtonImg;
+  pauseButtonSprite.scale = 1;
 }
 
 function loadPlayer() {
@@ -125,7 +125,7 @@ function loadPlayer() {
   player.sprite = new Sprite(32, 32, 32, 32); //creates the sprite object
   player.sprite.img = playerBaseShipImg; //loads the sprite image
   player.sprite.addSensor(0, 0, 32, 32); //adds a sensor to the sprite
-  player.sprite.debug = true; //turns on the debug mode for the sprite
+  //player.sprite.debug = true; //turns on the debug mode for the sprite
 
   playerEngineFireIdle = new Sprite(32, 32, 48, 48);
   playerEngineFireIdle.spriteSheet = "./assets/sprites/player/engine/engine_idle.png";
@@ -141,9 +141,7 @@ function loadPlayer() {
   new GlueJoint(player.sprite, playerEngineFireIdle);
   new GlueJoint(player.sprite, shipBaseEngine);
 
-  pauseButtonSprite = new Sprite(200, 25, 32, 32, "none");
-  pauseButtonSprite.img = pauseButtonImg;
-  pauseButtonSprite.scale = 1;
+  playerHealth = player.maxHealth; // This varible shows how much HP the player currently has. Player starts with max health
 }
 
 function loadEnemies() {
@@ -212,6 +210,7 @@ function playscreen() {
   playerMovement();
   document.getElementById("credits-playscreen").style.display = "block";
   updateCredits();
+  updateHealth();
   if (kb.presses("escape")) {
     //turn on and off pause screen.
     gameIsPaused = !gameIsPaused;
@@ -258,21 +257,13 @@ function playerMovement() {
 
 function playerCollision() {
   asteroidObject.base.vel.y = 1.6;
-  /*player.sprite.overlaps(asteroidObject.base, function (player, asteroid) {
-    asteroid.changeAni("explosion");
-    asteroid.anis.looping = false;
-    asteroid.anis.frameDelay = 8;
-    asteroid.onAnimationEnd = function () {
-      asteroid.remove();
-    };
-    player.remove();
-  });*/
   if (player.sprite.overlaps(asteroidObject.collider)) {
     console.log("collision");
     asteroidObject.base.changeAni("explosion");
     asteroidObject.base.anis.looping = false;
     asteroidObject.base.anis.frameDelay = 6;
     killAsteroid(asteroidObject.base, asteroidObject.collider, asteroidObject.flame);
+    playerHealth -= 25;
   }
   if (canvasBottomCollider.overlapped(asteroidObject.collider)) {
     asteroidObject.base.remove();
@@ -296,4 +287,43 @@ function enemySpawner() {
 }
 function createAsteroid(x, y) {
   console.log("created asteroid");
+  loadEnemies();
+}
+function updateHealth() {
+  let healthProcent = 1 - (player.maxHealth - playerHealth) / player.maxHealth; //calculates the health procent based on the current health and max health.
+  //if statements to calculate the correct value for the healthbar animation names.
+  if (healthProcent > 0.94 && healthProcent < 1) {
+    healthProcent = 1;
+  } else if (healthProcent < 0.94 && healthProcent > 0.88) {
+    healthProcent = 0.94;
+  } else if (healthProcent < 0.88 && healthProcent > 0.81) {
+    healthProcent = 0.88;
+  } else if (healthProcent < 0.81 && healthProcent > 0.75) {
+    healthProcent = 0.81;
+  } else if (healthProcent < 0.75 && healthProcent > 0.69) {
+    healthProcent = 0.75;
+  } else if (healthProcent < 0.69 && healthProcent > 0.63) {
+    healthProcent = 0.69;
+  } else if (healthProcent < 0.63 && healthProcent > 0.56) {
+    healthProcent = 0.63;
+  } else if (healthProcent < 0.56 && healthProcent > 0.5) {
+    healthProcent = 0.56;
+  } else if (healthProcent < 0.5 && healthProcent > 0.44) {
+    healthProcent = 0.5;
+  } else if (healthProcent < 0.44 && healthProcent > 0.38) {
+    healthProcent = 0.44;
+  } else if (healthProcent < 0.38 && healthProcent > 0.31) {
+    healthProcent = 0.38;
+  } else if (healthProcent < 0.31 && healthProcent > 0.25) {
+    healthProcent = 0.31;
+  } else if (healthProcent < 0.25 && healthProcent > 0.19) {
+    healthProcent = 0.25;
+  } else if (healthProcent < 0.19 && healthProcent > 0.13) {
+    healthProcent = 0.19;
+  } else if (healthProcent < 0.13 && healthProcent > 0.0) {
+    healthProcent = 0.13;
+  } else if (healthProcent == 0) {
+    healthProcent = 0.06;
+  }
+  healthBarSprite.changeAni("health" + healthProcent * 100); //changes the healthbar animation based on the health procent.
 }
