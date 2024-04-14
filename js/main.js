@@ -48,7 +48,7 @@ function setup() {
   loadPlayer();
 
   //load enemies
-  loadEnemies();
+ spawnAsteroid();
 
   //GUI
   loadGUI();
@@ -65,6 +65,7 @@ function loadGUI() {
 
   healthBarSprite = new Sprite(66, 334, 96, 16, "none"); //healthbar sprite
   healthBarSprite.spriteSheet = "./assets/sprites/GUI/healthbar.png";
+
   healthBarSprite.addAnis({
     //adding a state for every sprite
     health100: { col: 1, frames: 1 },
@@ -106,12 +107,7 @@ function loadGUI() {
   allCreditContainers = document.querySelector(".credits-container");
   creditText = document.createElement("p");
   allCreditContainers.appendChild(creditText);
-  /*creditsTextSprite = new Sprite(160, 334, 16, 16, "none");
-  creditsTextSprite.text = creditsValue;
-  creditsTextSprite.textSize = 8;
-  creditsTextSprite.textFont = smallFont;
-  creditsTextSprite.textColor = "white";*/
-
+ 
   pauseButtonSprite = new Sprite(200, 25, 32, 32, "none");
   pauseButtonSprite.img = pauseButtonImg;
   pauseButtonSprite.scale = 1;
@@ -144,7 +140,95 @@ function loadPlayer() {
   playerHealth = player.maxHealth; // This varible shows how much HP the player currently has. Player starts with max health
 }
 
-function loadEnemies() {
+
+
+function draw() {
+  clear();
+  playscreen();
+  
+  allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
+
+  //Main Menu Screen
+  //Shop
+  //Playbutton
+  //Settings
+  //Playscreen
+  //playscreen();
+  //Level 1
+  //Waves
+  //Level 2...
+}
+function updateCredits() {
+  /*fill(255,255,255);
+  textSize(10);
+  textFont(smallFont);
+  text(creditsValue, 180, 334);*/
+
+  creditText.innerHTML = creditsValue;
+}
+
+function playscreen() {
+  backgroundMovement();
+  playerMovement();
+  playerCollision();
+  enemySpawner();
+
+  document.getElementById("credits-playscreen").style.display = "block";
+  updateCredits();
+  updateHealth();
+  if (kb.presses("escape")) {
+    //turn on and off pause screen.
+    gameIsPaused = !gameIsPaused;
+  }
+  if (gameIsRunning && gameIsPaused === false) {
+    // a stage is being played and isn't paused.
+    canvas.style.setProperty("--cursorMode", "none");
+  } else if (gameIsRunning === false || gameIsPaused) {
+    // a stage isn't being played or it's paused.
+    canvas.style.setProperty("--cursorMode", "auto");
+  }
+}
+
+function backgroundMovement() {
+  image(testBackground2, 0, y1, 225, 1000);
+  image(testBackground2, 0, y2, 225, 1000);
+  y1 += 1;
+  y2 += 1;
+
+  if (y1 == 350) {
+    y1 = -1650;
+  }
+  if (y2 == 350) {
+    y2 = -1650;
+  }
+}
+
+//Make a playscreen, start coding level 1
+
+//Ship function restores health, etc.
+
+async function killAsteroid(base, collider, flame) {
+  flame.remove();
+  collider.remove();
+  await delay(600);
+  base.remove();
+}
+
+function enemySpawner() {
+  let randomFrameCOunt = Math.floor(random(100, 200));
+  if (frameCount % randomFrameCOunt === 0) {
+    
+    createAsteroid(random(50, 200), 50);
+  }
+}
+function createAsteroid(x, y) {
+
+  console.log("created asteroid");
+  spawnAsteroid(x,y);
+ 
+}
+
+function spawnAsteroid() {
   asteroidObject.flame = new Sprite(90, 50, 96, 96, "none");
   asteroidObject.flame.spriteSheet = "./assets/sprites/enemies/asteroid/asteroid_flame.png";
   asteroidObject.flame.addAnis({
@@ -179,151 +263,3 @@ function loadEnemies() {
   new GlueJoint(asteroidObject.base, asteroidObject.collider);
 }
 
-function draw() {
-  clear();
-  playscreen();
-  playerCollision();
-  enemySpawner();
-  allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
-
-  //Main Menu Screen
-  //Shop
-  //Playbutton
-  //Settings
-  //Playscreen
-  //playscreen();
-  //Level 1
-  //Waves
-  //Level 2...
-}
-function updateCredits() {
-  /*fill(255,255,255);
-  textSize(10);
-  textFont(smallFont);
-  text(creditsValue, 180, 334);*/
-
-  creditText.innerHTML = creditsValue;
-}
-
-function playscreen() {
-  backgroundMovement();
-  playerMovement();
-  document.getElementById("credits-playscreen").style.display = "block";
-  updateCredits();
-  updateHealth();
-  if (kb.presses("escape")) {
-    //turn on and off pause screen.
-    gameIsPaused = !gameIsPaused;
-  }
-  if (gameIsRunning && gameIsPaused === false) {
-    // a stage is being played and isn't paused.
-    canvas.style.setProperty("--cursorMode", "none");
-  } else if (gameIsRunning === false || gameIsPaused) {
-    // a stage isn't being played or it's paused.
-    canvas.style.setProperty("--cursorMode", "auto");
-  }
-}
-function backgroundMovement() {
-  image(testBackground2, 0, y1, 225, 1000);
-  image(testBackground2, 0, y2, 225, 1000);
-  y1 += 1;
-  y2 += 1;
-
-  if (y1 == 350) {
-    y1 = -1650;
-  }
-  if (y2 == 350) {
-    y2 = -1650;
-  }
-}
-function playerMovement() {
-  player.sprite.rotationLock = true;
-  player.sprite.moveTowards(mouse, 0.1);
-
-  //shooting
-
-  /*if (mouse.x >= 14 && mouse.x <= 186) {
-    player.sprite.moveTowards(mouse, 1);
-  } else {
-    player.sprite.vel.x = 0;
-    player.sprite.vel.y = 0;
-  }
-  player.sprite.debug = mouse.pressing();*/
-}
-
-//Make a playscreen, start coding level 1
-
-//Ship function restores health, etc.
-
-function playerCollision() {
-  asteroidObject.base.vel.y = 1.6;
-  if (player.sprite.overlaps(asteroidObject.collider)) {
-    console.log("collision");
-    asteroidObject.base.changeAni("explosion");
-    asteroidObject.base.anis.looping = false;
-    asteroidObject.base.anis.frameDelay = 6;
-    killAsteroid(asteroidObject.base, asteroidObject.collider, asteroidObject.flame);
-    playerHealth -= 25;
-  }
-  if (canvasBottomCollider.overlapped(asteroidObject.collider)) {
-    asteroidObject.base.remove();
-    asteroidObject.collider.remove();
-    asteroidObject.flame.remove();
-    print("hit");
-  }
-}
-async function killAsteroid(base, collider, flame) {
-  flame.remove();
-  collider.remove();
-  await delay(600);
-  base.remove();
-}
-
-function enemySpawner() {
-  let randomFrameCOunt = Math.floor(random(180, 600));
-  if (frameCount % randomFrameCOunt === 0) {
-    createAsteroid(random(50, 200), 50);
-  }
-}
-function createAsteroid(x, y) {
-  console.log("created asteroid");
-  loadEnemies();
-}
-function updateHealth() {
-  let healthProcent = 1 - (player.maxHealth - playerHealth) / player.maxHealth; //calculates the health procent based on the current health and max health.
-  //if statements to calculate the correct value for the healthbar animation names.
-  if (healthProcent > 0.94 && healthProcent < 1) {
-    healthProcent = 1;
-  } else if (healthProcent < 0.94 && healthProcent > 0.88) {
-    healthProcent = 0.94;
-  } else if (healthProcent < 0.88 && healthProcent > 0.81) {
-    healthProcent = 0.88;
-  } else if (healthProcent < 0.81 && healthProcent > 0.75) {
-    healthProcent = 0.81;
-  } else if (healthProcent < 0.75 && healthProcent > 0.69) {
-    healthProcent = 0.75;
-  } else if (healthProcent < 0.69 && healthProcent > 0.63) {
-    healthProcent = 0.69;
-  } else if (healthProcent < 0.63 && healthProcent > 0.56) {
-    healthProcent = 0.63;
-  } else if (healthProcent < 0.56 && healthProcent > 0.5) {
-    healthProcent = 0.56;
-  } else if (healthProcent < 0.5 && healthProcent > 0.44) {
-    healthProcent = 0.5;
-  } else if (healthProcent < 0.44 && healthProcent > 0.38) {
-    healthProcent = 0.44;
-  } else if (healthProcent < 0.38 && healthProcent > 0.31) {
-    healthProcent = 0.38;
-  } else if (healthProcent < 0.31 && healthProcent > 0.25) {
-    healthProcent = 0.31;
-  } else if (healthProcent < 0.25 && healthProcent > 0.19) {
-    healthProcent = 0.25;
-  } else if (healthProcent < 0.19 && healthProcent > 0.13) {
-    healthProcent = 0.19;
-  } else if (healthProcent < 0.13 && healthProcent > 0.0) {
-    healthProcent = 0.13;
-  } else if (healthProcent == 0) {
-    healthProcent = 0.06;
-  }
-  healthBarSprite.changeAni("health" + healthProcent * 100); //changes the healthbar animation based on the health procent.
-}
