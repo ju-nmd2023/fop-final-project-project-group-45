@@ -5,7 +5,7 @@ function loadPlayer() {
 
   player.sprite = new Sprite(32, 32, 32, 32); //creates the sprite object
   player.sprite.img = playerBaseShipImg; //loads the sprite image
-  player.sprite.addSensor(0, 0, 32, 32); //adds a sensor to the sprite
+  
   //player.sprite.debug = true; //turns on the debug mode for the sprite
 
   playerEngineFireIdle = new Sprite(32, 32, 48, 48);
@@ -24,6 +24,7 @@ function loadPlayer() {
 
   playerHealth = player.maxHealth; // This varible shows how much HP the player currently has. Player starts with max health
   player.sprite.layer = 101;
+  
 }
 
 function playerMovement() {
@@ -34,6 +35,8 @@ function playerMovement() {
   if (frameCount % 30 === 0) {
     createBullet(player.sprite.x, player.sprite.y);
   }
+
+  
 }
 function createBullet(x, y) {
   bulletObject.base = new Sprite(x, y, 32, 32, "none");
@@ -50,7 +53,16 @@ function createBullet(x, y) {
   bulletObject.collider.visible = false;
   new GlueJoint(bulletObject.base, bulletObject.collider);
   bulletObject.collider.layer = 101;
+  bulletObject.collider.debug = true;
+
+  /*if (bulletObject.base.overlaps(asteroidObject.collider)) {
+    console.log("collision");
+    asteroidObject.base.changeAni("explosion");
+    asteroidObject.base.anis.looping = false;
+    asteroidObject.base.anis.frameDelay = 6;
+    killAsteroid(asteroidObject.base, asteroidObject.collider, asteroidObject.flame);
 }
+*/}
 
 function playerCollision() {
   if (player.sprite.overlaps(asteroidObject.collider)) {
@@ -61,11 +73,11 @@ function playerCollision() {
     killAsteroid(asteroidObject.base, asteroidObject.collider, asteroidObject.flame);
     playerHealth -= 25;
   }
-  if (canvasBottomCollider.overlapped(asteroidObject.collider)) {
+  if (canvasBottomCollider.overlap(asteroidObject.collider)) {
     asteroidObject.base.remove();
     asteroidObject.collider.remove();
     asteroidObject.flame.remove();
-    print("hit");
+    
   }
 }
 

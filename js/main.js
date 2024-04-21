@@ -19,7 +19,8 @@ let asteroidObject = { base: "", flame: "", collider: "" };
 let pauseButtonImg;
 let pauseButtonSprite;
 let mainProjectileImg;
-let bulletObject = { base: "", collider: "" };
+let bulletObject = { base: "", collider: "", group:""};
+let bullets;
 let y1 = -650;
 let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
@@ -46,18 +47,20 @@ function setup() {
   canvasTopCollider = new Sprite(-1, 0, 450, 1, "static");
   canvasRightCollider = new Sprite(226, 0, 1, 700, "static");
   canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
+  bulletObject.group = new Group();
   /*allSprites.overlaps(canvasBottomCollider);
   allSprites.overlaps(canvasTopCollider);
   allSprites.overlaps(canvasRightCollider);
   allSprites.overlaps(canvasLeftCollider);*/
   frameRate(60);
-
+  
   //Player Sprites
   loadPlayer();
 
   //Enemies
   loadEnemies();
   spawnAsteroid(100, -50);
+  
   //GUI
   loadGUI();
 }
@@ -142,7 +145,7 @@ function loadEnemies() {
     explosion: { col: 1, frames: 6 },
   });
   asteroidObject.base.changeAni("base");
-  asteroidObject.base.addSensor(0, 0, 48, 48);
+  //asteroidObject.base.addSensor(0, 0, 32, 32);
   //asteroidObject.base.offset.x = 20;
   asteroidObject.base.width = 96;
   asteroidObject.base.height = 96;
@@ -188,6 +191,7 @@ function playscreen() {
   backgroundMovement();
   playerMovement();
   playerCollision();
+  
   enemySpawner();
   bulletCollision();
 
@@ -205,6 +209,7 @@ function playscreen() {
     // a stage isn't being played or it's paused.
     canvas.style.setProperty("--cursorMode", "auto");
   }
+  
 }
 
 function backgroundMovement() {
@@ -236,14 +241,14 @@ function enemySpawner() {
   let randomFrameCount = Math.floor(random(200, 400));
   let x = random(50, 200);
 
-  /*if (frameCount % randomFrameCount === 0) {
+  if (frameCount % randomFrameCount === 0) {
     if (x > prevX - 50 && x < prevX + 50) {
       print("worng");
     } else {
       spawnAsteroid(x, -50);
     }
   }
-  prevX = x;*/
+  prevX = x;
 }
 
 function spawnAsteroid(x, y) {
@@ -265,8 +270,8 @@ function spawnAsteroid(x, y) {
     explosion: { col: 1, frames: 6 },
   });
   asteroidObject.base.changeAni("base");
-  asteroidObject.base.addSensor(0, 0, 48, 48);
-  //asteroidObject.base.offset.x = 20;
+  //asteroidObject.base.addSensor(0, 0, 88, 48);
+
   asteroidObject.base.width = 96;
   asteroidObject.base.height = 96;
   asteroidObject.base.overlaps(allSprites);
@@ -281,4 +286,8 @@ function spawnAsteroid(x, y) {
   new GlueJoint(asteroidObject.base, asteroidObject.collider);
   asteroidObject.base.debug = true;
   asteroidObject.base.vel.y = 1.6;
+
+  
+  
+
 }
