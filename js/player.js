@@ -35,34 +35,26 @@ function playerMovement() {
   if (frameCount % 30 === 0) {
     createBullet(player.sprite.x, player.sprite.y);
   }
-
   
 }
-function createBullet(x, y) {
-  bulletObject.base = new Sprite(x, y, 32, 32, "none");
-  bulletObject.base.spriteSheet = mainProjectileImg;
-  bulletObject.base.addAnis({
-    base: { col: 1, frames: 4 },
-  });
-  bulletObject.base.changeAni("base");
-  bulletObject.base.vel.y = -4;
-  bulletObject.base.layer = 100;
-  bulletObject.collider = new Sprite(x, y, 16, 16, "dynamic");
-  bulletObject.collider.overlaps(allSprites);
-  bulletObject.collider.color = "blue";
-  bulletObject.collider.visible = false;
-  new GlueJoint(bulletObject.base, bulletObject.collider);
-  bulletObject.collider.layer = 101;
-  bulletObject.collider.debug = true;
 
-  /*if (bulletObject.base.overlaps(asteroidObject.collider)) {
-    console.log("collision");
-    asteroidObject.base.changeAni("explosion");
-    asteroidObject.base.anis.looping = false;
-    asteroidObject.base.anis.frameDelay = 6;
-    killAsteroid(asteroidObject.base, asteroidObject.collider, asteroidObject.flame);
+function createBullet(x,y) {
+//Each 40th frame a projectile is fired
+  if(frameCount % 40 === 0){
+    bulletObject.base = new Sprite(x, y, 32, 32, "none");
+    bulletObject.base.spriteSheet = mainProjectileImg;
+    bulletObject.base.addAnis({
+    base: { col: 1, frames: 4 },
+    });
+    bulletObject.group.add(bulletObject.base);
+    bulletObject.group.width = 16;
+    bulletObject.group.height = 16;
+    bulletObject.base.life = 120;
+    bulletObject.base.vel.y = -3;
+    
+  }
+  
 }
-*/}
 
 function playerCollision() {
   if (player.sprite.overlaps(asteroidObject.collider)) {
