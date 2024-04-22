@@ -264,9 +264,8 @@ function spawnAsteroid(x, y) {
   asteroidObject.flame.anis.frameDelay = 8;
   asteroidObject.flame.anis.rotation = -90;
   asteroidObject.flame.anis.looping = true;
-
-
   asteroidObject.base = new Sprite(x, y, 96, 96, "dynamic");
+  
   //asteroidObject.base.scale = 1;
   asteroidObject.base.spriteSheet = asteroidSpriteImg;
   asteroidObject.base.addAnis({
@@ -279,18 +278,23 @@ function spawnAsteroid(x, y) {
   asteroidObject.base.height = 96;
   asteroidObject.base.overlaps(allSprites);
 
-  asteroidObject.group.add(asteroidObject.base);
   asteroidObject.flame.overlaps(allSprites);
+
   new GlueJoint(asteroidObject.base, asteroidObject.flame);
 
   asteroidObject.collider = new Sprite(x, y, 32, 32, "dynamic");
+  asteroidObject.group.add(asteroidObject.collider);
+  console.log(asteroidObject.group.length);
   asteroidObject.collider.color = "blue";
-  asteroidObject.collider.visible = false;
-  asteroidObject.collider.debug = false;
+  
   asteroidObject.collider.overlaps(allSprites);
   let glue = new GlueJoint(asteroidObject.base, asteroidObject.collider);
   glue.visible = false;
   asteroidObject.base.vel.y = 1.6;
-
+  
+  console.log(asteroidObject.group.length);
+  asteroidObject.base.life = 1000;
+  asteroidObject.flame.life = 1000;
+  asteroidObject.collider.life = 1000;
  
 }

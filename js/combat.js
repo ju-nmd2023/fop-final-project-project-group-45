@@ -1,5 +1,7 @@
 function bulletCollision() {
-  if(bulletObject.group.overlaps(asteroidObject.collider)){
+  bulletObject.group.debug = true;
+  asteroidObject.group.debug = true;
+  if(asteroidObject.group.overlaps(bulletObject.group)){
     console.log("coll");
     asteroidObject.base.changeAni("explosion");
     asteroidObject.base.anis.looping = false;

@@ -32,10 +32,7 @@ function playerMovement() {
   player.sprite.moveTowards(mouse, 0.1);
 
   //shooting
-  if (frameCount % 30 === 0) {
     createBullet(player.sprite.x, player.sprite.y);
-  }
-  
 }
 
 function createBullet(x,y) {
