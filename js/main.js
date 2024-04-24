@@ -294,8 +294,8 @@ function spawnAsteroid(x, y) {
   
   
   asteroidObject.collider = new Sprite(x, y, 32, 32, "dynamic");
-  asteroidObject.group.add(asteroidObject.collider);
-  console.log(asteroidObject.group.length);
+  //asteroidObject.group.add(asteroidObject.collider);
+  //console.log(asteroidObject.group.length);
   asteroidObject.collider.color = "blue";
   asteroidObject.collider.visible = false; 
   
@@ -305,7 +305,7 @@ function spawnAsteroid(x, y) {
   asteroidObject.base.vel.y = 6;
     asteroidColliderGroup.push(asteroidObject.collider);
   
-  console.log(asteroidObject.group.length);
+  //console.log(asteroidObject.group.length);
   asteroidObject.base.life = 1000;
   asteroidObject.flame.life = 1000;
   asteroidObject.collider.life = 1000;
