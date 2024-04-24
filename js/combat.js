@@ -9,7 +9,6 @@ function asteroidCollision() {
         asteroidBaseGroup.splice(asteroidIndex, 1);
         asteroidFlameGroup.splice(asteroidIndex, 1);
         asteroidColliderGroup.splice(asteroidIndex, 1);
-
     
         creditsValue = creditsValue+1;
       }
