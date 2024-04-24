@@ -15,14 +15,14 @@ let allCreditContainers;
 let asteroidSpriteImg;
 let asteroidFlameImg;
 let creditsValue = 0;
-let asteroidObject = { base: "", flame: "", collider: ""};
+let asteroidObject = { base: "", flame: "", collider: "" };
 let asteroidBaseGroup = [];
 let asteroidColliderGroup = [];
 let asteroidFlameGroup = [];
 let pauseButtonImg;
 let pauseButtonSprite;
 let mainProjectileImg;
-let bulletObject = { base: "", collider: "", group: ""};
+let bulletObject = { base: "", collider: "", group: "" };
 let bulletGroup = [];
 
 let y1 = -650;
@@ -43,8 +43,6 @@ function preload() {
   asteroidSpriteImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_explode.png");
   asteroidFlameImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_flame.png");
   mainProjectileImg = loadImage("./assets/sprites/player/weapons/main_projectile.png");
-
-  
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
@@ -54,21 +52,20 @@ function setup() {
   canvasRightCollider = new Sprite(226, 0, 1, 700, "static");
   canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
   bulletObject.group = new Group();
- 
- 
+
   /*allSprites.overlaps(canvasBottomCollider);
   allSprites.overlaps(canvasTopCollider);
   allSprites.overlaps(canvasRightCollider);
   allSprites.overlaps(canvasLeftCollider);*/
   frameRate(60);
-  
+
   //Player Sprites
   loadPlayer();
 
   //Enemies
   //loadEnemies();
   spawnAsteroid(100, -50);
-  
+
   //GUI
   loadGUI();
 }
@@ -198,7 +195,7 @@ function updateCredits() {
 function playscreen() {
   backgroundMovement();
   playerMovement();
-  
+
   enemySpawner();
   createBullet(player.sprite.x, player.sprite.y);
   asteroidCollision();
@@ -206,7 +203,7 @@ function playscreen() {
   document.getElementById("credits-playscreen").style.display = "block";
   updateCredits();
   updateHealth();
-  
+
   if (kb.presses("escape")) {
     //turn on and off pause screen.
     gameIsPaused = !gameIsPaused;
@@ -218,7 +215,6 @@ function playscreen() {
     // a stage isn't being played or it's paused.
     canvas.style.setProperty("--cursorMode", "auto");
   }
-  
 }
 
 function backgroundMovement() {
@@ -273,7 +269,7 @@ function spawnAsteroid(x, y) {
   asteroidObject.flame.anis.looping = true;
   asteroidObject.flame.overlaps(allSprites);
   asteroidFlameGroup.push(asteroidObject.flame);
-  
+
   asteroidObject.base = new Sprite(x, y, 96, 96, "none");
   //asteroidObject.base.scale = 1;
   asteroidObject.base.spriteSheet = asteroidSpriteImg;
@@ -290,27 +286,26 @@ function spawnAsteroid(x, y) {
 
   asteroidObject.flame.overlaps(allSprites);
 
-  new GlueJoint(asteroidObject.base, asteroidObject.flame);
-  
-  
+  let flameGlue = new GlueJoint(asteroidObject.base, asteroidObject.flame);
+  flameGlue.visible = false;
+
   asteroidObject.collider = new Sprite(x, y, 32, 32, "dynamic");
   //asteroidObject.group.add(asteroidObject.collider);
   //console.log(asteroidObject.group.length);
   asteroidObject.collider.color = "blue";
-  asteroidObject.collider.visible = false; 
-  
+  asteroidObject.collider.visible = false;
+
   asteroidObject.collider.overlaps(allSprites);
   let glue = new GlueJoint(asteroidObject.base, asteroidObject.collider);
   glue.visible = false;
   asteroidObject.base.vel.y = 6;
-    asteroidColliderGroup.push(asteroidObject.collider);
-  
+  asteroidColliderGroup.push(asteroidObject.collider);
+
   //console.log(asteroidObject.group.length);
   asteroidObject.base.life = 1000;
   asteroidObject.flame.life = 1000;
   asteroidObject.collider.life = 1000;
- asteroidObject.base.layer = 99;
+  asteroidObject.base.layer = 99;
   asteroidObject.collider.layer = 99;
   asteroidObject.flame.layer = 99;
- 
 }
