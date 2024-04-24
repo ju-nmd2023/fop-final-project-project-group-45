@@ -24,7 +24,7 @@ let pauseButtonSprite;
 let mainProjectileImg;
 let bulletObject = { base: "", collider: "", group: "" };
 let bulletGroup = [];
-let healthbarImg;
+let healthBarImg;
 
 let y1 = -650;
 let y2 = -1650;
