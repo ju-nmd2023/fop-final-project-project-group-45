@@ -4,7 +4,7 @@ function loadPlayer() {
   shipBaseEngine.offset.y = 2;
 
   player.sprite = new Sprite(32, 32, 32, 32); //creates the sprite object
-  player.sprite.img = playerBaseShipImg; //loads the sprite image
+  player.sprite.img = playerFullHealthImg; //loads the sprite image
   
   //player.sprite.debug = true; //turns on the debug mode for the sprite
 
@@ -46,32 +46,21 @@ function createBullet(x,y) {
     bulletObject.base.addAnis({
     base: { col: 1, frames: 4 },
     });
+    //bulletObject.collider = new Sprite(x, y, 16, 16, "none");
     bulletObject.group.add(bulletObject.base);
     bulletObject.group.width = 16;
     bulletObject.group.height = 16;
-    bulletObject.base.life = 120;
+    
     bulletObject.base.vel.y = -3;
     
+
+    bulletObject.life = 60;
+    //bulletGroup.push(bulletObject.base);
   }
+  
   
 }
 
-function playerCollision() {
-  if (player.sprite.overlaps(asteroidObject.collider)) {
-    console.log("collision");
-    asteroidObject.base.changeAni("explosion");
-    asteroidObject.base.anis.looping = false;
-    asteroidObject.base.anis.frameDelay = 6;
-    killAsteroid(asteroidObject.base, asteroidObject.collider, asteroidObject.flame);
-    playerHealth -= 25;
-  }
-  if (canvasBottomCollider.overlap(asteroidObject.collider)) {
-    asteroidObject.base.remove();
-    asteroidObject.collider.remove();
-    asteroidObject.flame.remove();
-    
-  }
-}
 
 function updateHealth() {
   let healthProcent = 1 - (player.maxHealth - playerHealth) / player.maxHealth; //calculates the health procent based on the current health and max health.
@@ -108,6 +97,28 @@ function updateHealth() {
     healthProcent = 0.13;
   } else if (healthProcent == 0) {
     healthProcent = 0.06;
+    updateLives();
   }
+
   healthBarSprite.changeAni("health" + healthProcent * 100); //changes the healthbar animation based on the health procent.
+}
+
+function updateLives(){
+  playerHealth = player.maxHealth;
+  if(player.lives === 3){
+    player.lives = 2;
+    livesSprite.changeAni("lives2");
+
+    player.sprite.img = playerMediumHealthImg;
+
+  }
+  else if(player.lives === 2){
+    player.lives = 1;
+    livesSprite.changeAni("lives1");
+    player.sprite.img = playerLowHealthImg;
+  }
+  else{
+    alert("game over");
+  }
+  
 }
