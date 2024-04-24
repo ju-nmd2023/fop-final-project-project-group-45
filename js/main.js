@@ -1,6 +1,6 @@
 let player = { maxHealth: 100, lives: 3, sprite: "" }; //player ship object. Stores all important information about the player.
 let playerHealth; //player health variable. Used while the game is playing.
-let playerBaseShipImg; //sprite of base ship
+let playerFullHealthImg; //sprite of base ship
 let playerEngineFireIdle; //idle engine fire sprite
 let shipBaseEngineImg; //standard engine sprite
 let shipBaseEngine; //standard engine variable
@@ -14,13 +14,17 @@ let creditsSprite;
 let allCreditContainers;
 let asteroidSpriteImg;
 let asteroidFlameImg;
-let creditsValue = 100;
-let asteroidObject = { base: "", flame: "", collider: "", group: ""};
+let creditsValue = 0;
+let asteroidObject = { base: "", flame: "", collider: ""};
+let asteroidBaseGroup = [];
+let asteroidColliderGroup = [];
+let asteroidFlameGroup = [];
 let pauseButtonImg;
 let pauseButtonSprite;
 let mainProjectileImg;
-let bulletObject = { base: "", collider: "", group:""};
-let testcollider;
+let bulletObject = { base: "", collider: "", group: ""};
+let bulletGroup = [];
+
 let y1 = -650;
 let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
@@ -29,7 +33,9 @@ let creditText;
 let prevX = -100;
 
 function preload() {
-  playerBaseShipImg = loadImage("./assets/sprites/player/base_ship/base_ship_full_health.png");
+  playerFullHealthImg = loadImage("./assets/sprites/player/base_ship/base_ship_full_health.png");
+  playerMediumHealthImg = loadImage("./assets/sprites/player/base_ship/base_ship_slight_damaged.png");
+  playerLowHealthImg = loadImage("./assets/sprites/player/base_ship/base_ship_very_damaged.png");
   shipBaseEngineImg = loadImage("./assets/sprites/player/engine/ship_base_engine.png");
   testBackground2 = loadImage("./assets/backgrounds/space_background_test2.png");
   hudbackgroundImg = loadImage("./assets/sprites/GUI/hud_background.png");
@@ -38,7 +44,7 @@ function preload() {
   asteroidFlameImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_flame.png");
   mainProjectileImg = loadImage("./assets/sprites/player/weapons/main_projectile.png");
 
-  //smallFont = loadFont("./assets/fonts/small_font.ttf");
+  
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
@@ -48,8 +54,8 @@ function setup() {
   canvasRightCollider = new Sprite(226, 0, 1, 700, "static");
   canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
   bulletObject.group = new Group();
-  //testcollider = new Sprite(100, 100, 32, 32, "dynamic");
-  asteroidObject.group = new Group();
+ 
+ 
   /*allSprites.overlaps(canvasBottomCollider);
   allSprites.overlaps(canvasTopCollider);
   allSprites.overlaps(canvasRightCollider);
@@ -70,6 +76,7 @@ function setup() {
 function loadGUI() {
   hudbackground = new Sprite(112, 334, 225, 32, "static"); //hud background sprite
   hudbackground.img = hudbackgroundImg;
+  hudbackground.layer = 100;
   healthBarBorderSprite = new Sprite(66, 334, 96, 16, "none"); //healthbarborder sprite
   healthBarBorderSprite.spriteSheet = "./assets/sprites/GUI/healthbar.png";
   healthBarBorderSprite.addAnis({
@@ -191,10 +198,10 @@ function updateCredits() {
 function playscreen() {
   backgroundMovement();
   playerMovement();
-  playerCollision();
+  
   enemySpawner();
   createBullet(player.sprite.x, player.sprite.y);
-  bulletCollision();
+  asteroidCollision();
 
   document.getElementById("credits-playscreen").style.display = "block";
   updateCredits();
@@ -232,7 +239,7 @@ function backgroundMovement() {
 
 //Ship function restores health, etc.
 
-async function killAsteroid(base, collider, flame) {
+async function killAsteroid(base, flame, collider) {
   flame.remove();
   collider.remove();
   await delay(600);
@@ -240,8 +247,8 @@ async function killAsteroid(base, collider, flame) {
 }
 
 function enemySpawner() {
-  let randomFrameCount = Math.floor(random(200, 400));
-  let x = random(100, 200);
+  let randomFrameCount = Math.floor(random(50, 80));
+  let x = random(20, 210);
 
   if (frameCount % randomFrameCount === 0) {
     /*if (x > prevX - 50 && x < prevX + 50) {
@@ -264,8 +271,10 @@ function spawnAsteroid(x, y) {
   asteroidObject.flame.anis.frameDelay = 8;
   asteroidObject.flame.anis.rotation = -90;
   asteroidObject.flame.anis.looping = true;
-  asteroidObject.base = new Sprite(x, y, 96, 96, "dynamic");
+  asteroidObject.flame.overlaps(allSprites);
+  asteroidFlameGroup.push(asteroidObject.flame);
   
+  asteroidObject.base = new Sprite(x, y, 96, 96, "none");
   //asteroidObject.base.scale = 1;
   asteroidObject.base.spriteSheet = asteroidSpriteImg;
   asteroidObject.base.addAnis({
@@ -273,28 +282,35 @@ function spawnAsteroid(x, y) {
     explosion: { col: 1, frames: 6 },
   });
   asteroidObject.base.changeAni("base");
-  
-  asteroidObject.base.width = 96;
-  asteroidObject.base.height = 96;
+  asteroidObject.base.vel.y = 1.6;
   asteroidObject.base.overlaps(allSprites);
+  asteroidObject.base.anis.looping = false;
+  asteroidObject.base.anis.frameDelay = 6;
+  asteroidBaseGroup.push(asteroidObject.base);
 
   asteroidObject.flame.overlaps(allSprites);
 
   new GlueJoint(asteroidObject.base, asteroidObject.flame);
-
+  
+  
   asteroidObject.collider = new Sprite(x, y, 32, 32, "dynamic");
   asteroidObject.group.add(asteroidObject.collider);
   console.log(asteroidObject.group.length);
   asteroidObject.collider.color = "blue";
+  asteroidObject.collider.visible = false; 
   
   asteroidObject.collider.overlaps(allSprites);
   let glue = new GlueJoint(asteroidObject.base, asteroidObject.collider);
   glue.visible = false;
-  asteroidObject.base.vel.y = 1.6;
+  asteroidObject.base.vel.y = 6;
+    asteroidColliderGroup.push(asteroidObject.collider);
   
   console.log(asteroidObject.group.length);
   asteroidObject.base.life = 1000;
   asteroidObject.flame.life = 1000;
   asteroidObject.collider.life = 1000;
+ asteroidObject.base.layer = 99;
+  asteroidObject.collider.layer = 99;
+  asteroidObject.flame.layer = 99;
  
 }
