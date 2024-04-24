@@ -24,6 +24,7 @@ let pauseButtonSprite;
 let mainProjectileImg;
 let bulletObject = { base: "", collider: "", group: "" };
 let bulletGroup = [];
+let healthbarImg;
 
 let y1 = -650;
 let y2 = -1650;
@@ -43,6 +44,7 @@ function preload() {
   asteroidSpriteImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_explode.png");
   asteroidFlameImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_flame.png");
   mainProjectileImg = loadImage("./assets/sprites/player/weapons/main_projectile.png");
+  healthBarImg = loadImage("./assets/sprites/GUI/healthbar.png");
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
@@ -75,13 +77,13 @@ function loadGUI() {
   hudbackground.img = hudbackgroundImg;
   hudbackground.layer = 100;
   healthBarBorderSprite = new Sprite(66, 334, 96, 16, "none"); //healthbarborder sprite
-  healthBarBorderSprite.spriteSheet = "../assets/sprites/GUI/healthbar.png";
+  healthBarBorderSprite.spriteSheet = healthBarImg;
   healthBarBorderSprite.addAnis({
     border: { col: 0, frames: 1 },
   });
 
   healthBarSprite = new Sprite(66, 334, 96, 16, "none"); //healthbar sprite
-  healthBarSprite.spriteSheet = "../assets/sprites/GUI/healthbar.png";
+  healthBarSprite.spriteSheet = healthBarImg;
 
   healthBarSprite.addAnis({
     //adding a state for every sprite
