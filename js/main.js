@@ -75,13 +75,13 @@ function loadGUI() {
   hudbackground.img = hudbackgroundImg;
   hudbackground.layer = 100;
   healthBarBorderSprite = new Sprite(66, 334, 96, 16, "none"); //healthbarborder sprite
-  healthBarBorderSprite.spriteSheet = "./assets/sprites/GUI/healthbar.png";
+  healthBarBorderSprite.spriteSheet = "../assets/sprites/GUI/healthbar.png";
   healthBarBorderSprite.addAnis({
     border: { col: 0, frames: 1 },
   });
 
   healthBarSprite = new Sprite(66, 334, 96, 16, "none"); //healthbar sprite
-  healthBarSprite.spriteSheet = "./assets/sprites/GUI/healthbar.png";
+  healthBarSprite.spriteSheet = "../assets/sprites/GUI/healthbar.png";
 
   healthBarSprite.addAnis({
     //adding a state for every sprite
