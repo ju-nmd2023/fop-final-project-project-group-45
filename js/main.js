@@ -237,10 +237,10 @@ function backgroundMovement() {
 
 //Ship function restores health, etc.
 
-async function killAsteroid(base, flame, collider) {
+function killAsteroid(base, flame, collider) {
   flame.remove();
   collider.remove();
-  await delay(600);
+
   base.remove();
 }
 
