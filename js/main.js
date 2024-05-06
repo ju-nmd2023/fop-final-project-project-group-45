@@ -199,7 +199,7 @@ function playscreen() {
   playerMovement();
 
   enemySpawner();
-  createBullet(player.sprite.x, player.sprite.y);
+  
   asteroidCollision();
 
   document.getElementById("credits-playscreen").style.display = "block";

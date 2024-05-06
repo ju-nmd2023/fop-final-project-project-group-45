@@ -32,7 +32,7 @@ function playerMovement() {
   player.sprite.moveTowards(mouse, 0.1);
 
   //shooting
-    createBullet(player.sprite.x, player.sprite.y);
+  createBullet(player.sprite.x, player.sprite.y);
 }
 
 function createBullet(x,y) {
@@ -44,14 +44,14 @@ function createBullet(x,y) {
     base: { col: 1, frames: 4 },
     });
     //bulletObject.collider = new Sprite(x, y, 16, 16, "none");
-    bulletObject.group.add(bulletObject.base);
+    /*bulletObject.group.add(bulletObject.base);
     bulletObject.group.width = 16;
     bulletObject.group.height = 16;
     
     bulletObject.base.vel.y = -3;
     
 
-    bulletObject.life = 60;
+    bulletObject.life = 60;*/
     //bulletGroup.push(bulletObject.base);
   }
   
