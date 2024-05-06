@@ -44,7 +44,7 @@ function preload() {
   asteroidSpriteImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_explode.png");
   asteroidFlameImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_flame.png");
   mainProjectileImg = loadImage("./assets/sprites/player/weapons/main_projectile.png");
-  healthBarImg = loadImage("./assets/sprites/GUI/healthbar.png");
+  healthBarImg = loadImage("./assets/sprites/healthbar.png");
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
