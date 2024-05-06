@@ -39,12 +39,12 @@ function preload() {
   playerLowHealthImg = loadImage("./assets/sprites/player/base_ship/base_ship_very_damaged.png");
   shipBaseEngineImg = loadImage("./assets/sprites/player/engine/ship_base_engine.png");
   testBackground2 = loadImage("./assets/backgrounds/space_background_test2.png");
-  hudbackgroundImg = loadImage("./assets/sprites/GUI/hud_background.png");
-  pauseButtonImg = loadImage("./assets/sprites/GUI/pauseButton.png");
+  hudbackgroundImg = loadImage("./assets/sprites/interface/hud_background.png");
+  pauseButtonImg = loadImage("./assets/sprites/interface/pauseButton.png");
   asteroidSpriteImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_explode.png");
   asteroidFlameImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_flame.png");
   mainProjectileImg = loadImage("./assets/sprites/player/weapons/main_projectile.png");
-  healthBarImg = loadImage("./assets/sprites/healthbar.png");
+  healthBarImg = loadImage("./assets/sprites/interface/healthbar.png");
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
@@ -107,7 +107,7 @@ function loadGUI() {
   healthBarSprite.changeAni("health100");
 
   livesSprite = new Sprite(140, 334, 48, 16, "none"); //lives sprite
-  livesSprite.spriteSheet = "./assets/sprites/GUI/hearts.png";
+  livesSprite.spriteSheet = "./assets/sprites/interface/hearts.png";
   livesSprite.addAnis({
     lives3: { col: 0, frames: 1 },
     lives2: { col: 1, frames: 1 },
@@ -116,7 +116,7 @@ function loadGUI() {
   livesSprite.changeAni("lives3");
 
   creditsSprite = new Sprite(180, 334, 16, 16, "none");
-  creditsSprite.spriteSheet = "./assets/sprites/GUI/ingot.png";
+  creditsSprite.spriteSheet = "./assets/sprites/interface/ingot.png";
   creditsSprite.scale = 1;
 
   creditsSprite.addAnis({
