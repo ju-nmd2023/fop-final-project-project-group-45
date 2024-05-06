@@ -31,7 +31,6 @@ let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
 let gameIsPaused = false; //if a stage is currently being played but the player has paused it. Used to set if the cursor should be showed.
 let creditText;
-let prevX = -100;
 
 function preload() {
   playerFullHealthImg = loadImage("./assets/sprites/player/base_ship/base_ship_full_health.png");
@@ -54,11 +53,6 @@ function setup() {
   canvasRightCollider = new Sprite(226, 0, 1, 700, "static");
   canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
   bulletObject.group = new Group();
-
-  /*allSprites.overlaps(canvasBottomCollider);
-  allSprites.overlaps(canvasTopCollider);
-  allSprites.overlaps(canvasRightCollider);
-  allSprites.overlaps(canvasLeftCollider);*/
   frameRate(60);
 
   //Player Sprites
@@ -66,7 +60,7 @@ function setup() {
 
   //Enemies
   //loadEnemies();
-  spawnAsteroid(100, -50);
+  loadEnemies();
 
   //GUI
   loadGUI();
@@ -132,9 +126,9 @@ function loadGUI() {
   pauseButtonSprite.scale = 1;
 }
 
-/*function loadEnemies() {
-  let y = -150;
-  let x = 100;
+function loadEnemies() {
+  let x = 1000;
+  let y = 1000;
   asteroidObject.flame = new Sprite(x, y, 96, 96, "none");
   asteroidObject.flame.spriteSheet = asteroidFlameImg;
   asteroidObject.flame.addAnis({
@@ -144,31 +138,48 @@ function loadGUI() {
   asteroidObject.flame.anis.frameDelay = 8;
   asteroidObject.flame.anis.rotation = -90;
   asteroidObject.flame.anis.looping = true;
+  asteroidObject.flame.overlaps(allSprites);
+  asteroidFlameGroup.push(asteroidObject.flame);
 
-  asteroidObject.base = new Sprite(x, y, 96, 96, "dynamic");
-  asteroidObject.base.scale = 1;
+  asteroidObject.base = new Sprite(x, y, 96, 96, "none");
+  //asteroidObject.base.scale = 1;
   asteroidObject.base.spriteSheet = asteroidSpriteImg;
   asteroidObject.base.addAnis({
     base: { col: 0, frames: 1 },
     explosion: { col: 1, frames: 6 },
   });
   asteroidObject.base.changeAni("base");
-  //asteroidObject.base.addSensor(0, 0, 32, 32);
-  //asteroidObject.base.offset.x = 20;
-  asteroidObject.base.width = 96;
-  asteroidObject.base.height = 96;
+  asteroidObject.base.vel.y = 1.6;
   asteroidObject.base.overlaps(allSprites);
+  asteroidObject.base.anis.looping = false;
+  asteroidObject.base.anis.frameDelay = 6;
+  asteroidBaseGroup.push(asteroidObject.base);
 
   asteroidObject.flame.overlaps(allSprites);
-  new GlueJoint(asteroidObject.base, asteroidObject.flame);
 
-  asteroidObject.collider = new Sprite(x, y, 38, 36, "dynamic");
+  let flameGlue = new GlueJoint(asteroidObject.base, asteroidObject.flame);
+  flameGlue.visible = false;
+
+  asteroidObject.collider = new Sprite(x, y, 32, 32, "dynamic");
+  //asteroidObject.group.add(asteroidObject.collider);
+  //console.log(asteroidObject.group.length);
   asteroidObject.collider.color = "blue";
   asteroidObject.collider.visible = false;
+
   asteroidObject.collider.overlaps(allSprites);
-  new GlueJoint(asteroidObject.base, asteroidObject.collider);
-  asteroidObject.base.debug = true;
-}*/
+  let glue = new GlueJoint(asteroidObject.base, asteroidObject.collider);
+  glue.visible = false;
+  asteroidObject.base.vel.y = 6;
+  asteroidColliderGroup.push(asteroidObject.collider);
+
+  //console.log(asteroidObject.group.length);
+  asteroidObject.base.life = 1000;
+  asteroidObject.flame.life = 1000;
+  asteroidObject.collider.life = 1000;
+  asteroidObject.base.layer = 99;
+  asteroidObject.collider.layer = 99;
+  asteroidObject.flame.layer = 99;
+}
 
 function draw() {
   clear();
@@ -186,11 +197,6 @@ function draw() {
   //Level 2...
 }
 function updateCredits() {
-  /*fill(255,255,255);
-  textSize(10);
-  textFont(smallFont);
-  text(creditsValue, 180, 334);*/
-
   creditText.innerHTML = creditsValue;
 }
 
@@ -249,14 +255,8 @@ function enemySpawner() {
   let x = random(20, 210);
 
   if (frameCount % randomFrameCount === 0) {
-    /*if (x > prevX - 50 && x < prevX + 50) {
-      print("worng");
-    } else {
-      spawnAsteroid(x, -50);
-    }*/
     spawnAsteroid(x, -50);
   }
-  prevX = x;
 }
 
 function spawnAsteroid(x, y) {
