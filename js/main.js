@@ -10,6 +10,7 @@ let hudbackgroundImg; //hud background image
 let healthBarBorderSprite; //sprite sheet for the healthbar border
 let healthBarSprite; // sprite sheet for the healthbar
 let livesSprite;
+let startscreenBackground;
 let creditsSprite;
 let allCreditContainers;
 let asteroidSpriteImg;
@@ -34,6 +35,7 @@ let gameIsPaused = false; //if a stage is currently being played but the player 
 let creditText;
 
 function preload() {
+  startscreenBackground = loadImage("./assets/backgrounds/startscreen.png");
   playerFullHealthImg = loadImage("./assets/sprites/player/base_ship/base_ship_full_health.png");
   playerMediumHealthImg = loadImage("./assets/sprites/player/base_ship/base_ship_slight_damaged.png");
   playerLowHealthImg = loadImage("./assets/sprites/player/base_ship/base_ship_very_damaged.png");
@@ -187,7 +189,7 @@ function loadEnemies() {
 
 function draw() {
   clear();
-  playscreen();
+  startscreen();
   allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
 
   //Main Menu Screen
@@ -204,14 +206,16 @@ function updateCredits() {
   creditText.innerHTML = creditsValue;
 }
 
+function startscreen(){
+  image(startscreenBackground, 0, 0, 225, 350);
+
+}
+
 function playscreen() {
   backgroundMovement();
   playerMovement();
-
-  
   enemySpawner();
   asteroidCollision();
-
   document.getElementById("credits-playscreen").style.display = "block";
   updateCredits();
   updateHealth();
@@ -228,6 +232,8 @@ function playscreen() {
     canvas.style.setProperty("--cursorMode", "auto");
   }
 }
+
+
 
 function backgroundMovement() {
   image(testBackground2, 0, y1, 225, 1000);
@@ -302,7 +308,6 @@ function spawnAsteroid(x, y) {
   glue.visible = false;
   asteroidObject.base.vel.y = 6;
   asteroidColliderGroup.push(asteroidObject.collider);
-
   
   asteroidObject.base.life = 1000;
   asteroidObject.flame.life = 1000;
