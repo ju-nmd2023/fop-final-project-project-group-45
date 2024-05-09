@@ -15,7 +15,7 @@ let allCreditContainers;
 let asteroidSpriteImg;
 let asteroidFlameImg;
 let creditsValue = 0;
-let asteroidObject = { base: "", flame: "", collider: "" };
+let asteroidObject = { base: "", flame: "", collider: "", group:"" };
 let asteroidBaseGroup = [];
 let asteroidColliderGroup = [];
 let asteroidFlameGroup = [];
@@ -25,6 +25,7 @@ let mainProjectileImg;
 let bulletObject = { base: "", collider: "", group: "" };
 let bulletGroup = [];
 let healthBarImg;
+let numberOfBullets;
 
 let y1 = -650;
 let y2 = -1650;
@@ -53,6 +54,7 @@ function setup() {
   canvasRightCollider = new Sprite(226, 0, 1, 700, "static");
   canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
   bulletObject.group = new Group();
+  asteroidObject.group = new Group();
   frameRate(60);
 
   //Player Sprites
@@ -179,6 +181,8 @@ function loadEnemies() {
   asteroidObject.base.layer = 99;
   asteroidObject.collider.layer = 99;
   asteroidObject.flame.layer = 99;
+
+  
 }
 
 function draw() {
@@ -204,8 +208,8 @@ function playscreen() {
   backgroundMovement();
   playerMovement();
 
-  enemySpawner();
   
+  enemySpawner();
   asteroidCollision();
 
   document.getElementById("credits-playscreen").style.display = "block";
@@ -273,7 +277,6 @@ function spawnAsteroid(x, y) {
   asteroidFlameGroup.push(asteroidObject.flame);
 
   asteroidObject.base = new Sprite(x, y, 96, 96, "none");
-  //asteroidObject.base.scale = 1;
   asteroidObject.base.spriteSheet = asteroidSpriteImg;
   asteroidObject.base.addAnis({
     base: { col: 0, frames: 1 },
@@ -287,27 +290,29 @@ function spawnAsteroid(x, y) {
   asteroidBaseGroup.push(asteroidObject.base);
 
   asteroidObject.flame.overlaps(allSprites);
-
   let flameGlue = new GlueJoint(asteroidObject.base, asteroidObject.flame);
   flameGlue.visible = false;
 
   asteroidObject.collider = new Sprite(x, y, 32, 32, "dynamic");
-  //asteroidObject.group.add(asteroidObject.collider);
-  //console.log(asteroidObject.group.length);
   asteroidObject.collider.color = "blue";
   asteroidObject.collider.visible = false;
-
   asteroidObject.collider.overlaps(allSprites);
+
   let glue = new GlueJoint(asteroidObject.base, asteroidObject.collider);
   glue.visible = false;
   asteroidObject.base.vel.y = 6;
   asteroidColliderGroup.push(asteroidObject.collider);
 
-  //console.log(asteroidObject.group.length);
+  
   asteroidObject.base.life = 1000;
   asteroidObject.flame.life = 1000;
   asteroidObject.collider.life = 1000;
   asteroidObject.base.layer = 99;
   asteroidObject.collider.layer = 99;
   asteroidObject.flame.layer = 99;
+
+  //This group is only for the bullet collision in createbullet function.
+  asteroidObject.group.add(asteroidObject.collider);
+
+
 }
