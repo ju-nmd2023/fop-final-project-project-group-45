@@ -38,3 +38,61 @@ canvas:hover {
 .credits-container p {
   cursor: none;
 }
+#pauseScreenContainer {
+  display: none;
+}
+.pauseSceenLogoContainer {
+  position: absolute;
+  margin-top: -210px;
+  margin-left: 138px;
+}
+.pauseSceenLogoContainer img {
+  width: 175px;
+}
+.pauseScreenTitle {
+  position: absolute;
+  margin-top: -120px;
+  margin-left: 155px;
+  color: white;
+  font-family: "smallFont";
+  font-size: 15px;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+#buttonGridContainer {
+  display: grid;
+  position: absolute;
+  width: 180px;
+  margin-top: -69px;
+  margin-left: 148px;
+  grid-template-rows: 1fr 1fr;
+  row-gap: 100px;
+}
+.pauseScreenButton {
+  width: 150px;
+  height: 30px;
+  border: white 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0px 8px 0px 0px rgba(0, 0, 0, 0.75);
+  transition: all 0.1s ease;
+}
+.pauseScreenButton:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.75);
+}
+.pauseScreenButton p {
+  color: white;
+  font-family: "smallFont";
+  font-size: 14px;
+  text-align: center;
+}
+p::selection {
+  background-color: transparent;
+}
+#exitButton {
+  background-color: red;
+}

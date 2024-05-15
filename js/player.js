@@ -25,7 +25,7 @@ function loadPlayer() {
   playerHealth = player.maxHealth; // This varible shows how much HP the player currently has. Player starts with max health
   player.sprite.layer = 101;
 
-  createBullet(500, 500);
+  createBullet(500, 500); //to make sure there is a bullet in the bulletGroup array from the start to avoid crashes
 }
 
 function playerMovement() {

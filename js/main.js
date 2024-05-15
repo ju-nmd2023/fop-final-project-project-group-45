@@ -29,13 +29,16 @@ let healthBarImg;
 let pauseMenuBackgroundImg;
 let pauseMenuBackgroundSprite;
 let pauseMenuBackgroundDarkerSprite;
+let pauseMenuContainer;
 let numberOfBullets;
-
+let pauseMenuLogo;
 let y1 = -650;
 let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
 let gameIsPaused = false; //if a stage is currently being played but the player has paused it. Used to set if the cursor should be showed.
 let creditText;
+let resumeButton;
+let exitButton;
 
 function preload() {
   startscreenBackground = loadImage("./assets/backgrounds/startscreen.png");
@@ -61,6 +64,12 @@ function setup() {
   canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
   bulletObject.group = new Group();
   asteroidObject.group = new Group();
+  resumeButton = document.querySelector("#resumeButton");
+  resumeButton.addEventListener("click", function () {
+    gameIsPaused = false;
+    unpauseGame();
+  });
+  exitButton = document.querySelector("#exitButton");
   frameRate(60);
 
   //Player Sprites
@@ -120,6 +129,7 @@ function loadGUI() {
   creditsSprite = new Sprite(180, 334, 16, 16, "none");
   creditsSprite.spriteSheet = "./assets/sprites/interface/ingot.png";
   creditsSprite.scale = 1;
+  creditsSprite.layer = 100;
 
   creditsSprite.addAnis({
     lives3: { col: 0, frames: 1 },
@@ -202,7 +212,7 @@ function loadEnemies() {
 
 function draw() {
   clear();
-  if (kb.presses("escape") || pauseButtonSprite.mouse.pressed()) {
+  if (kb.presses("escape")) {
     //pause or unpause the game.
     gameIsPaused = !gameIsPaused;
     if (!gameIsPaused) {
@@ -210,10 +220,12 @@ function draw() {
     }
   }
   if (gameIsRunning && gameIsPaused === false) {
+    canvas.style.setProperty("--cursorMode", "none");
     playscreen();
   } else if (gameIsRunning || gameIsPaused) {
     pauseGame();
   } else if (gameIsRunning === false) {
+    canvas.style.setProperty("--cursorMode", "auto");
     //Main Menu Screen
     //Shop
     //Playbutton
@@ -239,8 +251,8 @@ function playscreen() {
   updateCredits();
   updateHealth();
 }
-
 function pauseGame() {
+  creditText.style.opacity = "30%";
   canvas.style.setProperty("--cursorMode", "auto");
   player.sprite.vel.y = 0;
   player.sprite.vel.x = 0;
@@ -263,9 +275,11 @@ function pauseGame() {
   image(testBackground2, 0, y2, 225, 1000);
   pauseMenuBackgroundSprite.visible = true;
   pauseMenuBackgroundDarkerSprite.visible = true;
+  pauseMenuContainer = document.querySelector("#pauseScreenContainer");
+  pauseMenuContainer.style.display = "block";
 }
-
 function unpauseGame() {
+  creditText.style.opacity = "100%";
   canvas.style.setProperty("--cursorMode", "none");
   playerEngineFireIdle.animation.play();
   bulletObject.group.vel.y = -3;
@@ -278,12 +292,13 @@ function unpauseGame() {
     asteroidFlameGroup[asteroidIndex].animation.play();
   }
   for (let bulletIndex in bulletGroup) {
-    bulletGroup[bulletIndex].animation.pause();
+    bulletGroup[bulletIndex].animation.play();
     bulletGroup[bulletIndex].life = 100;
     bulletGroup[bulletIndex].layer = 1;
   }
   pauseMenuBackgroundSprite.visible = false;
   pauseMenuBackgroundDarkerSprite.visible = false;
+  pauseMenuContainer.style.display = "none";
 }
 
 function backgroundMovement() {
