@@ -25,7 +25,8 @@ let mainProjectileImg;
 let bulletObject = { base: "", collider: "", group: "" };
 let bulletGroup = [];
 let healthBarImg;
-
+let pauseMenuBackgroundImg;
+let pauseMenuBackgroundSprite;
 let y1 = -650;
 let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
@@ -44,6 +45,7 @@ function preload() {
   asteroidFlameImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_flame.png");
   mainProjectileImg = loadImage("./assets/sprites/player/weapons/main_projectile.png");
   healthBarImg = loadImage("./assets/sprites/interface/healthbar.png");
+  pauseMenuBackgroundImg = loadImage("./assets/sprites/interface/pauseMenuBackground.png");
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
@@ -124,6 +126,11 @@ function loadGUI() {
   pauseButtonSprite = new Sprite(200, 25, 32, 32, "none");
   pauseButtonSprite.img = pauseButtonImg;
   pauseButtonSprite.scale = 1;
+
+  pauseMenuBackgroundSprite = new Sprite(112, 190, "none");
+  pauseMenuBackgroundSprite.img = pauseMenuBackgroundImg;
+  pauseMenuBackgroundSprite.layer = 105;
+  pauseMenuBackgroundSprite.visible = false;
 }
 
 function loadEnemies() {
@@ -183,18 +190,24 @@ function loadEnemies() {
 
 function draw() {
   clear();
-  playscreen();
+  if (kb.presses("escape")) {
+    //pause or unpause the game.
+    gameIsPaused = !gameIsPaused;
+    if (!gameIsPaused) {
+      unpauseGame();
+    }
+  }
+  if (gameIsRunning && gameIsPaused === false) {
+    playscreen();
+  } else if (gameIsRunning || gameIsPaused) {
+    pauseGame();
+  } else if (gameIsRunning === false) {
+    //Main Menu Screen
+    //Shop
+    //Playbutton
+    //Settings
+  }
   allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
-
-  //Main Menu Screen
-  //Shop
-  //Playbutton
-  //Settings
-  //Playscreen
-  //playscreen();
-  //Level 1
-  //Waves
-  //Level 2...
 }
 function updateCredits() {
   creditText.innerHTML = creditsValue;
@@ -211,18 +224,43 @@ function playscreen() {
   document.getElementById("credits-playscreen").style.display = "block";
   updateCredits();
   updateHealth();
+}
 
-  if (kb.presses("escape")) {
-    //turn on and off pause screen.
-    gameIsPaused = !gameIsPaused;
+function pauseGame() {
+  canvas.style.setProperty("--cursorMode", "auto");
+  player.sprite.vel.y = 0;
+  player.sprite.vel.x = 0;
+  playerEngineFireIdle.animation.pause();
+  bulletObject.group.vel.y = 0;
+  for (let asteroidIndex in asteroidBaseGroup) {
+    asteroidBaseGroup[asteroidIndex].vel.y = 0;
+    asteroidBaseGroup[asteroidIndex].animation.pause();
+    asteroidFlameGroup[asteroidIndex].life = 0;
+    asteroidColliderGroup[asteroidIndex].life = 0;
+    asteroidBaseGroup[asteroidIndex].life = 0;
+    asteroidFlameGroup[asteroidIndex].animation.pause();
   }
-  if (gameIsRunning && gameIsPaused === false) {
-    // a stage is being played and isn't paused.
-    canvas.style.setProperty("--cursorMode", "none");
-  } else if (gameIsRunning === false || gameIsPaused) {
-    // a stage isn't being played or it's paused.
-    canvas.style.setProperty("--cursorMode", "auto");
+  for (let bulletIndex in bulletGroup) {
+    bulletGroup[bulletIndex].animation.pause();
   }
+  image(testBackground2, 0, y1, 225, 1000);
+  image(testBackground2, 0, y2, 225, 1000);
+  pauseMenuBackgroundSprite.visible = true;
+}
+
+function unpauseGame() {
+  canvas.style.setProperty("--cursorMode", "none");
+  playerEngineFireIdle.animation.play();
+  bulletObject.group.vel.y = -3;
+  bulletObject.base.animation.play();
+  for (let asteroidIndex in asteroidBaseGroup) {
+    asteroidBaseGroup[asteroidIndex].vel.y = 6;
+    asteroidFlameGroup[asteroidIndex].life = 1000;
+    asteroidColliderGroup[asteroidIndex].life = 1000;
+    asteroidBaseGroup[asteroidIndex].life = 1000;
+    asteroidFlameGroup[asteroidIndex].animation.play();
+  }
+  pauseMenuBackgroundSprite.visible = false;
 }
 
 function backgroundMovement() {
