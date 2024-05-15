@@ -42,16 +42,15 @@ function createBullet(x, y) {
     bulletObject.base.addAnis({
       base: { col: 1, frames: 4 },
     });
-    //bulletObject.collider = new Sprite(x, y, 16, 16, "none");
-    bulletObject.group.add(bulletObject.base);
-    bulletObject.group.width = 16;
-    bulletObject.group.height = 16;
-
     bulletObject.base.vel.y = -3;
-    bulletGroup.push(bulletObject.base);
 
-    bulletObject.life = 60;
-    //bulletGroup.push(bulletObject.base);
+    bulletObject.group.add(bulletObject.base);
+    bulletObject.group.width = 12;
+    bulletObject.group.height = 16;
+    bulletObject.base.life = 100;
+
+    //Check if the bullet overlaps with any collider in the asteroid group
+    bulletObject.base.overlaps(asteroidObject.group, bulletCollision);
   }
 }
 
