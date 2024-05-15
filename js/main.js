@@ -39,6 +39,7 @@ let gameIsPaused = false; //if a stage is currently being played but the player 
 let creditText;
 let resumeButton;
 let exitButton;
+let startMenuContainer;
 
 function preload() {
   startscreenBackground = loadImage("./assets/backgrounds/startscreen.png");
@@ -46,7 +47,7 @@ function preload() {
   playerMediumHealthImg = loadImage("./assets/sprites/player/base_ship/base_ship_slight_damaged.png");
   playerLowHealthImg = loadImage("./assets/sprites/player/base_ship/base_ship_very_damaged.png");
   shipBaseEngineImg = loadImage("./assets/sprites/player/engine/ship_base_engine.png");
-  testBackground2 = loadImage("./assets/backgrounds/space_background_test2.png");
+  testBackground2 = loadImage("./assets/backgrounds/spaceBackground.png");
   hudbackgroundImg = loadImage("./assets/sprites/interface/hud_background.png");
   pauseButtonImg = loadImage("./assets/sprites/interface/pauseButton.png");
   asteroidSpriteImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_explode.png");
@@ -70,6 +71,10 @@ function setup() {
     unpauseGame();
   });
   exitButton = document.querySelector("#exitButton");
+  exitButton.addEventListener("click", function () {
+    gameIsPaused = false;
+    gameIsRunning = false;
+  });
   frameRate(60);
 
   //Player Sprites
@@ -226,12 +231,12 @@ function draw() {
     pauseGame();
   } else if (gameIsRunning === false) {
     canvas.style.setProperty("--cursorMode", "auto");
+    startscreen();
     //Main Menu Screen
     //Shop
     //Playbutton
     //Settings
   }
-  startscreen();
   allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
 }
 function updateCredits() {
@@ -239,7 +244,23 @@ function updateCredits() {
 }
 
 function startscreen() {
+  console.log("startscreen");
   image(startscreenBackground, 0, 0, 225, 350);
+  pauseMenuBackgroundSprite.visible = false;
+  pauseMenuBackgroundDarkerSprite.visible = false;
+  healthBarSprite.visible = false;
+  healthBarBorderSprite.visible = false;
+  livesSprite.visible = false;
+  creditsSprite.visible = false;
+  pauseButtonSprite.visible = false;
+  hudbackground.visible = false;
+  pauseMenuContainer.style.display = "none";
+  player.sprite.visible = false;
+  shipBaseEngine.visible = false;
+  playerEngineFireIdle.visible = false;
+
+  startMenuContainer = document.querySelector("#startScreenContainer");
+  startMenuContainer.style.display = "flex";
 }
 
 function playscreen() {
