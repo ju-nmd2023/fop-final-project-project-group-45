@@ -16,7 +16,7 @@ let allCreditContainers;
 let asteroidSpriteImg;
 let asteroidFlameImg;
 let creditsValue = 0;
-let asteroidObject = { base: "", flame: "", collider: "", group:"" };
+let asteroidObject = { base: "", flame: "", collider: "", group: "" };
 let asteroidBaseGroup = [];
 let asteroidColliderGroup = [];
 let asteroidFlameGroup = [];
@@ -26,6 +26,9 @@ let mainProjectileImg;
 let bulletObject = { base: "", collider: "", group: "" };
 let bulletGroup = [];
 let healthBarImg;
+let pauseMenuBackgroundImg;
+let pauseMenuBackgroundSprite;
+let pauseMenuBackgroundDarkerSprite;
 let numberOfBullets;
 
 let y1 = -650;
@@ -47,6 +50,7 @@ function preload() {
   asteroidFlameImg = loadImage("./assets/sprites/enemies/asteroid/asteroid_flame.png");
   mainProjectileImg = loadImage("./assets/sprites/player/weapons/main_projectile.png");
   healthBarImg = loadImage("./assets/sprites/interface/healthbar.png");
+  pauseMenuBackgroundImg = loadImage("./assets/sprites/interface/pauseMenuBackground.png");
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
@@ -128,6 +132,17 @@ function loadGUI() {
   pauseButtonSprite = new Sprite(200, 25, 32, 32, "none");
   pauseButtonSprite.img = pauseButtonImg;
   pauseButtonSprite.scale = 1;
+
+  pauseMenuBackgroundSprite = new Sprite(112, 150, "none");
+  pauseMenuBackgroundSprite.img = pauseMenuBackgroundImg;
+  pauseMenuBackgroundSprite.layer = 105;
+  pauseMenuBackgroundSprite.visible = false;
+
+  pauseMenuBackgroundDarkerSprite = new Sprite(112, 150, 225, 400, "none");
+  pauseMenuBackgroundDarkerSprite.fill = "rgba(0, 0, 0, 0.5)";
+  pauseMenuBackgroundDarkerSprite.stroke = "rgba(0, 0, 0, 0.5)";
+  pauseMenuBackgroundDarkerSprite.layer = 104;
+  pauseMenuBackgroundDarkerSprite.visible = false;
 }
 
 function loadEnemies() {
@@ -183,32 +198,36 @@ function loadEnemies() {
   asteroidObject.base.layer = 99;
   asteroidObject.collider.layer = 99;
   asteroidObject.flame.layer = 99;
-
-  
 }
 
 function draw() {
   clear();
+  if (kb.presses("escape") || pauseButtonSprite.mouse.pressed()) {
+    //pause or unpause the game.
+    gameIsPaused = !gameIsPaused;
+    if (!gameIsPaused) {
+      unpauseGame();
+    }
+  }
+  if (gameIsRunning && gameIsPaused === false) {
+    playscreen();
+  } else if (gameIsRunning || gameIsPaused) {
+    pauseGame();
+  } else if (gameIsRunning === false) {
+    //Main Menu Screen
+    //Shop
+    //Playbutton
+    //Settings
+  }
   startscreen();
   allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
-
-  //Main Menu Screen
-  //Shop
-  //Playbutton
-  //Settings
-  //Playscreen
-  //playscreen();
-  //Level 1
-  //Waves
-  //Level 2...
 }
 function updateCredits() {
   creditText.innerHTML = creditsValue;
 }
 
-function startscreen(){
+function startscreen() {
   image(startscreenBackground, 0, 0, 225, 350);
-
 }
 
 function playscreen() {
@@ -219,21 +238,53 @@ function playscreen() {
   document.getElementById("credits-playscreen").style.display = "block";
   updateCredits();
   updateHealth();
-
-  if (kb.presses("escape")) {
-    //turn on and off pause screen.
-    gameIsPaused = !gameIsPaused;
-  }
-  if (gameIsRunning && gameIsPaused === false) {
-    // a stage is being played and isn't paused.
-    canvas.style.setProperty("--cursorMode", "none");
-  } else if (gameIsRunning === false || gameIsPaused) {
-    // a stage isn't being played or it's paused.
-    canvas.style.setProperty("--cursorMode", "auto");
-  }
 }
 
+function pauseGame() {
+  canvas.style.setProperty("--cursorMode", "auto");
+  player.sprite.vel.y = 0;
+  player.sprite.vel.x = 0;
+  playerEngineFireIdle.animation.pause();
+  bulletObject.group.vel.y = 0;
+  for (let asteroidIndex in asteroidBaseGroup) {
+    asteroidBaseGroup[asteroidIndex].vel.y = 0;
+    asteroidBaseGroup[asteroidIndex].animation.pause();
+    asteroidFlameGroup[asteroidIndex].life = 0;
+    asteroidColliderGroup[asteroidIndex].life = 0;
+    asteroidBaseGroup[asteroidIndex].life = 0;
+    asteroidFlameGroup[asteroidIndex].animation.pause();
+  }
+  for (let bulletIndex in bulletGroup) {
+    bulletGroup[bulletIndex].animation.pause();
+    bulletGroup[bulletIndex].life = 0;
+    bulletGroup[bulletIndex].layer = 0;
+  }
+  image(testBackground2, 0, y1, 225, 1000);
+  image(testBackground2, 0, y2, 225, 1000);
+  pauseMenuBackgroundSprite.visible = true;
+  pauseMenuBackgroundDarkerSprite.visible = true;
+}
 
+function unpauseGame() {
+  canvas.style.setProperty("--cursorMode", "none");
+  playerEngineFireIdle.animation.play();
+  bulletObject.group.vel.y = -3;
+  bulletObject.base.animation.play();
+  for (let asteroidIndex in asteroidBaseGroup) {
+    asteroidBaseGroup[asteroidIndex].vel.y = 6;
+    asteroidFlameGroup[asteroidIndex].life = 1000;
+    asteroidColliderGroup[asteroidIndex].life = 1000;
+    asteroidBaseGroup[asteroidIndex].life = 1000;
+    asteroidFlameGroup[asteroidIndex].animation.play();
+  }
+  for (let bulletIndex in bulletGroup) {
+    bulletGroup[bulletIndex].animation.pause();
+    bulletGroup[bulletIndex].life = 100;
+    bulletGroup[bulletIndex].layer = 1;
+  }
+  pauseMenuBackgroundSprite.visible = false;
+  pauseMenuBackgroundDarkerSprite.visible = false;
+}
 
 function backgroundMovement() {
   image(testBackground2, 0, y1, 225, 1000);
@@ -308,7 +359,7 @@ function spawnAsteroid(x, y) {
   glue.visible = false;
   asteroidObject.base.vel.y = 6;
   asteroidColliderGroup.push(asteroidObject.collider);
-  
+
   asteroidObject.base.life = 1000;
   asteroidObject.flame.life = 1000;
   asteroidObject.collider.life = 1000;
@@ -318,6 +369,4 @@ function spawnAsteroid(x, y) {
 
   //This group is only for the bullet collision in createbullet function.
   asteroidObject.group.add(asteroidObject.collider);
-
-
 }

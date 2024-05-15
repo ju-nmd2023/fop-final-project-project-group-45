@@ -5,7 +5,7 @@ function loadPlayer() {
 
   player.sprite = new Sprite(32, 32, 32, 32); //creates the sprite object
   player.sprite.img = playerFullHealthImg; //loads the sprite image
-  
+
   //player.sprite.debug = true; //turns on the debug mode for the sprite
 
   playerEngineFireIdle = new Sprite(32, 32, 48, 48);
@@ -24,7 +24,6 @@ function loadPlayer() {
 
   playerHealth = player.maxHealth; // This varible shows how much HP the player currently has. Player starts with max health
   player.sprite.layer = 101;
-  
 }
 
 function playerMovement() {
@@ -33,29 +32,29 @@ function playerMovement() {
 
   //shooting
   createBullet(player.sprite.x, player.sprite.y);
-  
 }
 
-function createBullet(x,y) {
-//Each 40th frame a projectile is fired
-  if(frameCount % 40 === 0){
+function createBullet(x, y) {
+  //Each 40th frame a projectile is fired
+  if (frameCount % 40 === 0) {
     bulletObject.base = new Sprite(x, y, 32, 32, "none");
     bulletObject.base.spriteSheet = mainProjectileImg;
     bulletObject.base.addAnis({
-    base: { col: 1, frames: 4 },
+      base: { col: 1, frames: 4 },
     });
     bulletObject.base.vel.y = -3;
-    
+
     bulletObject.group.add(bulletObject.base);
     bulletObject.group.width = 12;
     bulletObject.group.height = 16;
     bulletObject.base.life = 100;
-    
+    bulletObject.base.layer = 100;
+    bulletGroup.push(bulletObject.base);
+
     //Check if the bullet overlaps with any collider in the asteroid group
     bulletObject.base.overlaps(asteroidObject.group, bulletCollision);
   }
 }
-
 
 function updateHealth() {
   let healthProcent = 1 - (player.maxHealth - playerHealth) / player.maxHealth; //calculates the health procent based on the current health and max health.
@@ -98,22 +97,18 @@ function updateHealth() {
   healthBarSprite.changeAni("health" + healthProcent * 100); //changes the healthbar animation based on the health procent.
 }
 
-function updateLives(){
+function updateLives() {
   playerHealth = player.maxHealth;
-  if(player.lives === 3){
+  if (player.lives === 3) {
     player.lives = 2;
     livesSprite.changeAni("lives2");
 
     player.sprite.img = playerMediumHealthImg;
-
-  }
-  else if(player.lives === 2){
+  } else if (player.lives === 2) {
     player.lives = 1;
     livesSprite.changeAni("lives1");
     player.sprite.img = playerLowHealthImg;
-  }
-  else{
+  } else {
     alert("game over");
   }
-  
 }
