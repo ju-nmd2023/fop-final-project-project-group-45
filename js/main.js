@@ -138,7 +138,7 @@ function loadGUI() {
   pauseMenuBackgroundSprite.layer = 105;
   pauseMenuBackgroundSprite.visible = false;
 
-  pauseMenuBackgroundDarkerSprite = new Sprite(112, 150, 225, 400, "none");
+  pauseMenuBackgroundDarkerSprite = new Sprite(112, 160, 225, 400, "none");
   pauseMenuBackgroundDarkerSprite.fill = "rgba(0, 0, 0, 0.5)";
   pauseMenuBackgroundDarkerSprite.stroke = "rgba(0, 0, 0, 0.5)";
   pauseMenuBackgroundDarkerSprite.layer = 104;
