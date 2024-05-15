@@ -48,6 +48,8 @@ function createBullet(x, y) {
     bulletObject.group.width = 12;
     bulletObject.group.height = 16;
     bulletObject.base.life = 100;
+    bulletObject.base.layer = 100;
+    bulletGroup.push(bulletObject.base);
 
     //Check if the bullet overlaps with any collider in the asteroid group
     bulletObject.base.overlaps(asteroidObject.group, bulletCollision);

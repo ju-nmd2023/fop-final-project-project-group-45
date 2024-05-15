@@ -28,6 +28,7 @@ let bulletGroup = [];
 let healthBarImg;
 let pauseMenuBackgroundImg;
 let pauseMenuBackgroundSprite;
+let pauseMenuBackgroundDarkerSprite;
 let numberOfBullets;
 
 let y1 = -650;
@@ -132,10 +133,16 @@ function loadGUI() {
   pauseButtonSprite.img = pauseButtonImg;
   pauseButtonSprite.scale = 1;
 
-  pauseMenuBackgroundSprite = new Sprite(112, 190, "none");
+  pauseMenuBackgroundSprite = new Sprite(112, 150, "none");
   pauseMenuBackgroundSprite.img = pauseMenuBackgroundImg;
   pauseMenuBackgroundSprite.layer = 105;
   pauseMenuBackgroundSprite.visible = false;
+
+  pauseMenuBackgroundDarkerSprite = new Sprite(112, 150, 225, 400, "none");
+  pauseMenuBackgroundDarkerSprite.fill = "rgba(0, 0, 0, 0.5)";
+  pauseMenuBackgroundDarkerSprite.stroke = "rgba(0, 0, 0, 0.5)";
+  pauseMenuBackgroundDarkerSprite.layer = 104;
+  pauseMenuBackgroundDarkerSprite.visible = false;
 }
 
 function loadEnemies() {
@@ -195,7 +202,7 @@ function loadEnemies() {
 
 function draw() {
   clear();
-  if (kb.presses("escape")) {
+  if (kb.presses("escape") || pauseButtonSprite.mouse.pressed()) {
     //pause or unpause the game.
     gameIsPaused = !gameIsPaused;
     if (!gameIsPaused) {
@@ -249,10 +256,13 @@ function pauseGame() {
   }
   for (let bulletIndex in bulletGroup) {
     bulletGroup[bulletIndex].animation.pause();
+    bulletGroup[bulletIndex].life = 0;
+    bulletGroup[bulletIndex].layer = 0;
   }
   image(testBackground2, 0, y1, 225, 1000);
   image(testBackground2, 0, y2, 225, 1000);
   pauseMenuBackgroundSprite.visible = true;
+  pauseMenuBackgroundDarkerSprite.visible = true;
 }
 
 function unpauseGame() {
@@ -267,7 +277,13 @@ function unpauseGame() {
     asteroidBaseGroup[asteroidIndex].life = 1000;
     asteroidFlameGroup[asteroidIndex].animation.play();
   }
+  for (let bulletIndex in bulletGroup) {
+    bulletGroup[bulletIndex].animation.pause();
+    bulletGroup[bulletIndex].life = 100;
+    bulletGroup[bulletIndex].layer = 1;
+  }
   pauseMenuBackgroundSprite.visible = false;
+  pauseMenuBackgroundDarkerSprite.visible = false;
 }
 
 function backgroundMovement() {
