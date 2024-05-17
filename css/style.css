@@ -138,3 +138,48 @@ p::selection {
   font-size: 20px;
   text-align: center;
 }
+
+#alertBoxContainer {
+  display: none;
+  position: absolute;
+  width: 300px;
+  height: 150px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: white 2px solid;
+  border-radius: 10px;
+  margin-top: 0;
+}
+#alertBoxText {
+  color: white;
+  font-family: "smallFont";
+  font-size: 20px;
+  text-align: center;
+  margin-top: 20px;
+}
+#alertBoxButtonGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+}
+.alertBoxButton {
+  width: 100px;
+  height: 30px;
+  border: white 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: all 0.1s ease;
+  margin-top: 15px;
+  margin-left: 25px;
+}
+.alertBoxButton:hover {
+  background-color: rgba(19, 39, 88, 0.8);
+}
+.alertBoxButton p {
+  color: rgb(119, 219, 254);
+  font-family: "smallFont";
+  font-size: 14px;
+  text-align: center;
+}

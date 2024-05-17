@@ -16,7 +16,8 @@ let allCreditContainers;
 let asteroidSpriteImg;
 let asteroidFlameImg;
 let creditsValue = 0;
-let asteroidObject = { base: "", flame: "", collider: "", group: "" };
+let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 50, spawnRate: 90 };
+let killCount = 0;
 let asteroidBaseGroup = [];
 let asteroidColliderGroup = [];
 let asteroidFlameGroup = [];
@@ -42,6 +43,11 @@ let exitButton;
 let startMenuContainer;
 let mainMenuStartButton;
 let mainMenuShopButton;
+let alertBox;
+let alertBoxYesButton;
+let alertBoxNoButton;
+let alertAnswer = "";
+let alertBoxIsVisible = false;
 
 function preload() {
   startscreenBackground = loadImage("./assets/backgrounds/startscreen.png");
@@ -67,22 +73,40 @@ function setup() {
   canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
   bulletObject.group = new Group();
   asteroidObject.group = new Group();
-  resumeButton = document.querySelector("#resumeButton");
+  resumeButton = document.querySelector("#resumeButton"); //defining the resume button
   resumeButton.addEventListener("click", function () {
+    //adding an event listener to the resume button
     gameIsPaused = false;
     unpauseGame();
   });
-  exitButton = document.querySelector("#exitButton");
+  exitButton = document.querySelector("#exitButton"); //defining the exit button
+  alertBox = document.querySelector("#alertBoxContainer"); //defining the alert box
+  alertBoxYesButton = document.querySelector("#yesButton"); //defining the yes button
+  alertBoxNoButton = document.querySelector("#noButton"); //defining the no button
   exitButton.addEventListener("click", function () {
-    gameIsPaused = false;
-    gameIsRunning = false;
+    //adding an event listener to the exit button
+    alertBox.style.display = "block";
+    alertBoxIsVisible = true;
+    alertBoxYesButton.addEventListener("click", function () {
+      gameIsRunning = false;
+      gameIsPaused = false;
+      toggleMainMenu();
+      alertBox.style.display = "none";
+      alertBoxIsVisible = false;
+    });
+    alertBoxNoButton.addEventListener("click", function () {
+      alertBox.style.display = "none";
+      alertBoxIsVisible = false;
+    });
   });
-  mainMenuStartButton = document.querySelector("#startButton");
+  mainMenuStartButton = document.querySelector("#startButton"); //defining the start button
   mainMenuStartButton.addEventListener("click", function () {
+    //adding an event listener to the start button
     startGame();
   });
-  mainMenuShopButton = document.querySelector("#shopButton");
+  mainMenuShopButton = document.querySelector("#shopButton"); //defining the shop button
   mainMenuShopButton.addEventListener("click", function () {
+    //adding an event listener to the shop button
     console.log("shop");
   });
   frameRate(60);
@@ -227,11 +251,17 @@ function loadEnemies() {
 
 function draw() {
   clear();
-  if (kb.presses("escape") && gameIsRunning) {
+  if (kb.presses("escape")) {
     //pause or unpause the game.
-    gameIsPaused = !gameIsPaused;
-    if (!gameIsPaused) {
-      unpauseGame();
+    if (gameIsRunning) {
+      gameIsPaused = !gameIsPaused;
+      if (!gameIsPaused) {
+        unpauseGame();
+      }
+    }
+    if (alertBoxIsVisible) {
+      alertBox.style.display = "none";
+      alertBoxIsVisible = false;
     }
   }
   if (gameIsRunning && gameIsPaused === false) {
@@ -265,6 +295,7 @@ function playscreen() {
   document.getElementById("credits-playscreen").style.display = "block";
   updateCredits();
   updateHealth();
+  increaseDifficulty();
 }
 function pauseGame() {
   creditText.style.opacity = "30%";
@@ -275,6 +306,7 @@ function pauseGame() {
   bulletObject.group.vel.y = 0;
   for (let asteroidIndex in asteroidBaseGroup) {
     asteroidBaseGroup[asteroidIndex].vel.y = 0;
+    asteroidBaseGroup[asteroidIndex].vel.x = 0;
     asteroidBaseGroup[asteroidIndex].animation.pause();
     asteroidFlameGroup[asteroidIndex].life = 0;
     asteroidColliderGroup[asteroidIndex].life = 0;
@@ -301,6 +333,14 @@ function unpauseGame() {
   bulletObject.base.animation.play();
   for (let asteroidIndex in asteroidBaseGroup) {
     asteroidBaseGroup[asteroidIndex].vel.y = 6;
+    if (asteroidBaseGroup[asteroidIndex].x < 90) {
+      asteroidBaseGroup[asteroidIndex].vel.x = -asteroidObject.velX;
+    }
+    if (asteroidBaseGroup[asteroidIndex].x > 144) {
+      asteroidBaseGroup[asteroidIndex].vel.x = asteroidObject.velX;
+    } else {
+      asteroidBaseGroup[asteroidIndex].vel.x = 0;
+    }
     asteroidFlameGroup[asteroidIndex].life = 1000;
     asteroidColliderGroup[asteroidIndex].life = 1000;
     asteroidBaseGroup[asteroidIndex].life = 1000;
@@ -370,11 +410,12 @@ function backgroundMovement() {
 //Ship function restores health, etc.
 
 function enemySpawner() {
-  let randomFrameCount = Math.floor(random(50, 80));
+  let spawnRate = asteroidObject.spawnRate;
+  let randomFrameCount = Math.floor(random(spawnRate, spawnRate + 20));
   let x = random(20, 210);
 
   if (frameCount % randomFrameCount === 0) {
-    spawnAsteroid(x, -50);
+    spawnAsteroid(x, -25);
   }
 }
 
@@ -398,7 +439,15 @@ function spawnAsteroid(x, y) {
     explosion: { col: 1, frames: 6 },
   });
   asteroidObject.base.changeAni("base");
-  asteroidObject.base.vel.y = 1.6;
+  asteroidObject.base.vel.y = asteroidObject.velY;
+  //make velx randomly positive or negative
+  if (x < 90) {
+    asteroidObject.base.vel.x = -asteroidObject.velX;
+  } else if (x > 144) {
+    asteroidObject.base.vel.x = asteroidObject.velX;
+  } else {
+    asteroidObject.base.vel.x = 0;
+  }
   asteroidObject.base.overlaps(allSprites);
   asteroidObject.base.anis.looping = false;
   asteroidObject.base.anis.frameDelay = 6;
@@ -415,7 +464,6 @@ function spawnAsteroid(x, y) {
 
   let glue = new GlueJoint(asteroidObject.base, asteroidObject.collider);
   glue.visible = false;
-  asteroidObject.base.vel.y = 6;
   asteroidColliderGroup.push(asteroidObject.collider);
 
   asteroidObject.base.life = 1000;
@@ -427,4 +475,32 @@ function spawnAsteroid(x, y) {
 
   //This group is only for the bullet collision in createbullet function.
   asteroidObject.group.add(asteroidObject.collider);
+}
+function increaseDifficulty() {
+  if (frameCount % 600 === 0) {
+    //every 10 seconds
+    if (asteroidObject.velY < 9) {
+      asteroidObject.velY += 0.2; //increase the Y speed of the asteroids
+    }
+    if (asteroidObject.spawnRate > 30) {
+      asteroidObject.spawnRate -= 0.3; //decrease the spawn rate of the asteroids
+    }
+    if (asteroidObject.velX > -3) {
+      asteroidObject.velX -= 0.1; //increase the X speed of the asteroids
+    }
+  }
+  if (killCount % 5 === 0 && killCount !== 0) {
+    //every 5 kills
+    if (asteroidObject.velY < 9) {
+      asteroidObject.velY += 0.1; //increase the Y speed of the asteroids
+    }
+    if (asteroidObject.spawnRate > 30) {
+      asteroidObject.spawnRate -= 0.15; //decrease the spawn rate of the asteroids
+    }
+    if (asteroidObject.velX > -3) {
+      asteroidObject.velX += 0.02; //increase the X speed of the asteroids
+    }
+    killCount = 0; //reset the kill count
+  }
+  console.log(asteroidObject.velX);
 }
