@@ -60,7 +60,7 @@ canvas:hover {
   text-decoration: underline;
   text-underline-offset: 5px;
 }
-#buttonGridContainer {
+#pauseButtonGridContainer {
   display: grid;
   position: absolute;
   width: 180px;
@@ -70,8 +70,6 @@ canvas:hover {
   row-gap: 100px;
 }
 .pauseScreenButton {
-  width: 150px;
-  height: 30px;
   border: white 2px solid;
   display: flex;
   justify-content: center;

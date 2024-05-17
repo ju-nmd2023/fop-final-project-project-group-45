@@ -38,8 +38,7 @@ let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
 let gameIsPaused = false; //if a stage is currently being played but the player has paused it. Used to set if the cursor should be showed.
 let creditText;
-let resumeButton;
-let exitButton;
+
 let startMenuContainer;
 let mainMenuStartButton;
 let mainMenuShopButton;
@@ -48,6 +47,54 @@ let alertBoxYesButton;
 let alertBoxNoButton;
 let alertAnswer = "";
 let alertBoxIsVisible = false;
+
+let startButton, resumeButton, exitButton, shopButton;
+
+//Buttons Class
+class Button{
+  constructor(width,height,text,type,onclick){
+    this.width = width;
+    this.height = height;
+    this.text = text;
+    this.type = type;
+    this.onclick = onclick;
+    this.backgroundColor = "rgba(0,0,0,0)";
+  }
+  
+  draw(){
+
+    if(this.type === "startScreenButton"){
+      let button = document.createElement("div");
+      let textElement = document.createElement("p");
+      textElement.innerHTML = this.text;
+      document.querySelector("#startButtonGridContainer").appendChild(button);
+      button.classList.add("startScreenButton");
+      button.setAttribute("onclick", this.onclick);
+      button.appendChild(textElement);
+      button.style.width = this.width + "px";
+      button.style.height = this.height + "px";
+    }
+
+    if(this.type === "pauseScreenButton"){
+      //draw pause screen button
+      let button = document.createElement("div");
+      let textElement = document.createElement("p");
+      textElement.innerHTML = this.text;
+      document.querySelector("#pauseButtonGridContainer").appendChild(button);
+      button.classList.add("pauseScreenButton");
+      button.setAttribute("onclick", this.onclick);
+      button.appendChild(textElement);
+      button.style.width = this.width + "px";
+      button.style.height = this.height + "px";
+      button.style.backgroundColor = this.backgroundColor;
+    }
+  }
+}
+class Redbutton extends Button{
+  constructor(width, height, text, type, onclick, backgroundColor){
+    super(width, height, text, type, onclick);
+    this.backgroundColor = "rgba(255,0,0,1)";
+}}
 
 function preload() {
   startscreenBackground = loadImage("./assets/backgrounds/startscreen.png");
@@ -109,6 +156,18 @@ function setup() {
     //adding an event listener to the shop button
     console.log("shop");
   });
+
+  startButton = new Button(250,50,"Start","startScreenButton", "startGame();");
+  shopButton = new Button(250,50,"Shop","startScreenButton", "console.log('shop');");
+  resumeButton = new Button(150, 30, "Resume", "pauseScreenButton","gameIsPaused = false; unpauseGame();");
+  exitButton = new Redbutton(150, 30, "Exit", "pauseScreenButton", "gameIsRunning = false; gameIsPaused = false;");
+
+  resumeButton.draw();
+  exitButton.draw();
+  startButton.draw();
+  shopButton.draw();
+  
+
   frameRate(60);
 
   //Player Sprites
@@ -324,6 +383,7 @@ function pauseGame() {
   pauseMenuBackgroundDarkerSprite.visible = true;
   pauseMenuContainer = document.querySelector("#pauseScreenContainer");
   pauseMenuContainer.style.display = "block";
+  
 }
 function unpauseGame() {
   creditText.style.opacity = "100%";
@@ -371,6 +431,7 @@ function toggleMainMenu() {
   startMenuContainer = document.querySelector("#startScreenContainer");
   startMenuContainer.style.display = "flex";
   creditText.style.opacity = "100%";
+  
 }
 function startGame() {
   gameIsRunning = true;
