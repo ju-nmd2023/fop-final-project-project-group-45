@@ -38,19 +38,13 @@ let y2 = -1650;
 let gameIsRunning = true; //if a stage is currently being played. Used to set if the cursor should be showned.
 let gameIsPaused = false; //if a stage is currently being played but the player has paused it. Used to set if the cursor should be showed.
 let creditText;
-
 let startMenuContainer;
-let mainMenuStartButton;
-let mainMenuShopButton;
 let alertBox;
-let alertBoxYesButton;
-let alertBoxNoButton;
 let alertAnswer = "";
 let alertBoxIsVisible = false;
+let startButton, resumeButton, exitButton, shopButton, alertBoxYesButton,alertBoxNoButton;
 
-let startButton, resumeButton, exitButton, shopButton;
-
-//Buttons Class
+//Buttons Class is created
 class Button{
   constructor(width,height,text,type,onclick){
     this.width = width;
@@ -62,39 +56,41 @@ class Button{
   }
   
   draw(){
+    //A standard div and p element is created for the button
+    let button = document.createElement("div");
+    let textElement = document.createElement("p");
+    textElement.innerHTML = this.text;
 
+    //Depending on the type of button it is assigned different classes and appended to different containers
     if(this.type === "startScreenButton"){
-      let button = document.createElement("div");
-      let textElement = document.createElement("p");
-      textElement.innerHTML = this.text;
       document.querySelector("#startButtonGridContainer").appendChild(button);
       button.classList.add("startScreenButton");
-      button.setAttribute("onclick", this.onclick);
-      button.appendChild(textElement);
-      button.style.width = this.width + "px";
-      button.style.height = this.height + "px";
     }
-
     if(this.type === "pauseScreenButton"){
       //draw pause screen button
-      let button = document.createElement("div");
-      let textElement = document.createElement("p");
-      textElement.innerHTML = this.text;
       document.querySelector("#pauseButtonGridContainer").appendChild(button);
       button.classList.add("pauseScreenButton");
+      button.style.backgroundColor = this.backgroundColor;
+    }
+    if(this.type === "alertScreenButton"){
+      //draw exit button
+      document.querySelector("#alertBoxButtonGrid").appendChild(button);
+      button.classList.add("alertBoxButton");
+      button.style.backgroundColor = this.backgroundColor;
+    }
+    //The button is styled and assigned an onclick function
       button.setAttribute("onclick", this.onclick);
       button.appendChild(textElement);
       button.style.width = this.width + "px";
       button.style.height = this.height + "px";
-      button.style.backgroundColor = this.backgroundColor;
-    }
   }
 }
 class Redbutton extends Button{
-  constructor(width, height, text, type, onclick, backgroundColor){
+  constructor(width, height, text, type, onclick){
     super(width, height, text, type, onclick);
     this.backgroundColor = "rgba(255,0,0,1)";
 }}
+
 
 function preload() {
   startscreenBackground = loadImage("./assets/backgrounds/startscreen.png");
@@ -120,53 +116,21 @@ function setup() {
   canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
   bulletObject.group = new Group();
   asteroidObject.group = new Group();
-  resumeButton = document.querySelector("#resumeButton"); //defining the resume button
-  resumeButton.addEventListener("click", function () {
-    //adding an event listener to the resume button
-    gameIsPaused = false;
-    unpauseGame();
-  });
-  exitButton = document.querySelector("#exitButton"); //defining the exit button
   alertBox = document.querySelector("#alertBoxContainer"); //defining the alert box
-  alertBoxYesButton = document.querySelector("#yesButton"); //defining the yes button
-  alertBoxNoButton = document.querySelector("#noButton"); //defining the no button
-  exitButton.addEventListener("click", function () {
-    //adding an event listener to the exit button
-    alertBox.style.display = "block";
-    alertBoxIsVisible = true;
-    alertBoxYesButton.addEventListener("click", function () {
-      gameIsRunning = false;
-      gameIsPaused = false;
-      toggleMainMenu();
-      alertBox.style.display = "none";
-      alertBoxIsVisible = false;
-    });
-    alertBoxNoButton.addEventListener("click", function () {
-      alertBox.style.display = "none";
-      alertBoxIsVisible = false;
-    });
-  });
-  mainMenuStartButton = document.querySelector("#startButton"); //defining the start button
-  mainMenuStartButton.addEventListener("click", function () {
-    //adding an event listener to the start button
-    startGame();
-  });
-  mainMenuShopButton = document.querySelector("#shopButton"); //defining the shop button
-  mainMenuShopButton.addEventListener("click", function () {
-    //adding an event listener to the shop button
-    console.log("shop");
-  });
-
+  
+  alertBoxYesButton = new Button(100,30,"Yes","alertScreenButton","gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); startscreen();");
+  alertBoxNoButton = new Button(100,30,"No", "alertScreenButton", "toggleExitAlertBox();");
   startButton = new Button(250,50,"Start","startScreenButton", "startGame();");
   shopButton = new Button(250,50,"Shop","startScreenButton", "console.log('shop');");
   resumeButton = new Button(150, 30, "Resume", "pauseScreenButton","gameIsPaused = false; unpauseGame();");
-  exitButton = new Redbutton(150, 30, "Exit", "pauseScreenButton", "gameIsRunning = false; gameIsPaused = false;");
+  exitButton = new Redbutton(150, 30, "Exit", "pauseScreenButton", "toggleExitAlertBox()");
 
   resumeButton.draw();
   exitButton.draw();
   startButton.draw();
   shopButton.draw();
-  
+  alertBoxYesButton.draw();
+  alertBoxNoButton.draw();
 
   frameRate(60);
 
@@ -179,6 +143,17 @@ function setup() {
 
   //GUI
   loadGUI();
+}
+
+function toggleExitAlertBox(){
+  if(alertBoxIsVisible){
+    alertBox.style.display = "none";
+    alertBoxIsVisible = false;
+  }
+  else{
+    alertBox.style.display = "block";
+    alertBoxIsVisible = true;
+  }
 }
 
 function loadGUI() {
