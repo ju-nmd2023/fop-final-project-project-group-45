@@ -121,16 +121,19 @@ p::selection {
 .startScreenButton {
   width: 250px;
   height: 50px;
-  border: white 2px solid;
+  border: rgb(32, 142, 237) 2px solid;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.4);
   transition: all 0.1s ease;
 }
+.startScreenButton:hover {
+  background-color: rgba(19, 39, 88, 0.8);
+}
 .startScreenButton p {
-  color: white;
+  color: rgb(119, 219, 254);
   font-family: "smallFont";
   font-size: 20px;
   text-align: center;

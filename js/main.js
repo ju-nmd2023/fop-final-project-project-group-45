@@ -40,6 +40,8 @@ let creditText;
 let resumeButton;
 let exitButton;
 let startMenuContainer;
+let mainMenuStartButton;
+let mainMenuShopButton;
 
 function preload() {
   startscreenBackground = loadImage("./assets/backgrounds/startscreen.png");
@@ -74,6 +76,14 @@ function setup() {
   exitButton.addEventListener("click", function () {
     gameIsPaused = false;
     gameIsRunning = false;
+  });
+  mainMenuStartButton = document.querySelector("#startButton");
+  mainMenuStartButton.addEventListener("click", function () {
+    startGame();
+  });
+  mainMenuShopButton = document.querySelector("#shopButton");
+  mainMenuShopButton.addEventListener("click", function () {
+    console.log("shop");
   });
   frameRate(60);
 
@@ -217,7 +227,7 @@ function loadEnemies() {
 
 function draw() {
   clear();
-  if (kb.presses("escape")) {
+  if (kb.presses("escape") && gameIsRunning) {
     //pause or unpause the game.
     gameIsPaused = !gameIsPaused;
     if (!gameIsPaused) {
@@ -244,23 +254,7 @@ function updateCredits() {
 }
 
 function startscreen() {
-  console.log("startscreen");
-  image(startscreenBackground, 0, 0, 225, 350);
-  pauseMenuBackgroundSprite.visible = false;
-  pauseMenuBackgroundDarkerSprite.visible = false;
-  healthBarSprite.visible = false;
-  healthBarBorderSprite.visible = false;
-  livesSprite.visible = false;
-  creditsSprite.visible = false;
-  pauseButtonSprite.visible = false;
-  hudbackground.visible = false;
-  pauseMenuContainer.style.display = "none";
-  player.sprite.visible = false;
-  shipBaseEngine.visible = false;
-  playerEngineFireIdle.visible = false;
-
-  startMenuContainer = document.querySelector("#startScreenContainer");
-  startMenuContainer.style.display = "flex";
+  toggleMainMenu();
 }
 
 function playscreen() {
@@ -321,7 +315,42 @@ function unpauseGame() {
   pauseMenuBackgroundDarkerSprite.visible = false;
   pauseMenuContainer.style.display = "none";
 }
-
+function toggleMainMenu() {
+  image(startscreenBackground, 0, 0, 225, 350);
+  pauseMenuBackgroundSprite.visible = false;
+  pauseMenuBackgroundDarkerSprite.visible = false;
+  healthBarSprite.visible = false;
+  healthBarBorderSprite.visible = false;
+  livesSprite.visible = false;
+  pauseButtonSprite.visible = false;
+  hudbackground.visible = false;
+  pauseMenuContainer.style.display = "none";
+  player.sprite.visible = false;
+  shipBaseEngine.visible = false;
+  playerEngineFireIdle.visible = false;
+  startMenuContainer = document.querySelector("#startScreenContainer");
+  startMenuContainer.style.display = "flex";
+  creditText.style.opacity = "100%";
+}
+function startGame() {
+  gameIsRunning = true;
+  gameIsPaused = false;
+  startMenuContainer.style.display = "none";
+  healthBarSprite.visible = true;
+  healthBarBorderSprite.visible = true;
+  livesSprite.visible = true;
+  creditsSprite.visible = true;
+  pauseButtonSprite.visible = true;
+  hudbackground.visible = true;
+  player.sprite.visible = true;
+  shipBaseEngine.visible = true;
+  playerEngineFireIdle.visible = true;
+  creditText.style.opacity = "100%";
+  playerHealth = player.maxHealth;
+  player.lives = 3;
+  livesSprite.changeAni("lives3");
+  player.sprite.img = playerFullHealthImg;
+}
 function backgroundMovement() {
   image(testBackground2, 0, y1, 225, 1000);
   image(testBackground2, 0, y2, 225, 1000);
@@ -339,13 +368,6 @@ function backgroundMovement() {
 //Make a playscreen, start coding level 1
 
 //Ship function restores health, etc.
-
-async function killAsteroid(base, flame, collider) {
-  flame.remove();
-  collider.remove();
-  await delay(600);
-  base.remove();
-}
 
 function enemySpawner() {
   let randomFrameCount = Math.floor(random(50, 80));
