@@ -28,6 +28,7 @@ function bulletCollision(hitBullet, hitAsteroid) {
       asteroidColliderGroup.splice(asteroidIndex, 1);
       creditsValue = creditsValue + 1;
       killCount = killCount + 1;
+      difficultyKillCounter = difficultyKillCounter + 1;
     }
   }
 }
