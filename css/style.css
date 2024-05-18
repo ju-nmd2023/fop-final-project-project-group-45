@@ -182,29 +182,25 @@ p::selection {
   text-align: center;
 }
 
-#gameOverContainer{
-  display:none;
-  justify-content:center;
+#gameOverContainer {
+  display: none;
+  justify-content: center;
   align-items: center;
-  position:absolute;
+  position: absolute;
   flex-direction: column;
-  width:175px;
-  height:300px;
+  width: 175px;
+  height: 300px;
   background-size: contain;
   background-image: url("../assets/sprites/interface/pauseMenuBackground.png");
   background-repeat: no-repeat;
-  margin-bottom:100px;
+  margin-bottom: 100px;
 }
 
-#gameOverContainer p{
+#gameOverContainer p {
   color: white;
   font-family: "smallFont";
   font-size: 14px;
   text-align: center;
-}
-
-#gameOverLogoContainer{
-  
 }
 
 .gameOverButton {
@@ -215,23 +211,38 @@ p::selection {
   cursor: pointer;
   box-shadow: 0px 8px 0px 0px rgba(0, 0, 0, 0.75);
   transition: all 0.1s ease;
-  margin-top:30px;
+  margin-top: 30px;
 }
 .gameOverButton:hover {
   background-color: rgba(0, 0, 0, 0.4);
   box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.75);
 }
 
-#gameOverLogoContainer img{
-  width:160px;
-  margin-top:-20px;
-  
+#gameOverLogoContainer img {
+  width: 120px;
+  margin-top: -20px;
 }
-#gameOverDarkBackground{
-  display:none;
-  position:absolute;
-  width:100%;
-  height:100%;
-  background-color:rgba(0,0,0,0.5);
+#gameOverDarkBackground {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
-
+#launchGameContainer {
+  display: none;
+  width: 450px;
+  height: 700px;
+  position: absolute;
+  align-items: center;
+  flex-direction: column;
+}
+#launchGameContainer img {
+  width: 330px;
+}
+#launchButtonGridContainer {
+  display: grid;
+  grid-template-rows: 1fr;
+  row-gap: 40px;
+  margin-top: 150px;
+}
