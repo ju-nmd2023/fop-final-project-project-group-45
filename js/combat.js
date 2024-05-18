@@ -30,6 +30,7 @@ function bulletCollision(hitBullet, hitAsteroid) {
       creditsValue = creditsValue + 1;
       killCount = killCount + 1;
       asteroidExplosionSound.play();
+      difficultyKillCounter = difficultyKillCounter + 1;
     }
   }
 }
