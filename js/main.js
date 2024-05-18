@@ -1,4 +1,4 @@
-let player = { maxHealth: 100, lives: 1, sprite: "" }; //player ship object. Stores all important information about the player.
+let player = { maxHealth: 100, lives: 3, sprite: "" }; //player ship object. Stores all important information about the player.
 let playerHealth; //player health variable. Used while the game is playing.
 let playerFullHealthImg; //sprite of base ship
 let playerEngineFireIdle; //idle engine fire sprite
@@ -48,6 +48,7 @@ let gameScore,
   gameScoreContainer,
   highscore = 0;
 let gameHasBeenLaunched = false;
+(highscore = 0), highscoreContainer;
 
 //Buttons Class is created
 class Button {
@@ -155,6 +156,7 @@ function setup() {
 
   gameScore = document.createElement("p");
   gameScoreContainer.appendChild(gameScore);
+  highscoreContainer = document.querySelector("#highscoreContainer");
 
   alertBoxYesButton = new Button(100, 30, "Yes", "alertScreenButton", "gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver(); confirmSound.play();");
   alertBoxNoButton = new Button(100, 30, "No", "alertScreenButton", "toggleExitAlertBox(); cancelSound.play();");
@@ -254,7 +256,7 @@ function loadGUI() {
     lives3: { col: 0, frames: 1 },
   });
 
-  allCreditContainers = document.querySelector(".credits-container");
+  allCreditContainers = document.querySelector(".creditsContainer");
   creditText = document.createElement("p");
   allCreditContainers.appendChild(creditText);
 
@@ -380,7 +382,7 @@ function playscreen() {
   playerMovement();
   enemySpawner();
   asteroidCollision();
-  document.getElementById("credits-playscreen").style.display = "block";
+  document.getElementById("creditsPlayscreen").style.display = "block";
   updateCredits();
   updateHealth();
   increaseDifficulty();
@@ -451,6 +453,8 @@ function unpauseGame() {
 function toggleMainMenu() {
   updateCredits();
   startscreenBackgroundSprite.visible = true;
+  highscoreContainer.style.display = "flex";
+  highscoreContainer.innerHTML = "Highscore: " + highscore;
   pauseMenuBackgroundSprite.visible = false;
   pauseMenuBackgroundDarkerSprite.visible = false;
   healthBarSprite.visible = false;
@@ -466,6 +470,7 @@ function toggleMainMenu() {
   creditText.style.opacity = "100%";
 }
 function startGame() {
+  highscoreContainer.style.display = "none";
   mainMenuSong.stop();
   playScreenSong.play();
   startscreenBackgroundSprite.visible = false;
