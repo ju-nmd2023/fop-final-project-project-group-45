@@ -1,4 +1,4 @@
-let player = { maxHealth: 100, lives: 1, sprite: "" }; //player ship object. Stores all important information about the player.
+let player = { maxHealth: 100, lives: 3, sprite: "" }; //player ship object. Stores all important information about the player.
 let playerHealth; //player health variable. Used while the game is playing.
 let playerFullHealthImg; //sprite of base ship
 let playerEngineFireIdle; //idle engine fire sprite
@@ -42,7 +42,7 @@ let alertBox;
 let alertAnswer = "";
 let alertBoxIsVisible = false;
 let startButton, resumeButton, exitButton, shopButton, alertBoxYesButton,alertBoxNoButton, gameOverButton;
-let gameScore, gameScoreContainer,highscore = 0;
+let gameScore, gameScoreContainer,highscore = 0, highscoreContainer;
 
 
 //Buttons Class is created
@@ -130,6 +130,7 @@ function setup() {
   gameScoreContainer = document.querySelector("#gameScore");
   gameScore = document.createElement("p");
   gameScoreContainer.appendChild(gameScore);
+  highscoreContainer = document.querySelector("#highscoreContainer");
 
   alertBoxYesButton = new Button(100,30,"Yes","alertScreenButton","gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver();");
   alertBoxNoButton = new Button(100,30,"No", "alertScreenButton", "toggleExitAlertBox();");
@@ -222,7 +223,7 @@ function loadGUI() {
     lives3: { col: 0, frames: 1 },
   });
 
-  allCreditContainers = document.querySelector(".credits-container");
+  allCreditContainers = document.querySelector(".creditsContainer");
   creditText = document.createElement("p");
   allCreditContainers.appendChild(creditText);
 
@@ -342,7 +343,7 @@ function playscreen() {
   playerMovement();
   enemySpawner();
   asteroidCollision();
-  document.getElementById("credits-playscreen").style.display = "block";
+  document.getElementById("creditsPlayscreen").style.display = "block";
   updateCredits();
   updateHealth();
   increaseDifficulty();
@@ -409,6 +410,8 @@ function unpauseGame() {
   pauseMenuContainer.style.display = "none";
 }
 function toggleMainMenu() {
+  highscoreContainer.style.display = "flex";
+  highscoreContainer.innerHTML = "Highscore: " + highscore;
   image(startscreenBackground, 0, 0, 225, 350);
   pauseMenuBackgroundSprite.visible = false;
   pauseMenuBackgroundDarkerSprite.visible = false;
@@ -427,7 +430,7 @@ function toggleMainMenu() {
   
 }
 function startGame() {
-  
+  highscoreContainer.style.display = "none";
   gameIsRunning = true;
   gameIsPaused = false;
   startMenuContainer.style.display = "none";

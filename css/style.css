@@ -20,8 +20,20 @@ canvas:hover {
   cursor: var(--cursorMode);
 }
 
+#highscoreContainer{
+  display: none;
+  position: absolute;
+  color: white;
+  font-family: "smallFont";
+  font-size: large;
+  text-align: center;
+  height:40px;
+  margin-top: 655px;
+  margin-left: -240px;
+}
+
 /*all credits containers are display none by default and are shown individually by their ID's*/
-.credits-container {
+.creditsContainer {
   display: none;
   position: absolute;
   color: white;
@@ -32,10 +44,10 @@ canvas:hover {
   margin-top: 623px;
   margin-left: 355px;
 }
-.credits-container {
+.creditsContainer {
   cursor: none;
 }
-.credits-container p {
+.creditsContainer p {
   cursor: none;
 }
 #pauseScreenContainer {
@@ -201,10 +213,6 @@ p::selection {
   font-family: "smallFont";
   font-size: 14px;
   text-align: center;
-}
-
-#gameOverLogoContainer{
-  
 }
 
 .gameOverButton {
