@@ -52,6 +52,7 @@ function createBullet(x, y) {
     bulletObject.base.life = 100;
     bulletObject.base.layer = 100;
     bulletGroup.push(bulletObject.base);
+    gunShotSound.play();
 
     //Check if the bullet overlaps with any collider in the asteroid group
     bulletObject.base.overlaps(asteroidObject.group, bulletCollision);
@@ -104,11 +105,12 @@ function updateLives() {
   if (player.lives === 3) {
     player.lives = 2;
     livesSprite.changeAni("lives2");
-
+    playerLoseLifeSound.play();
     player.sprite.img = playerMediumHealthImg;
   } else if (player.lives === 2) {
     player.lives = 1;
     livesSprite.changeAni("lives1");
+    playerLoseLifeSound.play();
     player.sprite.img = playerLowHealthImg;
   } else {
     gameOver();

@@ -16,7 +16,7 @@ let allCreditContainers;
 let asteroidSpriteImg;
 let asteroidFlameImg;
 let creditsValue = 0;
-let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 50, spawnRate: 90};
+let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 50, spawnRate: 90 };
 let difficultyKillCounter = 0; //Counter for the amount of kills that is reset for every 5 kills.
 let killCount = 0; //Counter for the amount of kills that is reset for every game.
 let asteroidBaseGroup = [];
@@ -41,63 +41,66 @@ let startMenuContainer;
 let alertBox;
 let alertAnswer = "";
 let alertBoxIsVisible = false;
-let startButton, resumeButton, exitButton, shopButton, alertBoxYesButton,alertBoxNoButton, gameOverButton;
-let gameScore, gameScoreContainer,highscore = 0, highscoreContainer;
-
+let mainMenuSong, playScreenSong, gunShotSound, asteroidExplosionSound, gameOverSound, playerDamageSound, confirmSound, cancelSound, playerLoseLifeSound;
+let mainMenuHasBeenToogled = false;
+let startButton, resumeButton, exitButton, shopButton, alertBoxYesButton, alertBoxNoButton, gameOverButton;
+let gameScore,
+  gameScoreContainer,
+  highscore = 0, highscoreContainer;
 
 //Buttons Class is created
-class Button{
-  constructor(width,height,text,type,onclick){
+class Button {
+  constructor(width, height, text, type, onclick, sound) {
     this.width = width;
     this.height = height;
     this.text = text;
     this.type = type;
     this.onclick = onclick;
     this.backgroundColor = "rgba(0,0,0,0)";
+    this.sound = sound;
   }
-  
-  draw(){
+  draw() {
     //A standard div and p element is created for the button
     let button = document.createElement("div");
     let textElement = document.createElement("p");
     textElement.innerHTML = this.text;
 
     //Depending on the type of button it is assigned different classes and appended to different containers
-    if(this.type === "startScreenButton"){
+    if (this.type === "startScreenButton") {
       document.querySelector("#startButtonGridContainer").appendChild(button);
       button.classList.add("startScreenButton");
     }
-    if(this.type === "pauseScreenButton"){
+    if (this.type === "pauseScreenButton") {
       //draw pause screen button
       document.querySelector("#pauseButtonGridContainer").appendChild(button);
       button.classList.add("pauseScreenButton");
       button.style.backgroundColor = this.backgroundColor;
     }
-    if(this.type === "alertScreenButton"){
+    if (this.type === "alertScreenButton") {
       //draw exit button
       document.querySelector("#alertBoxButtonGrid").appendChild(button);
       button.classList.add("alertBoxButton");
       button.style.backgroundColor = this.backgroundColor;
     }
-    if(this.type === "gameOverButton"){
+    if (this.type === "gameOverButton") {
       //draw exit button
       document.querySelector("#gameOverContainer").appendChild(button);
       button.classList.add("gameOverButton");
       button.style.backgroundColor = this.backgroundColor;
     }
     //The button is styled and assigned an onclick function
-      button.setAttribute("onclick", this.onclick);
-      button.appendChild(textElement);
-      button.style.width = this.width + "px";
-      button.style.height = this.height + "px";
+    button.setAttribute("onclick", this.onclick);
+    button.appendChild(textElement);
+    button.style.width = this.width + "px";
+    button.style.height = this.height + "px";
   }
 }
-class Redbutton extends Button{
-  constructor(width, height, text, type, onclick){
+class Redbutton extends Button {
+  constructor(width, height, text, type, onclick) {
     super(width, height, text, type, onclick);
     this.backgroundColor = "rgba(255,0,0,1)";
-}}
-
+  }
+}
 
 function preload() {
   startscreenBackground = loadImage("./assets/backgrounds/startscreen.png");
@@ -113,7 +116,17 @@ function preload() {
   mainProjectileImg = loadImage("./assets/sprites/player/weapons/main_projectile.png");
   healthBarImg = loadImage("./assets/sprites/interface/healthbar.png");
   pauseMenuBackgroundImg = loadImage("./assets/sprites/interface/pauseMenuBackground.png");
-  
+  mainMenuSong = loadSound("./assets/audio/music/mainMenuMusic.mp3");
+  playScreenSong = loadSound("./assets/audio/music/playScreenMusic.mp3");
+  gunShotSound = loadSound("./assets/audio/sfx/gunShot.mp3");
+  asteroidExplosionSound = loadSound("./assets/audio/sfx/asteroidExplosion.wav");
+  confirmSound = loadSound("./assets/audio/sfx/confirm.wav");
+  cancelSound = loadSound("./assets/audio/sfx/cancel.wav");
+  playerDamageSound = loadSound("./assets/audio/sfx/playerDamage.wav");
+  playerLoseLifeSound = loadSound("./assets/audio/sfx/playerLoseLife.wav");
+  playScreenSong.setVolume(0.9);
+  gunShotSound.setVolume(0.5);
+  asteroidExplosionSound.setVolume(0.3);
 }
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
@@ -126,19 +139,26 @@ function setup() {
   asteroidObject.group = new Group();
   alertBox = document.querySelector("#alertBoxContainer"); //defining the alert box
   gameOverContainer = document.querySelector("#gameOverContainer");
+
   gameOverDarkBackground = document.querySelector("#gameOverDarkBackground");
   gameScoreContainer = document.querySelector("#gameScore");
   gameScore = document.createElement("p");
   gameScoreContainer.appendChild(gameScore);
   highscoreContainer = document.querySelector("#highscoreContainer");
 
-  alertBoxYesButton = new Button(100,30,"Yes","alertScreenButton","gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver();");
-  alertBoxNoButton = new Button(100,30,"No", "alertScreenButton", "toggleExitAlertBox();");
-  startButton = new Button(250,50,"Start","startScreenButton", "startGame();");
-  shopButton = new Button(250,50,"Shop","startScreenButton", "console.log('shop');");
-  resumeButton = new Button(150, 30, "Resume", "pauseScreenButton","gameIsPaused = false; unpauseGame();");
-  exitButton = new Redbutton(150, 30, "Exit", "pauseScreenButton", "toggleExitAlertBox()");
-  gameOverButton = new Button(120,30,"Main Menu","gameOverButton", "document.querySelector('#gameOverContainer').style.display = 'none'; document.querySelector('#gameOverDarkBackground').style.display = 'none';");
+  alertBoxYesButton = new Button(100, 30, "Yes", "alertScreenButton", "gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver(); confirmSound.play();");
+  alertBoxNoButton = new Button(100, 30, "No", "alertScreenButton", "toggleExitAlertBox(); cancelSound.play();");
+  startButton = new Button(250, 50, "Start", "startScreenButton", "startGame();");
+  shopButton = new Button(250, 50, "Shop", "startScreenButton", "console.log('shop');");
+  resumeButton = new Button(150, 30, "Resume", "pauseScreenButton", "gameIsPaused = false; unpauseGame(); cancelSound.play();");
+  exitButton = new Redbutton(150, 30, "Exit", "pauseScreenButton", "toggleExitAlertBox(); cancelSound.play();");
+  gameOverButton = new Button(
+    120,
+    30,
+    "Main Menu",
+    "gameOverButton",
+    "document.querySelector('#gameOverContainer').style.display = 'none'; document.querySelector('#gameOverDarkBackground').style.display = 'none';"
+  );
 
   resumeButton.draw();
   exitButton.draw();
@@ -160,12 +180,11 @@ function setup() {
   loadGUI();
 }
 
-function toggleExitAlertBox(){
-  if(alertBoxIsVisible){
+function toggleExitAlertBox() {
+  if (alertBoxIsVisible) {
     alertBox.style.display = "none";
     alertBoxIsVisible = false;
-  }
-  else{
+  } else {
     alertBox.style.display = "block";
     alertBoxIsVisible = true;
   }
@@ -241,8 +260,6 @@ function loadGUI() {
   pauseMenuBackgroundDarkerSprite.stroke = "rgba(0, 0, 0, 0.5)";
   pauseMenuBackgroundDarkerSprite.layer = 104;
   pauseMenuBackgroundDarkerSprite.visible = false;
-
-  
 }
 
 function loadEnemies() {
@@ -306,6 +323,7 @@ function draw() {
     //pause or unpause the game.
     if (gameIsRunning) {
       gameIsPaused = !gameIsPaused;
+      cancelSound.play();
       if (!gameIsPaused) {
         unpauseGame();
       }
@@ -335,6 +353,11 @@ function updateCredits() {
 }
 
 function startscreen() {
+  if (!mainMenuHasBeenToogled) {
+    playScreenSong.stop();
+    mainMenuSong.play();
+    mainMenuHasBeenToogled = true;
+  }
   toggleMainMenu();
 }
 
@@ -369,15 +392,12 @@ function pauseGame() {
     bulletGroup[bulletIndex].life = 0;
     bulletGroup[bulletIndex].layer = 0;
   }
-  image(playScreenSpaceBackground
-  , 0, y1, 225, 1000);
-  image(playScreenSpaceBackground
-  , 0, y2, 225, 1000);
+  image(playScreenSpaceBackground, 0, y1, 225, 1000);
+  image(playScreenSpaceBackground, 0, y2, 225, 1000);
   pauseMenuBackgroundSprite.visible = true;
   pauseMenuBackgroundDarkerSprite.visible = true;
   pauseMenuContainer = document.querySelector("#pauseScreenContainer");
   pauseMenuContainer.style.display = "block";
-  
 }
 function unpauseGame() {
   creditText.style.opacity = "100%";
@@ -427,10 +447,12 @@ function toggleMainMenu() {
   startMenuContainer = document.querySelector("#startScreenContainer");
   startMenuContainer.style.display = "flex";
   creditText.style.opacity = "100%";
-  
 }
 function startGame() {
   highscoreContainer.style.display = "none";
+  mainMenuSong.stop();
+  playScreenSong.play();
+  mainMenuHasBeenToogled = false;
   gameIsRunning = true;
   gameIsPaused = false;
   startMenuContainer.style.display = "none";
@@ -451,10 +473,8 @@ function startGame() {
   player.sprite.img = playerFullHealthImg;
 }
 function backgroundMovement() {
-  image(playScreenSpaceBackground
-  , 0, y1, 225, 1000);
-  image(playScreenSpaceBackground
-  , 0, y2, 225, 1000);
+  image(playScreenSpaceBackground, 0, y1, 225, 1000);
+  image(playScreenSpaceBackground, 0, y2, 225, 1000);
   y1 += 1;
   y2 += 1;
 
@@ -566,19 +586,19 @@ function increaseDifficulty() {
   console.log(asteroidObject.velX);
 }
 
-function gameOver(){
+function gameOver() {
   toggleMainMenu();
   gameIsPaused = false;
   gameIsRunning = false;
   //The game over background is put in HTML to make sure it is on top of all other elements.
   gameOverContainer.style.display = "flex";
   gameOverDarkBackground.style.display = "block";
-  gameScore.innerHTML = "Score: " + killCount; 
+  gameScore.innerHTML = "Score: " + killCount;
   highScore();
 }
 
-function highScore(){
-  if(killCount > highscore){
+function highScore() {
+  if (killCount > highscore) {
     highscore = killCount;
   }
 }
