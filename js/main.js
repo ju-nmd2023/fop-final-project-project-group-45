@@ -42,7 +42,8 @@ let startMenuContainer;
 let alertBox;
 let alertAnswer = "";
 let alertBoxIsVisible = false;
-let startButton, resumeButton, exitButton, shopButton, alertBoxYesButton,alertBoxNoButton;
+let startButton, resumeButton, exitButton, shopButton, alertBoxYesButton,alertBoxNoButton, gameOverButton;
+let gameOverContainer;
 
 //Buttons Class is created
 class Button{
@@ -117,8 +118,9 @@ function setup() {
   bulletObject.group = new Group();
   asteroidObject.group = new Group();
   alertBox = document.querySelector("#alertBoxContainer"); //defining the alert box
+  gameOverContainer = document.querySelector("#gameOverContainer");
   
-  alertBoxYesButton = new Button(100,30,"Yes","alertScreenButton","gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); startscreen();");
+  alertBoxYesButton = new Button(100,30,"Yes","alertScreenButton","gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver();");
   alertBoxNoButton = new Button(100,30,"No", "alertScreenButton", "toggleExitAlertBox();");
   startButton = new Button(250,50,"Start","startScreenButton", "startGame();");
   shopButton = new Button(250,50,"Shop","startScreenButton", "console.log('shop');");
@@ -539,4 +541,14 @@ function increaseDifficulty() {
     killCount = 0; //reset the kill count
   }
   console.log(asteroidObject.velX);
+}
+
+function gameOver(){
+  
+  toggleMainMenu();
+  gameOverContainer.style.display = "flex";
+  pauseMenuBackgroundSprite.visible = true;
+  pauseMenuBackgroundDarkerSprite.visible = true;
+  pauseMenuBackgroundSprite.layer = 200;
+  pauseMenuBackgroundDarkerSprite.layer = 199;
 }

@@ -111,6 +111,6 @@ function updateLives() {
     livesSprite.changeAni("lives1");
     player.sprite.img = playerLowHealthImg;
   } else {
-    alert("game over");
+    gameOver();
   }
 }

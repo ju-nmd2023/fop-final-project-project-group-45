@@ -181,3 +181,17 @@ p::selection {
   font-size: 14px;
   text-align: center;
 }
+
+#gameOverContainer{
+  display:none;
+  position:absolute;
+  flex-direction: column;
+  width:175px;
+  height:200px;
+
+}
+
+.gameOverLogoContainer img{
+  width: 175px;
+}
+
