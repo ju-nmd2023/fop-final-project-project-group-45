@@ -52,7 +52,7 @@ function bulletCollision(hitBullet, hitAsteroid) {
         asteroidFlameGroup.splice(asteroidIndex, 1);
         asteroidColliderGroup.splice(asteroidIndex, 1);
         asteroidHealthGroup.splice(asteroidIndex, 1);
-        creditsValue = creditsValue + creditGain;
+        progress.creditsValue = progress.creditsValue + creditGain;
         killCount = killCount + 1;
         asteroidExplosionSound.setVolume(0.3);
         asteroidExplosionSound.play();
