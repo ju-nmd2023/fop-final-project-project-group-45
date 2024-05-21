@@ -1,4 +1,4 @@
-let player = { maxHealth: 100, lives: 3, sprite: "", damage: 1, reloadspeed: 70 }; //player ship object. Stores all important information about the player.
+let player = { maxHealth: 50, lives: 3, sprite: "", damage: 1, reloadspeed: 70 }; //player ship object. Stores all important information about the player.
 let playerHealth; //player health variable. Used while the game is playing.
 let playerFullHealthImg; //sprite of base ship
 let playerEngineFireIdle; //idle engine fire sprite
@@ -15,7 +15,7 @@ let creditsSprite;
 let allCreditContainers;
 let asteroidSpriteImg;
 let asteroidFlameImg;
-
+let progress = { bulletDamageLevel: 0, bulletReloadSpeedLevel: 0, playerHealthLevel: 0, creditsLevel: 0, highscore: 0, creditsValue: 0 }; //progress object that stores all the progress of the player.
 let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 1, spawnRate: 90 };
 let asteroidHealthGroup = [];
 let difficultyKillCounter = 0; //Counter for the amount of kills that is reset for every 5 kills.
@@ -410,7 +410,6 @@ function loadEnemies() {
 
   asteroidObject.collider = new Sprite(x, y, 32, 32, "dynamic");
   //asteroidObject.group.add(asteroidObject.collider);
-  //console.log(asteroidObject.group.length);
   asteroidObject.collider.color = "blue";
   asteroidObject.collider.visible = false;
 
@@ -419,7 +418,6 @@ function loadEnemies() {
   glue.visible = false;
   asteroidObject.base.vel.y = 6;
 
-  //console.log(asteroidObject.group.length);
   asteroidObject.base.life = 1000;
   asteroidObject.flame.life = 1000;
   asteroidObject.collider.life = 1000;
@@ -621,7 +619,6 @@ function backgroundMovement() {
   if (y2 == 350) {
     y2 = -1650;
   }
-  console.log(frameCount);
 }
 
 function enemySpawner() {
@@ -691,7 +688,6 @@ function spawnAsteroid(x, y) {
   //This group is only for the bullet collision in createbullet function.
   asteroidObject.group.add(asteroidObject.collider);
   asteroidHealthGroup.push(asteroidObject.health);
-  console.log(asteroidHealthGroup);
 }
 function increaseDifficulty() {
   if (frameCount % 600 === 0) {
@@ -823,10 +819,10 @@ function upgradeChecker() {
     player.maxHealth = 250;
   }
 
-  if (creditsLevel === 0) {
+  if (progress.creditsLevel === 0) {
     creditGain = 1;
   }
-  if (creditsLevel === 1) {
+  if (progress.creditsLevel === 1) {
     creditGain = 2;
   }
 
@@ -854,6 +850,7 @@ function updatePrices() {
     bulletDamageLevelSprite.changeAni("level0");
     priceDamageLevel = 10;
     priceDamageLevelTextElement.innerHTML = "Price: " + priceDamageLevel;
+    console.log(progress.creditsLevel);
   }
   if (progress.bulletDamageLevel === 1) {
     bulletDamageLevelSprite.changeAni("level1");
@@ -927,7 +924,7 @@ function updatePrices() {
 
   if (progress.creditsLevel === 0) {
     creditLevelSprite.changeAni("level0");
-    progress.creditsLevel = 100;
+    priceCreditsLevel = 100;
     priceCreditsLevelTextElement.innerHTML = "Price: " + priceCreditsLevel;
   }
   if (progress.creditsLevel === 1) {
@@ -941,7 +938,6 @@ function upgradeButton(upgrade) {
     if (progress.creditsValue >= priceDamageLevel) {
       progress.bulletDamageLevel++;
       progress.creditsValue = progress.creditsValue - priceDamageLevel;
-      localStorage.priceDamageLevel = priceDamageLevel;
     }
   }
   if (upgrade === "firerate") {
