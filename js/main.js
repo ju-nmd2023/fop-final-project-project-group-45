@@ -72,6 +72,8 @@ let bulletDamageLevel = 0,
 (highscore = 0), highscoreContainer;
 let shopScreenContainer,
   shopIsOpen = false;
+  let priceDamageLevel, priceReloadSpeedLevel, priceHealthLevel, priceCreditsLevel, priceContainer;
+  
 
 //Buttons Class is created
 class Button {
@@ -192,6 +194,7 @@ function setup() {
   gameScore = document.createElement("p");
   gameScoreContainer.appendChild(gameScore);
   highscoreContainer = document.querySelector("#highscoreContainer");
+  priceContainer = document.querySelector("#priceContainer");
 
   alertBoxYesButton = new Button(100, 30, "Yes", "alertScreenButton", "gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver(); confirmSound.play();");
   alertBoxNoButton = new Button(100, 30, "No", "alertScreenButton", "toggleExitAlertBox(); cancelSound.play();");
@@ -327,7 +330,7 @@ function loadGUI() {
   startscreenBackgroundSprite.layer = 100;
   startscreenBackgroundSprite.visible = false;
 
-  bulletDamageLevelSprite = new Sprite(150, 334, 16, 8, "none");
+  bulletDamageLevelSprite = new Sprite(158, 166, 16, 8, "none");
   bulletDamageLevelSprite.scale = 2;
   bulletDamageLevelSprite.spriteSheet = "./assets/sprites/interface/upgradeLevel.png";
   bulletDamageLevelSprite.addAnis({
@@ -341,7 +344,7 @@ function loadGUI() {
   bulletDamageLevelSprite.layer = 101;
   bulletDamageLevelSprite.visible = false;
 
-  bulletReloadSpeedLevelSprite = new Sprite(100, 334, 16, 8, "none");
+  bulletReloadSpeedLevelSprite = new Sprite(68, 241, 16, 8, "none");
   bulletReloadSpeedLevelSprite.scale = 2;
   bulletReloadSpeedLevelSprite.spriteSheet = "./assets/sprites/interface/upgradeLevel.png";
   bulletReloadSpeedLevelSprite.addAnis({
@@ -355,7 +358,7 @@ function loadGUI() {
   bulletReloadSpeedLevelSprite.layer = 101;
   bulletReloadSpeedLevelSprite.visible = false;
 
-  playerHealthLevelSprite = new Sprite(200, 334, 16, 8, "none");
+  playerHealthLevelSprite = new Sprite(68, 166, 16, 8, "none");
   playerHealthLevelSprite.scale = 2;
   playerHealthLevelSprite.spriteSheet = "./assets/sprites/interface/upgradeLevel.png";
   playerHealthLevelSprite.addAnis({
@@ -369,7 +372,7 @@ function loadGUI() {
   playerHealthLevelSprite.layer = 101;
   playerHealthLevelSprite.visible = false;
 
-  creditLevelSprite = new Sprite(240, 334, 8, 8, "none");
+  creditLevelSprite = new Sprite(158, 241, 8, 8, "none");
   creditLevelSprite.scale = 2;
   creditLevelSprite.spriteSheet = "./assets/sprites/interface/creditUpgradeLevel.png";
   creditLevelSprite.addAnis({
@@ -478,9 +481,11 @@ function startscreen() {
   if (shopIsOpen) {
     shopScreenContainer.style.display = "flex";
     startMenuContainer.style.display = "none";
+    priceContainer.style.display = "grid";
   } else {
     shopScreenContainer.style.display = "none";
     startMenuContainer.style.display = "flex";
+    priceContainer.style.display = "none";
   }
 }
 
@@ -807,7 +812,20 @@ function upgradeChecker() {
 function toggleShop() {
   if (shopIsOpen) {
     shopIsOpen = false;
+
+    bulletDamageLevelSprite.visible = false;
+    bulletReloadSpeedLevelSprite.visible = false;
+    playerHealthLevelSprite.visible = false;
+    creditLevelSprite.visible = false;
+
+
   } else {
     shopIsOpen = true;
+    bulletDamageLevelSprite.visible = true;
+    bulletReloadSpeedLevelSprite.visible = true;
+    playerHealthLevelSprite.visible = true;
+    creditLevelSprite.visible = true;
   }
+
+  
 }
