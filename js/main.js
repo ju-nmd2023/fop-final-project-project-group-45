@@ -49,6 +49,7 @@ let gameScore,
   highscore = 0;
 let gameHasBeenLaunched = false;
 (highscore = 0), highscoreContainer;
+let shopScreenContainer;
 
 //Buttons Class is created
 class Button {
@@ -153,6 +154,7 @@ function setup() {
   gameScoreContainer = document.querySelector("#gameScore");
   startMenuContainer = document.querySelector("#startScreenContainer");
   launchGameContainer = document.querySelector("#launchGameContainer");
+  shopScreenContainer = document.querySelector("#shopScreenContainer");
 
   gameScore = document.createElement("p");
   gameScoreContainer.appendChild(gameScore);
@@ -161,7 +163,7 @@ function setup() {
   alertBoxYesButton = new Button(100, 30, "Yes", "alertScreenButton", "gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver(); confirmSound.play();");
   alertBoxNoButton = new Button(100, 30, "No", "alertScreenButton", "toggleExitAlertBox(); cancelSound.play();");
   startButton = new Button(250, 50, "Start", "startScreenButton", "startGame(); confirmSound.play();");
-  shopButton = new Button(250, 50, "Shop", "startScreenButton", "console.log('shop'); confirmSound.play();");
+  shopButton = new Button(250, 50, "Shop", "startScreenButton", "openShop(); confirmSound.play();");
   resumeButton = new Button(150, 30, "Resume", "pauseScreenButton", "gameIsPaused = false; unpauseGame(); cancelSound.play();");
   exitButton = new Redbutton(150, 30, "Exit", "pauseScreenButton", "toggleExitAlertBox(); cancelSound.play();");
   gameOverButton = new Button(
@@ -641,4 +643,12 @@ function gameLaunch() {
     gameOverDarkBackground.style.display = "none";
     launchGameContainer.style.display = "flex";
   }
+}
+
+function openShop(){
+  startscreenBackgroundSprite.visible = false;
+  highscoreContainer.style.display = "none";
+  
+  shopScreenContainer.style.display = "none";
+  
 }
