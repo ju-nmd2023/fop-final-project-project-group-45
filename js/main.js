@@ -42,7 +42,7 @@ let startMenuContainer;
 let alertBox;
 let alertAnswer = "";
 let alertBoxIsVisible = false;
-let mainMenuSong, playScreenSong, gunShotSound, asteroidExplosionSound, gameOverSound, playerDamageSound, confirmSound, cancelSound, playerLoseLifeSound;
+let mainMenuSong, playScreenSong, gunShotSound, asteroidExplosionSound, asteroidHitSound, gameOverSound, playerDamageSound, confirmSound, cancelSound, playerLoseLifeSound;
 let mainMenuHasBeenToggled = false;
 let startButton,
   resumeButton,
@@ -65,6 +65,7 @@ let bulletDamageLevelSprite;
 let bulletReloadSpeedLevelSprite;
 let playerHealthLevelSprite;
 let creditLevelSprite;
+let creditGain = 1;
 let bulletDamageLevel = 0,
   bulletReloadSpeedLevel = 0,
   playerHealthLevel = 0,
@@ -171,6 +172,7 @@ function preload() {
   playerDamageSound = loadSound("./assets/audio/sfx/playerDamage.wav");
   playerLoseLifeSound = loadSound("./assets/audio/sfx/playerLoseLife.wav");
   gameOverSound = loadSound("./assets/audio/sfx/gameOver.wav");
+  asteroidHitSound = loadSound("./assets/audio/sfx/asteroidHit.mp3");
   playScreenSong.setVolume(0.9);
   mainMenuSong.loop();
   playScreenSong.loop();
@@ -608,6 +610,7 @@ function startGame() {
   asteroidObject.velX = 0;
   asteroidObject.spawnRate = 90;
   asteroidObject.health = 1;
+  frameCount = 0;
 
   upgradeChecker();
 }
@@ -623,6 +626,7 @@ function backgroundMovement() {
   if (y2 == 350) {
     y2 = -1650;
   }
+  console.log(frameCount);
 }
 
 function enemySpawner() {
@@ -823,6 +827,14 @@ function upgradeChecker() {
   if (playerHealthLevel === 4) {
     player.maxHealth = 250;
   }
+
+  if (creditsLevel === 0) {
+    creditGain = 1;
+  }
+  if (creditsLevel === 1) {
+    creditGain = 2;
+  }
+
   playerHealth = player.maxHealth;
 }
 function toggleShop() {
@@ -920,7 +932,7 @@ function updatePrices() {
 
   if (creditsLevel === 0) {
     creditLevelSprite.changeAni("level0");
-    priceCreditsLevel = 10;
+    priceCreditsLevel = 100;
     priceCreditsLevelTextElement.innerHTML = "Price: " + priceCreditsLevel;
   }
   if (creditsLevel === 1) {

@@ -52,13 +52,12 @@ function bulletCollision(hitBullet, hitAsteroid) {
         asteroidFlameGroup.splice(asteroidIndex, 1);
         asteroidColliderGroup.splice(asteroidIndex, 1);
         asteroidHealthGroup.splice(asteroidIndex, 1);
-        creditsValue = creditsValue + 1;
+        creditsValue = creditsValue + creditGain;
         killCount = killCount + 1;
         asteroidExplosionSound.setVolume(0.3);
         asteroidExplosionSound.play();
         difficultyKillCounter = difficultyKillCounter + 1;
       } else {
-        asteroidBaseGroup[asteroidIndex].changeAni("hit");
         asteroidHitSound.play();
       }
     }

@@ -20,14 +20,14 @@ canvas:hover {
   cursor: var(--cursorMode);
 }
 
-#highscoreContainer{
+#highscoreContainer {
   display: none;
   position: absolute;
   color: white;
   font-family: "smallFont";
   font-size: large;
   text-align: center;
-  height:40px;
+  height: 40px;
   margin-top: 655px;
   margin-left: -240px;
 }
@@ -258,31 +258,31 @@ p::selection {
   row-gap: 40px;
   margin-top: 150px;
 }
-#shopScreenContainer{
-  display:none;
+#shopScreenContainer {
+  display: none;
   flex-direction: column;
   position: absolute;
   justify-content: center;
-  height:700px;
+  height: 700px;
   align-items: center;
 }
-#shopGrid{
+#shopGrid {
   display: grid;
-  height:40%;
+  height: 40%;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows:1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   column-gap: 20px;
   row-gap: 20px;
 }
 
 .shopScreenButton {
   width: 200px;
-  padding:5px;
-  padding-bottom:82px;
+  padding: 5px;
+  padding-bottom: 82px;
   border: rgb(32, 142, 237) 2px solid;
   display: flex;
   justify-content: center;
-  align-items:flex-start;
+  align-items: flex-start;
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0.4);
   transition: all 0.1s ease;
@@ -295,7 +295,7 @@ p::selection {
   font-family: "smallFont";
   font-size: 20px;
   text-align: center;
-  margin:0;
+  margin: 0;
 }
 .shopTitleText {
   color: white;
@@ -304,28 +304,27 @@ p::selection {
   text-align: center;
   margin-top: 20px;
 }
-.shopExitButton{
-  display:flex;
-  padding:5px;
+.shopExitButton {
+  display: flex;
+  padding: 5px;
   align-items: center;
   justify-content: center;
-  border:white 2px solid;
+  border: white 2px solid;
   font-family: "smallFont";
-  color:white;
-  cursor:pointer;
-  
+  color: white;
+  cursor: pointer;
 }
-#priceContainer{
-  position:absolute;
+#priceContainer {
+  position: absolute;
   display: none;
-  padding-top:45px;
+  width: 350px;
+  padding-top: 45px;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows:1fr 1fr;
-  column-gap: 100px;
+  grid-template-rows: 1fr 1fr;
   row-gap: 100px;
 }
 
-.priceText{
+.priceText {
   color: gold;
   font-family: "smallFont";
   font-size: 15px;
