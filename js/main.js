@@ -16,7 +16,7 @@ let allCreditContainers;
 let asteroidSpriteImg;
 let asteroidFlameImg;
 let creditsValue = 0;
-let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 3, spawnRate: 90 };
+let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 1, spawnRate: 90 };
 let asteroidHealthGroup = [];
 let difficultyKillCounter = 0; //Counter for the amount of kills that is reset for every 5 kills.
 let killCount = 0; //Counter for the amount of kills that is reset for every game.
@@ -66,12 +66,13 @@ let bulletReloadSpeedLevelSprite;
 let playerHealthLevelSprite;
 let creditLevelSprite;
 let bulletDamageLevel = 0,
-  bulletReloadSpeedLevel = 2,
+  bulletReloadSpeedLevel = 0,
   playerHealthLevel = 0,
   creditsLevel = 0;
 (highscore = 0), highscoreContainer;
 let shopScreenContainer,
   shopIsOpen = false;
+let asteroidBottomCollider;
 
 //Buttons Class is created
 class Button {
@@ -213,7 +214,6 @@ function setup() {
   upgradeCreditsDoublerButton = new Button(150, 30, "Double Credits", "shopButton", "confirmSound.play();");
   exitShopButton = new Redbutton(150, 30, "Exit Shop", "exitShopButton", "toggleShop(); cancelSound.play();");
   //exitShopButton = new Redbutton(150, 30, "Exit Shop", "exitShopButton",  "cancelSound.play();");
-
   resumeButton.draw();
   exitGameButton.draw();
   startButton.draw();
@@ -229,15 +229,8 @@ function setup() {
   exitShopButton.draw();
 
   frameRate(60);
-
-  //Player Sprites
   loadPlayer();
-
-  //Enemies
-  //loadEnemies();
   loadEnemies();
-
-  //GUI
   loadGUI();
 }
 
@@ -394,7 +387,6 @@ function loadEnemies() {
   asteroidObject.flame.anis.rotation = -90;
   asteroidObject.flame.anis.looping = true;
   asteroidObject.flame.overlaps(allSprites);
-  asteroidFlameGroup.push(asteroidObject.flame);
 
   asteroidObject.base = new Sprite(x, y, 96, 96, "none");
   //asteroidObject.base.scale = 1;
@@ -408,7 +400,6 @@ function loadEnemies() {
   asteroidObject.base.overlaps(allSprites);
   asteroidObject.base.anis.looping = false;
   asteroidObject.base.anis.frameDelay = 6;
-  asteroidBaseGroup.push(asteroidObject.base);
 
   asteroidObject.flame.overlaps(allSprites);
 
@@ -425,7 +416,6 @@ function loadEnemies() {
   let glue = new GlueJoint(asteroidObject.base, asteroidObject.collider);
   glue.visible = false;
   asteroidObject.base.vel.y = 6;
-  asteroidColliderGroup.push(asteroidObject.collider);
 
   //console.log(asteroidObject.group.length);
   asteroidObject.base.life = 1000;
@@ -434,6 +424,9 @@ function loadEnemies() {
   asteroidObject.base.layer = 99;
   asteroidObject.collider.layer = 99;
   asteroidObject.flame.layer = 99;
+
+  asteroidBottomCollider = new Sprite(112, 360, 225, 1, "static");
+  asteroidBottomCollider.overlaps(allSprites);
 }
 
 function draw() {
@@ -530,7 +523,7 @@ function unpauseGame() {
   bulletObject.group.vel.y = -3;
   bulletObject.base.animation.play();
   for (let asteroidIndex in asteroidBaseGroup) {
-    asteroidBaseGroup[asteroidIndex].vel.y = 6;
+    asteroidBaseGroup[asteroidIndex].vel.y = asteroidObject.velY;
     if (asteroidBaseGroup[asteroidIndex].x < 90) {
       asteroidBaseGroup[asteroidIndex].vel.x = -asteroidObject.velX;
     }
@@ -604,6 +597,8 @@ function startGame() {
   asteroidObject.velY = 3;
   asteroidObject.velX = 0;
   asteroidObject.spawnRate = 90;
+  asteroidObject.health = 1;
+
   upgradeChecker();
 }
 function backgroundMovement() {
@@ -687,6 +682,7 @@ function spawnAsteroid(x, y) {
   //This group is only for the bullet collision in createbullet function.
   asteroidObject.group.add(asteroidObject.collider);
   asteroidHealthGroup.push(asteroidObject.health);
+  console.log(asteroidHealthGroup);
 }
 function increaseDifficulty() {
   if (frameCount % 600 === 0) {
@@ -702,7 +698,8 @@ function increaseDifficulty() {
     }
   }
 
-  if (frameCount % 1500 === 0) {
+  if (frameCount % 1800 === 0) {
+    //every 30 seconds
     asteroidObject.health += 1;
   }
 
@@ -730,6 +727,19 @@ function gameOver() {
   gameOverContainer.style.display = "flex";
   gameOverDarkBackground.style.display = "block";
   gameScore.innerHTML = "Score: " + killCount;
+  for (let asteroidIndex in asteroidBaseGroup) {
+    asteroidBaseGroup[asteroidIndex].remove();
+    asteroidFlameGroup[asteroidIndex].remove();
+    asteroidColliderGroup[asteroidIndex].remove();
+  }
+  for (let bulletIndex in bulletGroup) {
+    bulletGroup[bulletIndex].remove();
+  }
+  asteroidBaseGroup = [];
+  asteroidColliderGroup = [];
+  asteroidFlameGroup = [];
+  asteroidHealthGroup = [];
+  bulletGroup = [];
   highScore();
 }
 
@@ -789,20 +799,21 @@ function upgradeChecker() {
   }
 
   if (playerHealthLevel === 0) {
-    player.maxHealth = 100;
+    player.maxHealth = 50;
   }
   if (playerHealthLevel === 1) {
-    player.maxHealth = 120;
+    player.maxHealth = 100;
   }
   if (playerHealthLevel === 2) {
-    player.maxHealth = 140;
+    player.maxHealth = 150;
   }
   if (playerHealthLevel === 3) {
-    player.maxHealth = 160;
-  }
-  if (playerHealthLevel === 4) {
     player.maxHealth = 200;
   }
+  if (playerHealthLevel === 4) {
+    player.maxHealth = 250;
+  }
+  playerHealth = player.maxHealth;
 }
 function toggleShop() {
   if (shopIsOpen) {

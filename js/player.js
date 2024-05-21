@@ -93,7 +93,7 @@ function updateHealth() {
     healthProcent = 0.19;
   } else if (healthProcent < 0.13 && healthProcent > 0.0) {
     healthProcent = 0.13;
-  } else if (healthProcent == 0) {
+  } else if (healthProcent <= 0) {
     healthProcent = 0.06;
     updateLives();
   }
