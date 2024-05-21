@@ -11,6 +11,7 @@ function asteroidCollision() {
         asteroidBaseGroup.splice(asteroidIndex, 1);
         asteroidFlameGroup.splice(asteroidIndex, 1);
         asteroidColliderGroup.splice(asteroidIndex, 1);
+        asteroidHealthGroup.splice(asteroidIndex, 1);
         if (playerHealth > 0) {
           playerDamageSound.play();
         }
@@ -27,18 +28,24 @@ function bulletCollision(hitBullet, hitAsteroid) {
   //Look for the collider in the group of all asteroids colliders and remove the asteroid it belongs to.
   for (let asteroidIndex in asteroidBaseGroup) {
     if (hitAsteroid === asteroidColliderGroup[asteroidIndex]) {
-      asteroidBaseGroup[asteroidIndex].changeAni("explosion");
-      //remove the asteroid Sprites from their groups
-      killAsteroid(asteroidBaseGroup[asteroidIndex], asteroidFlameGroup[asteroidIndex], asteroidColliderGroup[asteroidIndex]);
-      //Splice the arrays
-      asteroidBaseGroup.splice(asteroidIndex, 1);
-      asteroidFlameGroup.splice(asteroidIndex, 1);
-      asteroidColliderGroup.splice(asteroidIndex, 1);
-      creditsValue = creditsValue + 1;
-      killCount = killCount + 1;
-      asteroidExplosionSound.setVolume(0.3);
-      asteroidExplosionSound.play();
-      difficultyKillCounter = difficultyKillCounter + 1;
+      if (player.sprite.overlaps(asteroidColliderGroup[asteroidIndex])) {
+        asteroidHealthGroup[asteroidIndex] -= player.damage;
+        if (asteroidHealthGroup[asteroidIndex] < 0) {
+          asteroidBaseGroup[asteroidIndex].changeAni("explosion");
+          //remove the asteroid Sprites from their groups
+          killAsteroid(asteroidBaseGroup[asteroidIndex], asteroidFlameGroup[asteroidIndex], asteroidColliderGroup[asteroidIndex]);
+          //Splice the arrays
+          asteroidBaseGroup.splice(asteroidIndex, 1);
+          asteroidFlameGroup.splice(asteroidIndex, 1);
+          asteroidColliderGroup.splice(asteroidIndex, 1);
+          asteroidHealthGroup.splice(asteroidIndex, 1);
+          creditsValue = creditsValue + 1;
+          killCount = killCount + 1;
+          asteroidExplosionSound.setVolume(0.3);
+          asteroidExplosionSound.play();
+          difficultyKillCounter = difficultyKillCounter + 1;
+        }
+      }
     }
   }
 }

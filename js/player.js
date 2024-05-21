@@ -38,7 +38,7 @@ function playerMovement() {
 
 function createBullet(x, y) {
   //Each 40th frame a projectile is fired
-  if (frameCount % 40 === 0) {
+  if (frameCount % player.reloadspeed === 0) {
     bulletObject.base = new Sprite(x, y, 32, 32, "none");
     bulletObject.base.spriteSheet = mainProjectileImg;
     bulletObject.base.addAnis({

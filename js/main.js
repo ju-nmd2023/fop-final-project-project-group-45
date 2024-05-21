@@ -1,4 +1,4 @@
-let player = { maxHealth: 100, lives: 3, sprite: "" }; //player ship object. Stores all important information about the player.
+let player = { maxHealth: 100, lives: 3, sprite: "", damage: 1, reloadspeed: 70 }; //player ship object. Stores all important information about the player.
 let playerHealth; //player health variable. Used while the game is playing.
 let playerFullHealthImg; //sprite of base ship
 let playerEngineFireIdle; //idle engine fire sprite
@@ -16,7 +16,8 @@ let allCreditContainers;
 let asteroidSpriteImg;
 let asteroidFlameImg;
 let creditsValue = 0;
-let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 50, spawnRate: 90 };
+let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 3, spawnRate: 90 };
+let asteroidHealthGroup = [];
 let difficultyKillCounter = 0; //Counter for the amount of kills that is reset for every 5 kills.
 let killCount = 0; //Counter for the amount of kills that is reset for every game.
 let asteroidBaseGroup = [];
@@ -48,7 +49,14 @@ let gameScore,
   gameScoreContainer,
   highscore = 0;
 let gameHasBeenLaunched = false;
-(highscore = 0), highscoreContainer;
+let bulletDamageLevelSprite;
+let bulletReloadSpeedLevelSprite;
+let playerHealthLevelSprite;
+let creditLevelSprite;
+let bulletDamageLevel = 0,
+  bulletReloadSpeedLevel = 2,
+  playerHealthLevel = 0,
+  creditsLevel = 0;
 
 //Buttons Class is created
 class Button {
@@ -279,6 +287,59 @@ function loadGUI() {
   startscreenBackgroundSprite.img = startscreenBackgroundImg;
   startscreenBackgroundSprite.layer = 100;
   startscreenBackgroundSprite.visible = false;
+
+  bulletDamageLevelSprite = new Sprite(150, 334, 16, 8, "none");
+  bulletDamageLevelSprite.scale = 2;
+  bulletDamageLevelSprite.spriteSheet = "./assets/sprites/interface/upgradeLevel.png";
+  bulletDamageLevelSprite.addAnis({
+    level0: { col: 0, frames: 1 },
+    level1: { col: 1, frames: 1 },
+    level2: { col: 2, frames: 1 },
+    level3: { col: 3, frames: 1 },
+    level4: { col: 4, frames: 1 },
+  });
+  bulletDamageLevelSprite.changeAni("level0");
+  bulletDamageLevelSprite.layer = 101;
+  bulletDamageLevelSprite.visible = false;
+
+  bulletReloadSpeedLevelSprite = new Sprite(100, 334, 16, 8, "none");
+  bulletReloadSpeedLevelSprite.scale = 2;
+  bulletReloadSpeedLevelSprite.spriteSheet = "./assets/sprites/interface/upgradeLevel.png";
+  bulletReloadSpeedLevelSprite.addAnis({
+    level0: { col: 0, frames: 1 },
+    level1: { col: 1, frames: 1 },
+    level2: { col: 2, frames: 1 },
+    level3: { col: 3, frames: 1 },
+    level4: { col: 4, frames: 1 },
+  });
+  bulletReloadSpeedLevelSprite.changeAni("level0");
+  bulletReloadSpeedLevelSprite.layer = 101;
+  bulletReloadSpeedLevelSprite.visible = false;
+
+  playerHealthLevelSprite = new Sprite(200, 334, 16, 8, "none");
+  playerHealthLevelSprite.scale = 2;
+  playerHealthLevelSprite.spriteSheet = "./assets/sprites/interface/upgradeLevel.png";
+  playerHealthLevelSprite.addAnis({
+    level0: { col: 0, frames: 1 },
+    level1: { col: 1, frames: 1 },
+    level2: { col: 2, frames: 1 },
+    level3: { col: 3, frames: 1 },
+    level4: { col: 4, frames: 1 },
+  });
+  playerHealthLevelSprite.changeAni("level0");
+  playerHealthLevelSprite.layer = 101;
+  playerHealthLevelSprite.visible = false;
+
+  creditLevelSprite = new Sprite(240, 334, 8, 8, "none");
+  creditLevelSprite.scale = 2;
+  creditLevelSprite.spriteSheet = "./assets/sprites/interface/creditUpgradeLevel.png";
+  creditLevelSprite.addAnis({
+    level0: { col: 0, frames: 1 },
+    level1: { col: 1, frames: 1 },
+  });
+  creditLevelSprite.changeAni("level0");
+  creditLevelSprite.layer = 101;
+  creditLevelSprite.visible = false;
 }
 
 function loadEnemies() {
@@ -497,6 +558,7 @@ function startGame() {
   asteroidObject.velY = 3;
   asteroidObject.velX = 0;
   asteroidObject.spawnRate = 90;
+  upgradeChecker();
 }
 function backgroundMovement() {
   image(playScreenSpaceBackground, 0, y1, 225, 1000);
@@ -582,6 +644,7 @@ function spawnAsteroid(x, y) {
 
   //This group is only for the bullet collision in createbullet function.
   asteroidObject.group.add(asteroidObject.collider);
+  asteroidHealthGroup.push(asteroidObject.health);
 }
 function increaseDifficulty() {
   if (frameCount % 600 === 0) {
@@ -596,6 +659,11 @@ function increaseDifficulty() {
       asteroidObject.velX -= 0.1; //increase the X speed of the asteroids
     }
   }
+
+  if (frameCount % 1500 === 0) {
+    asteroidObject.health += 1;
+  }
+
   if (difficultyKillCounter % 5 === 0 && difficultyKillCounter !== 0) {
     //every 5 kills
     if (asteroidObject.velY < 9) {
@@ -609,7 +677,6 @@ function increaseDifficulty() {
     }
     difficultyKillCounter = 0; //reset the kill count
   }
-  console.log(asteroidObject.velX);
 }
 
 function gameOver() {
@@ -643,5 +710,55 @@ function gameLaunch() {
     launchGameContainer.style.display = "flex";
     creditText.style.opacity = "100%";
     document.getElementById("creditsPlayscreen").style.display = "block";
+  }
+}
+
+function upgradeChecker() {
+  if (bulletReloadSpeedLevel === 0) {
+    player.reloadspeed = 70;
+  }
+  if (bulletReloadSpeedLevel === 1) {
+    player.reloadspeed = 60;
+  }
+  if (bulletReloadSpeedLevel === 2) {
+    player.reloadspeed = 50;
+  }
+  if (bulletReloadSpeedLevel === 3) {
+    player.reloadspeed = 40;
+  }
+  if (bulletReloadSpeedLevel === 4) {
+    player.reloadspeed = 20;
+  }
+
+  if (bulletDamageLevel === 0) {
+    player.damage = 1;
+  }
+  if (bulletDamageLevel === 1) {
+    player.damage = 2;
+  }
+  if (bulletDamageLevel === 2) {
+    player.damage = 3;
+  }
+  if (bulletDamageLevel === 3) {
+    player.damage = 4;
+  }
+  if (bulletDamageLevel === 4) {
+    player.damage = 5;
+  }
+
+  if (playerHealthLevel === 0) {
+    player.maxHealth = 100;
+  }
+  if (playerHealthLevel === 1) {
+    player.maxHealth = 120;
+  }
+  if (playerHealthLevel === 2) {
+    player.maxHealth = 140;
+  }
+  if (playerHealthLevel === 3) {
+    player.maxHealth = 160;
+  }
+  if (playerHealthLevel === 4) {
+    player.maxHealth = 200;
   }
 }
