@@ -43,8 +43,20 @@ let alertBox;
 let alertAnswer = "";
 let alertBoxIsVisible = false;
 let mainMenuSong, playScreenSong, gunShotSound, asteroidExplosionSound, gameOverSound, playerDamageSound, confirmSound, cancelSound, playerLoseLifeSound;
-let mainMenuHasBeenToogled = false;
-let startButton, resumeButton, exitButton, shopButton, alertBoxYesButton, alertBoxNoButton, gameOverButton, launchGameButton;
+let mainMenuHasBeenToggled = false;
+let startButton,
+  resumeButton,
+  exitGameButton,
+  shopButton,
+  alertBoxYesButton,
+  alertBoxNoButton,
+  gameOverButton,
+  launchGameButton,
+  upgradeHealthButton,
+  upgradeDamageButton,
+  upgradeFireRateButton,
+  upgradeCreditsDoublerButton,
+  exitShopButton;
 let gameScore,
   gameScoreContainer,
   highscore = 0;
@@ -57,6 +69,9 @@ let bulletDamageLevel = 0,
   bulletReloadSpeedLevel = 2,
   playerHealthLevel = 0,
   creditsLevel = 0;
+(highscore = 0), highscoreContainer;
+let shopScreenContainer,
+  shopIsOpen = false;
 
 //Buttons Class is created
 class Button {
@@ -104,6 +119,18 @@ class Button {
       button.classList.add("startScreenButton");
       button.style.backgroundColor = this.backgroundColor;
     }
+
+    if (this.type == "shopButton") {
+      document.querySelector("#shopGrid").appendChild(button);
+      button.classList.add("shopScreenButton");
+      button.style.backgroundColor = this.backgroundColor;
+    }
+    if (this.type == "exitShopButton") {
+      document.querySelector("#shopScreenContainer").appendChild(button);
+      button.classList.add("shopExitButton");
+      button.style.backgroundColor = this.backgroundColor;
+    }
+
     //The button is styled and assigned an onclick function
     button.setAttribute("onclick", this.onclick);
     button.appendChild(textElement);
@@ -161,7 +188,7 @@ function setup() {
   gameScoreContainer = document.querySelector("#gameScore");
   startMenuContainer = document.querySelector("#startScreenContainer");
   launchGameContainer = document.querySelector("#launchGameContainer");
-
+  shopScreenContainer = document.querySelector("#shopScreenContainer");
   gameScore = document.createElement("p");
   gameScoreContainer.appendChild(gameScore);
   highscoreContainer = document.querySelector("#highscoreContainer");
@@ -169,9 +196,9 @@ function setup() {
   alertBoxYesButton = new Button(100, 30, "Yes", "alertScreenButton", "gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver(); confirmSound.play();");
   alertBoxNoButton = new Button(100, 30, "No", "alertScreenButton", "toggleExitAlertBox(); cancelSound.play();");
   startButton = new Button(250, 50, "Start", "startScreenButton", "startGame(); confirmSound.play();");
-  shopButton = new Button(250, 50, "Shop", "startScreenButton", "console.log('shop'); confirmSound.play();");
+  shopButton = new Button(250, 50, "Shop", "startScreenButton", "toggleShop(); confirmSound.play();");
   resumeButton = new Button(150, 30, "Resume", "pauseScreenButton", "gameIsPaused = false; unpauseGame(); cancelSound.play();");
-  exitButton = new Redbutton(150, 30, "Exit", "pauseScreenButton", "toggleExitAlertBox(); cancelSound.play();");
+  exitGameButton = new Redbutton(150, 30, "Exit", "pauseScreenButton", "toggleExitAlertBox(); cancelSound.play();");
   gameOverButton = new Button(
     120,
     30,
@@ -180,15 +207,27 @@ function setup() {
     "document.querySelector('#gameOverContainer').style.display = 'none'; document.querySelector('#gameOverDarkBackground').style.display = 'none'; confirmSound.play();"
   );
   launchGameButton = new Button(300, 70, "Launch Game", "launchButton", "confirmSound.play(); gameHasBeenLaunched = true; launchGameContainer.style.display = 'none';");
+  upgradeHealthButton = new Button(150, 30, "Health", "shopButton", "confirmSound.play();");
+  upgradeDamageButton = new Button(150, 30, "Damage", "shopButton", "confirmSound.play();");
+  upgradeFireRateButton = new Button(150, 30, "Fire Rate", "shopButton", "confirmSound.play();");
+  upgradeCreditsDoublerButton = new Button(150, 30, "Double Credits", "shopButton", "confirmSound.play();");
+  exitShopButton = new Redbutton(150, 30, "Exit Shop", "exitShopButton", "toggleShop(); cancelSound.play();");
+  //exitShopButton = new Redbutton(150, 30, "Exit Shop", "exitShopButton",  "cancelSound.play();");
 
   resumeButton.draw();
-  exitButton.draw();
+  exitGameButton.draw();
   startButton.draw();
   shopButton.draw();
   alertBoxYesButton.draw();
   alertBoxNoButton.draw();
   gameOverButton.draw();
   launchGameButton.draw();
+  upgradeHealthButton.draw();
+  upgradeDamageButton.draw();
+  upgradeFireRateButton.draw();
+  upgradeCreditsDoublerButton.draw();
+  exitShopButton.draw();
+
   frameRate(60);
 
   //Player Sprites
@@ -430,12 +469,19 @@ function updateCredits() {
 }
 
 function startscreen() {
-  if (!mainMenuHasBeenToogled) {
+  if (!mainMenuHasBeenToggled) {
     playScreenSong.stop();
     mainMenuSong.play();
-    mainMenuHasBeenToogled = true;
+    mainMenuHasBeenToggled = true;
   }
   toggleMainMenu();
+  if (shopIsOpen) {
+    shopScreenContainer.style.display = "flex";
+    startMenuContainer.style.display = "none";
+  } else {
+    shopScreenContainer.style.display = "none";
+    startMenuContainer.style.display = "flex";
+  }
 }
 
 function playscreen() {
@@ -536,7 +582,7 @@ function startGame() {
   mainMenuSong.stop();
   playScreenSong.play();
   startscreenBackgroundSprite.visible = false;
-  mainMenuHasBeenToogled = false;
+  mainMenuHasBeenToggled = false;
   gameIsRunning = true;
   gameIsPaused = false;
   startMenuContainer.style.display = "none";
@@ -573,10 +619,6 @@ function backgroundMovement() {
     y2 = -1650;
   }
 }
-
-//Make a playscreen, start coding level 1
-
-//Ship function restores health, etc.
 
 function enemySpawner() {
   let spawnRate = asteroidObject.spawnRate;
@@ -760,5 +802,12 @@ function upgradeChecker() {
   }
   if (playerHealthLevel === 4) {
     player.maxHealth = 200;
+  }
+}
+function toggleShop() {
+  if (shopIsOpen) {
+    shopIsOpen = false;
+  } else {
+    shopIsOpen = true;
   }
 }
