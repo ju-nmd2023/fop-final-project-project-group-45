@@ -133,8 +133,8 @@ function preload() {
   playerDamageSound = loadSound("./assets/audio/sfx/playerDamage.wav");
   playerLoseLifeSound = loadSound("./assets/audio/sfx/playerLoseLife.wav");
   gameOverSound = loadSound("./assets/audio/sfx/gameOver.wav");
-  mainMenuSong.loop();
   playScreenSong.setVolume(0.9);
+  mainMenuSong.loop();
   playScreenSong.loop();
 }
 function setup() {
@@ -382,7 +382,6 @@ function playscreen() {
   playerMovement();
   enemySpawner();
   asteroidCollision();
-  document.getElementById("creditsPlayscreen").style.display = "block";
   updateCredits();
   updateHealth();
   increaseDifficulty();
@@ -468,6 +467,8 @@ function toggleMainMenu() {
   playerEngineFireIdle.visible = false;
   startMenuContainer.style.display = "flex";
   creditText.style.opacity = "100%";
+  creditsSprite.visible = true;
+  updateCredits();
 }
 function startGame() {
   highscoreContainer.style.display = "none";
@@ -640,5 +641,7 @@ function gameLaunch() {
     pauseButtonSprite.visible = false;
     gameOverDarkBackground.style.display = "none";
     launchGameContainer.style.display = "flex";
+    creditText.style.opacity = "100%";
+    document.getElementById("creditsPlayscreen").style.display = "block";
   }
 }
