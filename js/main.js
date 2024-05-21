@@ -74,6 +74,7 @@ let shopScreenContainer,
   shopIsOpen = false;
 let asteroidBottomCollider;
 let priceDamageLevel, priceReloadSpeedLevel, priceHealthLevel, priceCreditsLevel, priceContainer;
+let priceDamageLevelTextElement, priceReloadSpeedLevelTextElement, priceHealthLevelTextElement, priceCreditsLevelTextElement;
 
 //Buttons Class is created
 class Button {
@@ -195,6 +196,10 @@ function setup() {
   gameScoreContainer.appendChild(gameScore);
   highscoreContainer = document.querySelector("#highscoreContainer");
   priceContainer = document.querySelector("#priceContainer");
+  priceDamageLevelTextElement = document.querySelector("#damagePrice");
+  priceReloadSpeedLevelTextElement = document.querySelector("#fireRatePrice");
+  priceHealthLevelTextElement = document.querySelector("#healthPrice");
+  priceCreditsLevelTextElement = document.querySelector("#doubleCreditsPrice");
 
   alertBoxYesButton = new Button(100, 30, "Yes", "alertScreenButton", "gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver(); confirmSound.play();");
   alertBoxNoButton = new Button(100, 30, "No", "alertScreenButton", "toggleExitAlertBox(); cancelSound.play();");
@@ -210,10 +215,10 @@ function setup() {
     "document.querySelector('#gameOverContainer').style.display = 'none'; document.querySelector('#gameOverDarkBackground').style.display = 'none'; confirmSound.play();"
   );
   launchGameButton = new Button(300, 70, "Launch Game", "launchButton", "confirmSound.play(); gameHasBeenLaunched = true; launchGameContainer.style.display = 'none';");
-  upgradeHealthButton = new Button(150, 30, "Health", "shopButton", "confirmSound.play();");
-  upgradeDamageButton = new Button(150, 30, "Damage", "shopButton", "confirmSound.play();");
-  upgradeFireRateButton = new Button(150, 30, "Fire Rate", "shopButton", "confirmSound.play();");
-  upgradeCreditsDoublerButton = new Button(150, 30, "Double Credits", "shopButton", "confirmSound.play();");
+  upgradeHealthButton = new Button(150, 30, "Health", "shopButton", "confirmSound.play(); upgradeButton('health');");
+  upgradeDamageButton = new Button(150, 30, "Damage", "shopButton", "confirmSound.play(); upgradeButton('damage');");
+  upgradeFireRateButton = new Button(150, 30, "Fire Rate", "shopButton", "confirmSound.play(); upgradeButton('firerate');");
+  upgradeCreditsDoublerButton = new Button(150, 30, "Double Credits", "shopButton", "confirmSound.play(); upgradeButton('doubleCredits');");
   exitShopButton = new Redbutton(150, 30, "Exit Shop", "exitShopButton", "toggleShop(); cancelSound.play();");
   //exitShopButton = new Redbutton(150, 30, "Exit Shop", "exitShopButton",  "cancelSound.play();");
   resumeButton.draw();
@@ -474,6 +479,7 @@ function startscreen() {
     shopScreenContainer.style.display = "flex";
     startMenuContainer.style.display = "none";
     priceContainer.style.display = "grid";
+    updatePrices();
   } else {
     shopScreenContainer.style.display = "none";
     startMenuContainer.style.display = "flex";
@@ -833,5 +839,119 @@ function toggleShop() {
     bulletReloadSpeedLevelSprite.visible = true;
     playerHealthLevelSprite.visible = true;
     creditLevelSprite.visible = true;
+  }
+}
+
+function updatePrices() {
+  if (bulletDamageLevel === 0) {
+    bulletDamageLevelSprite.changeAni("level0");
+    priceDamageLevel = 10;
+    priceDamageLevelTextElement.innerHTML = "Price: " + priceDamageLevel;
+  }
+  if (bulletDamageLevel === 1) {
+    bulletDamageLevelSprite.changeAni("level1");
+    priceDamageLevel = 20;
+    priceDamageLevelTextElement.innerHTML = "Price: " + priceDamageLevel;
+  }
+  if (bulletDamageLevel === 2) {
+    bulletDamageLevelSprite.changeAni("level2");
+    priceDamageLevel = 30;
+    priceDamageLevelTextElement.innerHTML = "Price: " + priceDamageLevel;
+  }
+  if (bulletDamageLevel === 3) {
+    bulletDamageLevelSprite.changeAni("level3");
+    priceDamageLevel = 40;
+    priceDamageLevelTextElement.innerHTML = "Price: " + priceDamageLevel;
+  }
+  if (bulletDamageLevel === 4) {
+    bulletDamageLevelSprite.changeAni("level4");
+    priceDamageLevelTextElement.innerHTML = "MAX";
+  }
+
+  if (bulletReloadSpeedLevel === 0) {
+    bulletReloadSpeedLevelSprite.changeAni("level0");
+    priceReloadSpeedLevel = 10;
+    priceReloadSpeedLevelTextElement.innerHTML = "Price: " + priceReloadSpeedLevel;
+  }
+  if (bulletReloadSpeedLevel === 1) {
+    bulletReloadSpeedLevelSprite.changeAni("level1");
+    priceReloadSpeedLevel = 20;
+    priceReloadSpeedLevelTextElement.innerHTML = "Price: " + priceReloadSpeedLevel;
+  }
+  if (bulletReloadSpeedLevel === 2) {
+    bulletReloadSpeedLevelSprite.changeAni("level2");
+    priceReloadSpeedLevel = 30;
+    priceReloadSpeedLevelTextElement.innerHTML = "Price: " + priceReloadSpeedLevel;
+  }
+  if (bulletReloadSpeedLevel === 3) {
+    bulletReloadSpeedLevelSprite.changeAni("level3");
+    priceReloadSpeedLevel = 40;
+    priceReloadSpeedLevelTextElement.innerHTML = "Price: " + priceReloadSpeedLevel;
+  }
+  if (bulletReloadSpeedLevel === 4) {
+    bulletReloadSpeedLevelSprite.changeAni("level4");
+    priceReloadSpeedLevelTextElement.innerHTML = "MAX";
+  }
+
+  if (playerHealthLevel === 0) {
+    playerHealthLevelSprite.changeAni("level0");
+    priceHealthLevel = 10;
+    priceHealthLevelTextElement.innerHTML = "Price: " + priceHealthLevel;
+  }
+  if (playerHealthLevel === 1) {
+    playerHealthLevelSprite.changeAni("level1");
+    priceHealthLevel = 20;
+    priceHealthLevelTextElement.innerHTML = "Price: " + priceHealthLevel;
+  }
+  if (playerHealthLevel === 2) {
+    playerHealthLevelSprite.changeAni("level2");
+    priceHealthLevel = 30;
+    priceHealthLevelTextElement.innerHTML = "Price: " + priceHealthLevel;
+  }
+  if (playerHealthLevel === 3) {
+    playerHealthLevelSprite.changeAni("level3");
+    priceHealthLevel = 40;
+    priceHealthLevelTextElement.innerHTML = "Price: " + priceHealthLevel;
+  }
+  if (playerHealthLevel === 4) {
+    playerHealthLevelSprite.changeAni("level4");
+    priceHealthLevelTextElement.innerHTML = "MAX";
+  }
+
+  if (creditsLevel === 0) {
+    creditLevelSprite.changeAni("level0");
+    priceCreditsLevel = 10;
+    priceCreditsLevelTextElement.innerHTML = "Price: " + priceCreditsLevel;
+  }
+  if (creditsLevel === 1) {
+    creditLevelSprite.changeAni("level1");
+    priceCreditsLevelTextElement.innerHTML = "MAX";
+  }
+}
+
+function upgradeButton(upgrade) {
+  if (upgrade === "damage") {
+    if (creditsValue >= priceDamageLevel) {
+      bulletDamageLevel++;
+      creditsValue = creditsValue - priceDamageLevel;
+    }
+  }
+  if (upgrade === "firerate") {
+    if (creditsValue >= priceReloadSpeedLevel) {
+      bulletReloadSpeedLevel++;
+      creditsValue = creditsValue - priceReloadSpeedLevel;
+    }
+  }
+  if (upgrade === "health") {
+    if (creditsValue >= priceHealthLevel) {
+      playerHealthLevel++;
+      creditsValue = creditsValue - priceHealthLevel;
+    }
+  }
+  if (upgrade === "doubleCredits") {
+    if (creditsValue >= priceCreditsLevel) {
+      creditsLevel++;
+      creditsValue = creditsValue - priceCreditsLevel;
+    }
   }
 }

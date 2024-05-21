@@ -57,6 +57,9 @@ function bulletCollision(hitBullet, hitAsteroid) {
         asteroidExplosionSound.setVolume(0.3);
         asteroidExplosionSound.play();
         difficultyKillCounter = difficultyKillCounter + 1;
+      } else {
+        asteroidBaseGroup[asteroidIndex].changeAni("hit");
+        asteroidHitSound.play();
       }
     }
   }
