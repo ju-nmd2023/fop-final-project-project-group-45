@@ -15,7 +15,7 @@ let creditsSprite;
 let allCreditContainers;
 let asteroidSpriteImg;
 let asteroidFlameImg;
-let creditsValue = 0;
+
 let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 1, spawnRate: 90 };
 let asteroidHealthGroup = [];
 let difficultyKillCounter = 0; //Counter for the amount of kills that is reset for every 5 kills.
@@ -58,18 +58,14 @@ let startButton,
   upgradeCreditsDoublerButton,
   exitShopButton;
 let gameScore,
-  gameScoreContainer,
-  highscore = 0;
+  gameScoreContainer;
 let gameHasBeenLaunched = false;
 let bulletDamageLevelSprite;
 let bulletReloadSpeedLevelSprite;
 let playerHealthLevelSprite;
 let creditLevelSprite;
-let bulletDamageLevel = 0,
-  bulletReloadSpeedLevel = 0,
-  playerHealthLevel = 0,
-  creditsLevel = 0;
-(highscore = 0), highscoreContainer;
+let progress = {bulletDamageLevel: 0,bulletReloadSpeedLevel: 0,playerHealthLevel: 0,creditsLevel: 0, highscore:0, creditsValue:0}
+let highscoreContainer;
 let shopScreenContainer,
   shopIsOpen = false;
 let asteroidBottomCollider;
@@ -438,6 +434,8 @@ function loadEnemies() {
 
 function draw() {
   clear();
+
+  localStorage.progress = JSON.stringify(progress);
   gameLaunch();
   if (kb.presses("escape") || pauseButtonSprite.mouse.presses()) {
     //pause or unpause the game.
@@ -465,7 +463,7 @@ function draw() {
   allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
 }
 function updateCredits() {
-  creditText.innerHTML = creditsValue;
+  creditText.innerHTML = progress.creditsValue;
 }
 
 function startscreen() {
@@ -563,7 +561,7 @@ function toggleMainMenu() {
   updateCredits();
   startscreenBackgroundSprite.visible = true;
   highscoreContainer.style.display = "flex";
-  highscoreContainer.innerHTML = "Highscore: " + highscore;
+  highscoreContainer.innerHTML = "Highscore: " + progress.highscore;
   pauseMenuBackgroundSprite.visible = false;
   pauseMenuBackgroundDarkerSprite.visible = false;
   healthBarSprite.visible = false;
@@ -754,13 +752,14 @@ function gameOver() {
 }
 
 function highScore() {
-  if (killCount > highscore) {
-    highscore = killCount;
+  if (killCount > progress.highscore) {
+    progress.highscore = killCount;
   }
 }
 
 function gameLaunch() {
   if (!gameHasBeenLaunched) {
+    
     startscreenBackgroundSprite.visible = true;
     creditsSprite.visible = false;
     healthBarSprite.visible = false;
@@ -776,51 +775,51 @@ function gameLaunch() {
 }
 
 function upgradeChecker() {
-  if (bulletReloadSpeedLevel === 0) {
+  if (progress.bulletReloadSpeedLevel=== 0) {
     player.reloadspeed = 70;
   }
-  if (bulletReloadSpeedLevel === 1) {
+  if (progress.bulletReloadSpeedLevel=== 1) {
     player.reloadspeed = 60;
   }
-  if (bulletReloadSpeedLevel === 2) {
+  if (progress.bulletReloadSpeedLevel=== 2) {
     player.reloadspeed = 50;
   }
-  if (bulletReloadSpeedLevel === 3) {
+  if (progress.bulletReloadSpeedLevel=== 3) {
     player.reloadspeed = 40;
   }
-  if (bulletReloadSpeedLevel === 4) {
+  if (progress.bulletReloadSpeedLevel=== 4) {
     player.reloadspeed = 20;
   }
 
-  if (bulletDamageLevel === 0) {
+  if (progress.bulletDamageLevel=== 0) {
     player.damage = 1;
   }
-  if (bulletDamageLevel === 1) {
+  if (progress.bulletDamageLevel=== 1) {
     player.damage = 2;
   }
-  if (bulletDamageLevel === 2) {
+  if (progress.bulletDamageLevel=== 2) {
     player.damage = 3;
   }
-  if (bulletDamageLevel === 3) {
+  if (progress.bulletDamageLevel=== 3) {
     player.damage = 4;
   }
-  if (bulletDamageLevel === 4) {
+  if (progress.bulletDamageLevel=== 4) {
     player.damage = 5;
   }
 
-  if (playerHealthLevel === 0) {
+  if (progress.playerHealthLevel=== 0) {
     player.maxHealth = 50;
   }
-  if (playerHealthLevel === 1) {
+  if (progress.playerHealthLevel=== 1) {
     player.maxHealth = 100;
   }
-  if (playerHealthLevel === 2) {
+  if (progress.playerHealthLevel=== 2) {
     player.maxHealth = 150;
   }
-  if (playerHealthLevel === 3) {
+  if (progress.playerHealthLevel=== 3) {
     player.maxHealth = 200;
   }
-  if (playerHealthLevel === 4) {
+  if (progress.playerHealthLevel=== 4) {
     player.maxHealth = 250;
   }
   playerHealth = player.maxHealth;
@@ -843,87 +842,87 @@ function toggleShop() {
 }
 
 function updatePrices() {
-  if (bulletDamageLevel === 0) {
+  if (progress.bulletDamageLevel=== 0) {
     bulletDamageLevelSprite.changeAni("level0");
     priceDamageLevel = 10;
     priceDamageLevelTextElement.innerHTML = "Price: " + priceDamageLevel;
   }
-  if (bulletDamageLevel === 1) {
+  if (progress.bulletDamageLevel=== 1) {
     bulletDamageLevelSprite.changeAni("level1");
     priceDamageLevel = 20;
     priceDamageLevelTextElement.innerHTML = "Price: " + priceDamageLevel;
   }
-  if (bulletDamageLevel === 2) {
+  if (progress.bulletDamageLevel=== 2) {
     bulletDamageLevelSprite.changeAni("level2");
     priceDamageLevel = 30;
     priceDamageLevelTextElement.innerHTML = "Price: " + priceDamageLevel;
   }
-  if (bulletDamageLevel === 3) {
+  if (progress.bulletDamageLevel=== 3) {
     bulletDamageLevelSprite.changeAni("level3");
     priceDamageLevel = 40;
     priceDamageLevelTextElement.innerHTML = "Price: " + priceDamageLevel;
   }
-  if (bulletDamageLevel === 4) {
+  if (progress.bulletDamageLevel=== 4) {
     bulletDamageLevelSprite.changeAni("level4");
     priceDamageLevelTextElement.innerHTML = "MAX";
   }
 
-  if (bulletReloadSpeedLevel === 0) {
+  if (progress.bulletReloadSpeedLevel=== 0) {
     bulletReloadSpeedLevelSprite.changeAni("level0");
     priceReloadSpeedLevel = 10;
     priceReloadSpeedLevelTextElement.innerHTML = "Price: " + priceReloadSpeedLevel;
   }
-  if (bulletReloadSpeedLevel === 1) {
+  if (progress.bulletReloadSpeedLevel=== 1) {
     bulletReloadSpeedLevelSprite.changeAni("level1");
     priceReloadSpeedLevel = 20;
     priceReloadSpeedLevelTextElement.innerHTML = "Price: " + priceReloadSpeedLevel;
   }
-  if (bulletReloadSpeedLevel === 2) {
+  if (progress.bulletReloadSpeedLevel=== 2) {
     bulletReloadSpeedLevelSprite.changeAni("level2");
     priceReloadSpeedLevel = 30;
     priceReloadSpeedLevelTextElement.innerHTML = "Price: " + priceReloadSpeedLevel;
   }
-  if (bulletReloadSpeedLevel === 3) {
+  if (progress.bulletReloadSpeedLevel=== 3) {
     bulletReloadSpeedLevelSprite.changeAni("level3");
     priceReloadSpeedLevel = 40;
     priceReloadSpeedLevelTextElement.innerHTML = "Price: " + priceReloadSpeedLevel;
   }
-  if (bulletReloadSpeedLevel === 4) {
+  if (progress.bulletReloadSpeedLevel=== 4) {
     bulletReloadSpeedLevelSprite.changeAni("level4");
     priceReloadSpeedLevelTextElement.innerHTML = "MAX";
   }
 
-  if (playerHealthLevel === 0) {
+  if (progress.playerHealthLevel=== 0) {
     playerHealthLevelSprite.changeAni("level0");
     priceHealthLevel = 10;
     priceHealthLevelTextElement.innerHTML = "Price: " + priceHealthLevel;
   }
-  if (playerHealthLevel === 1) {
+  if (progress.playerHealthLevel=== 1) {
     playerHealthLevelSprite.changeAni("level1");
     priceHealthLevel = 20;
     priceHealthLevelTextElement.innerHTML = "Price: " + priceHealthLevel;
   }
-  if (playerHealthLevel === 2) {
+  if (progress.playerHealthLevel=== 2) {
     playerHealthLevelSprite.changeAni("level2");
     priceHealthLevel = 30;
     priceHealthLevelTextElement.innerHTML = "Price: " + priceHealthLevel;
   }
-  if (playerHealthLevel === 3) {
+  if (progress.playerHealthLevel=== 3) {
     playerHealthLevelSprite.changeAni("level3");
     priceHealthLevel = 40;
     priceHealthLevelTextElement.innerHTML = "Price: " + priceHealthLevel;
   }
-  if (playerHealthLevel === 4) {
+  if (progress.playerHealthLevel=== 4) {
     playerHealthLevelSprite.changeAni("level4");
     priceHealthLevelTextElement.innerHTML = "MAX";
   }
 
-  if (creditsLevel === 0) {
+  if (progress.creditsLevel=== 0) {
     creditLevelSprite.changeAni("level0");
-    priceCreditsLevel = 10;
+    progress.creditsLevel= 10;
     priceCreditsLevelTextElement.innerHTML = "Price: " + priceCreditsLevel;
   }
-  if (creditsLevel === 1) {
+  if (progress.creditsLevel=== 1) {
     creditLevelSprite.changeAni("level1");
     priceCreditsLevelTextElement.innerHTML = "MAX";
   }
@@ -931,27 +930,35 @@ function updatePrices() {
 
 function upgradeButton(upgrade) {
   if (upgrade === "damage") {
-    if (creditsValue >= priceDamageLevel) {
-      bulletDamageLevel++;
-      creditsValue = creditsValue - priceDamageLevel;
+    if (progress.creditsValue >= priceDamageLevel) {
+      progress.bulletDamageLevel++;
+      progress.creditsValue = progress.creditsValue - priceDamageLevel;
+      localStorage.priceDamageLevel = priceDamageLevel;
     }
   }
   if (upgrade === "firerate") {
-    if (creditsValue >= priceReloadSpeedLevel) {
-      bulletReloadSpeedLevel++;
-      creditsValue = creditsValue - priceReloadSpeedLevel;
+    if (progress.creditsValue >= priceReloadSpeedLevel) {
+      progress.bulletReloadSpeedLevel++;
+      progress.creditsValue = progress.creditsValue - priceReloadSpeedLevel;
     }
   }
   if (upgrade === "health") {
-    if (creditsValue >= priceHealthLevel) {
-      playerHealthLevel++;
-      creditsValue = creditsValue - priceHealthLevel;
+    if (progress.creditsValue >= priceHealthLevel) {
+      progress.playerHealthLevel++;
+      progress.creditsValue = progress.creditsValue - priceHealthLevel;
     }
   }
   if (upgrade === "doubleCredits") {
-    if (creditsValue >= priceCreditsLevel) {
-      creditsLevel++;
-      creditsValue = creditsValue - priceCreditsLevel;
+    if (progress.creditsValue >= priceCreditsLevel) {
+      progress.creditsLevel++;
+      progress.creditsValue = progress.creditsValue - priceCreditsLevel;
     }
   }
 }
+
+window.addEventListener("load", function(){
+  //Check if there is any progress saved in the local storage, if so, load it.
+  if(localStorage.progress){
+    progress = JSON.parse(localStorage.progress);
+  }
+})
