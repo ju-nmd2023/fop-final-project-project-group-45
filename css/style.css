@@ -260,15 +260,56 @@ p::selection {
 }
 #shopScreenContainer{
   display:none;
+  flex-direction: column;
   position: absolute;
-  width:450px;
+  justify-content: center;
   height:700px;
   align-items: center;
 }
 #shopGrid{
   display: grid;
+  height:40%;
   grid-template-columns: 1fr 1fr;
   grid-template-rows:1fr 1fr;
   column-gap: 20px;
-  margin-top: 100px;
+  row-gap: 20px;
+}
+
+.shopScreenButton {
+  width: 250px;
+  padding:10px;
+  border: rgb(32, 142, 237) 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: all 0.1s ease;
+}
+.shopScreenButton:hover {
+  background-color: rgba(19, 39, 88, 0.8);
+}
+.shopScreenButton p {
+  color: rgb(119, 219, 254);
+  font-family: "smallFont";
+  font-size: 20px;
+  text-align: center;
+}
+.shopTitleText {
+  color: white;
+  font-family: "smallFont";
+  font-size: 35px;
+  text-align: center;
+  margin-top: 20px;
+}
+.shopExitButton{
+  display:flex;
+  padding:5px;
+  align-items: center;
+  justify-content: center;
+  border:white 2px solid;
+  font-family: "smallFont";
+  color:white;
+  cursor:pointer;
+  
 }
