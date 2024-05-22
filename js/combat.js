@@ -54,7 +54,7 @@ function bulletCollision(hitBullet, hitAsteroid) {
         asteroidHealthGroup.splice(asteroidIndex, 1);
         progress.creditsValue = progress.creditsValue + creditGain;
         killCount = killCount + 1;
-        asteroidExplosionSound.setVolume(0.3);
+        asteroidExplosionSound.setVolume(0.1);
         asteroidExplosionSound.play();
         difficultyKillCounter = difficultyKillCounter + 1;
       } else {
