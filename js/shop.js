@@ -20,7 +20,6 @@ function toggleShop() {
       bulletDamageLevelSprite.changeAni("level0");
       priceDamageLevel = 10;
       priceDamageLevelTextElement.innerHTML = "Price: " + priceDamageLevel;
-      console.log(progress.creditsLevel);
     }
     if (progress.bulletDamageLevel === 1) {
       bulletDamageLevelSprite.changeAni("level1");
