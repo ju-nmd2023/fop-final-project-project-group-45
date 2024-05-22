@@ -11,7 +11,7 @@ let healthBarSprite; //sprite sheet for the healthbar
 let livesSprite; //sprite sheet for the hearts
 let startscreenBackgroundSprite, startscreenBackgroundImg; //Spritesheet for background and Img for preload
 let creditsSprite, creditContainer; //Sprite for credits icon and container to hold the text and icon.
-let progress = { bulletDamageLevel: 0, bulletReloadSpeedLevel: 0, playerHealthLevel: 0, creditsLevel: 0, highscore: 0, creditsValue: 0 }; //progress object that stores all the progress of the player.
+let progress = { bulletDamageLevel: 0, bulletReloadSpeedLevel: 0, playerHealthLevel: 0, creditsLevel: 0, highscore: 0, creditsValue: 1000}; //progress object that stores all the progress of the player.
 let difficultyKillCounter = 0; //Counter for the amount of kills that is reset for every 5 kills.
 let killCount = 0; //Counter for the amount of kills that is reset for every game.
 let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 1, spawnRate: 90 }; //Object that stores group, sprites, velocity and spawnrate
@@ -693,4 +693,5 @@ window.addEventListener("load", function () {
   if (localStorage.progress) {
     progress = JSON.parse(localStorage.progress);
   }
+  
 });

@@ -1,7 +1,6 @@
 function toggleShop() {
     if (shopIsOpen) {
       shopIsOpen = false;
-  
       bulletDamageLevelSprite.visible = false;
       bulletReloadSpeedLevelSprite.visible = false;
       playerHealthLevelSprite.visible = false;
@@ -15,6 +14,7 @@ function toggleShop() {
     }
   }
   
+  //Change prices depending on what upgrade level that player has.
   function updatePrices() {
     if (progress.bulletDamageLevel === 0) {
       bulletDamageLevelSprite.changeAni("level0");
@@ -41,7 +41,6 @@ function toggleShop() {
       bulletDamageLevelSprite.changeAni("level4");
       priceDamageLevelTextElement.innerHTML = "MAX";
     }
-  
     if (progress.bulletReloadSpeedLevel === 0) {
       bulletReloadSpeedLevelSprite.changeAni("level0");
       priceReloadSpeedLevel = 10;
@@ -66,7 +65,6 @@ function toggleShop() {
       bulletReloadSpeedLevelSprite.changeAni("level4");
       priceReloadSpeedLevelTextElement.innerHTML = "MAX";
     }
-  
     if (progress.playerHealthLevel === 0) {
       playerHealthLevelSprite.changeAni("level0");
       priceHealthLevel = 10;
@@ -91,7 +89,6 @@ function toggleShop() {
       playerHealthLevelSprite.changeAni("level4");
       priceHealthLevelTextElement.innerHTML = "MAX";
     }
-  
     if (progress.creditsLevel === 0) {
       creditLevelSprite.changeAni("level0");
       priceCreditsLevel = 100;
@@ -103,6 +100,7 @@ function toggleShop() {
     }
   }
   
+  //Depending on what upgrade button is pressed, the function recieves a string and checks if the player has enough credits to buy the upgrade.
   function upgradeButton(upgrade) {
     if (upgrade === "damage") {
       if (progress.creditsValue >= priceDamageLevel) {
