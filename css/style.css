@@ -346,3 +346,18 @@ p::selection {
   text-align: center;
   margin-top: 20px;
 }
+
+#gameScoreContainer{
+  display: none;
+  position: absolute;
+  text-align: center;
+  flex-direction: column;
+  margin-top: -600px;
+  margin-left: -270px;
+}
+#gameScoreContainer p{
+  color: white;
+  font-family: "smallFont";
+  font-size: large;
+}
+

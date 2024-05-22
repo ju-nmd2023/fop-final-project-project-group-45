@@ -61,7 +61,7 @@ let startButton,
   upgradeCreditsDoublerButton,
   exitShopButton,
   resetProgressButton;
-let gameScore, gameScoreContainer;
+let gameOverScore, gameOverScoreContainer, playScreenScore, playScreenScoreContainer;
 let gameHasBeenLaunched = false;
 let bulletDamageLevelSprite;
 let bulletReloadSpeedLevelSprite;
@@ -199,12 +199,14 @@ function setup() {
   gameOverContainer = document.querySelector("#gameOverContainer"); //defining the game over container
   pauseMenuContainer = document.querySelector("#pauseScreenContainer"); //defining the pause menu container
   gameOverDarkBackground = document.querySelector("#gameOverDarkBackground"); //defining the dark background for the game over screen
-  gameScoreContainer = document.querySelector("#gameScore"); //defining the game score container
+  gameOverScoreContainer = document.querySelector("#gameScore"); //defining the game score container
   startMenuContainer = document.querySelector("#startScreenContainer"); //defining the start menu container
   launchGameContainer = document.querySelector("#launchGameContainer"); //defining the launch game container
   shopScreenContainer = document.querySelector("#shopScreenContainer"); //defining the shop screen container
-  gameScore = document.createElement("p"); //creating a p element for the game score
-  gameScoreContainer.appendChild(gameScore); //appending the game score to the game score container
+  gameOverScore = document.createElement("p"); //creating a p element for the game score in Game Over Screen
+  gameOverScoreContainer.appendChild(gameOverScore); //appending the game score to the game score container
+  
+  
   highscoreContainer = document.querySelector("#highscoreContainer");
   priceContainer = document.querySelector("#priceContainer");
   priceDamageLevelTextElement = document.querySelector("#damagePrice");
@@ -304,6 +306,7 @@ function loadGUI() {
     lives1: { col: 2, frames: 1 },
   });
   livesSprite.changeAni("lives3");
+  livesSprite.layer = 101;
 
   creditsSprite = new Sprite(180, 334, 16, 16, "none");
   creditsSprite.spriteSheet = "./assets/sprites/interface/ingot.png";
@@ -317,6 +320,11 @@ function loadGUI() {
   allCreditContainers = document.querySelector(".creditsContainer");
   creditText = document.createElement("p");
   allCreditContainers.appendChild(creditText);
+
+  playScreenScoreContainer = document.querySelector("#gameScoreContainer"); //defining the play screen score container
+
+  playScreenScore = document.createElement("p"); //creating a p element for the game score in Play Screen
+  playScreenScoreContainer.appendChild(playScreenScore); //appending the game score to the game score container
 
   pauseButtonSprite = new Sprite(200, 25, 32, 32, "none");
   pauseButtonSprite.img = pauseButtonImg;
@@ -511,6 +519,7 @@ function playscreen() {
   enemySpawner();
   asteroidCollision();
   updateCredits();
+  updateScore();
   updateHealth();
   increaseDifficulty();
 }
@@ -578,7 +587,7 @@ function unpauseGame() {
   gunShotSound.setVolume(0.5);
 }
 function toggleMainMenu() {
-  updateCredits();
+  playScreenScoreContainer.style.display = "none";
   startscreenBackgroundSprite.visible = true;
   highscoreContainer.style.display = "flex";
   highscoreContainer.innerHTML = "Highscore: " + progress.highscore;
@@ -610,6 +619,7 @@ function startGame() {
   healthBarSprite.visible = true;
   healthBarBorderSprite.visible = true;
   livesSprite.visible = true;
+  playScreenScoreContainer.style.display = "flex";
   creditsSprite.visible = true;
   pauseButtonSprite.visible = true;
   hudbackground.visible = true;
@@ -627,7 +637,6 @@ function startGame() {
   asteroidObject.spawnRate = 90;
   asteroidObject.health = 1;
   frameCount = 0;
-
   upgradeChecker();
 }
 function backgroundMovement() {
@@ -712,6 +721,12 @@ function spawnAsteroid(x, y) {
   asteroidObject.group.add(asteroidObject.collider);
   asteroidHealthGroup.push(asteroidObject.health);
 }
+
+function updateScore(){
+  playScreenScore.innerHTML = "Score: " + killCount;
+
+}
+
 function increaseDifficulty() {
   if (frameCount % 600 === 0) {
     //every 10 seconds
@@ -754,7 +769,7 @@ function gameOver() {
   //The game over background is put in HTML to make sure it is on top of all other elements.
   gameOverContainer.style.display = "flex";
   gameOverDarkBackground.style.display = "block";
-  gameScore.innerHTML = "Score: " + killCount;
+  gameOverScore.innerHTML = "Score: " + killCount;
   for (let asteroidIndex in asteroidBaseGroup) {
     asteroidBaseGroup[asteroidIndex].remove();
     asteroidFlameGroup[asteroidIndex].remove();
