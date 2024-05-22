@@ -12,16 +12,16 @@ function asteroidCollision() {
       asteroidFlameGroup.splice(asteroidIndex, 1);
       asteroidColliderGroup.splice(asteroidIndex, 1);
       asteroidHealthGroup.splice(asteroidIndex, 1);
-      if (playerHealth > 0) {
+      if (playerHealth > 0) { //If the player still has health, play the player damage sound
         playerDamageSound.play();
       }
     }
   }
-  //If the asteroid collides with the bottom collider, remove the asteroid.
+  //If the asteroid collides with the bottom collider, remove the asteroid and damage the player. Same as last loop but with the bottom collider instead of player.
   for (let asteroidIndex in asteroidBaseGroup) {
     if (asteroidBottomCollider.overlaps(asteroidColliderGroup[asteroidIndex])) {
       killAsteroid(asteroidBaseGroup[asteroidIndex], asteroidFlameGroup[asteroidIndex], asteroidColliderGroup[asteroidIndex]);
-      playerHealth -= 10;
+      playerHealth -= 10; //Reduce player health by 10 instead of 50
       asteroidBaseGroup.splice(asteroidIndex, 1);
       asteroidFlameGroup.splice(asteroidIndex, 1);
       asteroidColliderGroup.splice(asteroidIndex, 1);
@@ -41,12 +41,12 @@ function bulletCollision(hitBullet, hitAsteroid) {
   //Look for the collider in the group of all asteroids colliders and remove the asteroid it belongs to.
   for (let asteroidIndex in asteroidBaseGroup) {
     if (hitAsteroid === asteroidColliderGroup[asteroidIndex]) {
-      asteroidHealthGroup[asteroidIndex] -= player.damage;
-      if (asteroidHealthGroup[asteroidIndex] <= 0) {
+      asteroidHealthGroup[asteroidIndex] -= player.damage; //Reduce the asteroid health by the player damage
+      if (asteroidHealthGroup[asteroidIndex] <= 0) { //If the asteroid health is 0 or below, remove the asteroid and add credits to the player.
         asteroidBaseGroup[asteroidIndex].changeAni("explosion");
         //remove the asteroid Sprites from their groups
         killAsteroid(asteroidBaseGroup[asteroidIndex], asteroidFlameGroup[asteroidIndex], asteroidColliderGroup[asteroidIndex]);
-        //Splice the arrays
+        //remove the asteroid from all the arrays
         asteroidBaseGroup.splice(asteroidIndex, 1);
         asteroidFlameGroup.splice(asteroidIndex, 1);
         asteroidColliderGroup.splice(asteroidIndex, 1);
@@ -81,6 +81,7 @@ function enemySpawner() {
   }
 }
 
+//Function to spawn every seperate asteroid sprite and add them to their respective groups.
 function spawnAsteroid(x, y) {
   asteroidObject.flame = new Sprite(x, y, 96, 96, "none");
   asteroidObject.flame.spriteSheet = asteroidFlameImg;
@@ -102,7 +103,8 @@ function spawnAsteroid(x, y) {
   });
   asteroidObject.base.changeAni("base");
   asteroidObject.base.vel.y = asteroidObject.velY;
-  //make velx randomly positive or negative
+
+  //make X velocity randomly positive or negative
   if (x < 90) {
     asteroidObject.base.vel.x = -asteroidObject.velX;
   } else if (x > 144) {
@@ -137,9 +139,11 @@ function spawnAsteroid(x, y) {
 
   //This group is only for the bullet collision in createbullet function.
   asteroidObject.group.add(asteroidObject.collider);
+  //Push the health of the asteroid to the health array
   asteroidHealthGroup.push(asteroidObject.health);
 }
 
+//Function to spawn one asteroid at the beginning of the game to make sure there is an asteroid in the asteroid group from the start.
 function loadEnemies() {
   let x = 1000;
   let y = 1000;
@@ -191,4 +195,41 @@ function loadEnemies() {
 
   asteroidBottomCollider = new Sprite(112, 360, 225, 1, "static");
   asteroidBottomCollider.overlaps(allSprites);
+}
+
+//function to make the game harder as time goes on and the more kills the player gets.
+function increaseDifficulty() {
+  if (frameCount % 600 === 0) {
+    //every 10 seconds (60 frames per second)
+    if (asteroidObject.velY < 12) {
+      asteroidObject.velY += 0.25; //increase the Y speed of the asteroids
+    }
+    if (asteroidObject.spawnRate > 24) {
+      asteroidObject.spawnRate -= 0.4; //increase the spawn rate of the asteroids
+    }
+    if (asteroidObject.velX > -3) {
+      asteroidObject.velX -= 0.15; //increase the X speed of the asteroids
+    }
+  }
+
+  if (frameCount % 1800 === 0) {
+    //every 30 seconds
+    if (asteroidObject.health < 15) {//increase the health of the asteroids
+      asteroidObject.health += 1;
+    }
+  }
+
+  if (difficultyKillCounter % 5 === 0 && difficultyKillCounter !== 0) {
+    //every 5 kills
+    if (asteroidObject.velY < 12) {
+      asteroidObject.velY += 0.12; //increase the Y speed of the asteroids
+    }
+    if (asteroidObject.spawnRate > 24) {
+      asteroidObject.spawnRate -= 0.2; //decrease the spawn rate of the asteroids
+    }
+    if (asteroidObject.velX > -3) {
+      asteroidObject.velX += 0.075; //increase the X speed of the asteroids
+    }
+    difficultyKillCounter = 0; //reset the kill count
+  }
 }

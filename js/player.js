@@ -118,3 +118,63 @@ function updateLives() {
     gameOver();
   }
 }
+
+//Check for what upgrades are bought and update the player stats accordingly
+function upgradeChecker() {
+  if (progress.bulletReloadSpeedLevel === 0) {
+    player.reloadspeed = 70;
+  }
+  if (progress.bulletReloadSpeedLevel === 1) {
+    player.reloadspeed = 60;
+  }
+  if (progress.bulletReloadSpeedLevel === 2) {
+    player.reloadspeed = 50;
+  }
+  if (progress.bulletReloadSpeedLevel === 3) {
+    player.reloadspeed = 40;
+  }
+  if (progress.bulletReloadSpeedLevel === 4) {
+    player.reloadspeed = 20;
+  }
+
+  if (progress.bulletDamageLevel === 0) {
+    player.damage = 1;
+  }
+  if (progress.bulletDamageLevel === 1) {
+    player.damage = 2;
+  }
+  if (progress.bulletDamageLevel === 2) {
+    player.damage = 3;
+  }
+  if (progress.bulletDamageLevel === 3) {
+    player.damage = 4;
+  }
+  if (progress.bulletDamageLevel === 4) {
+    player.damage = 5;
+  }
+
+  if (progress.playerHealthLevel === 0) {
+    player.maxHealth = 50;
+  }
+  if (progress.playerHealthLevel === 1) {
+    player.maxHealth = 100;
+  }
+  if (progress.playerHealthLevel === 2) {
+    player.maxHealth = 150;
+  }
+  if (progress.playerHealthLevel === 3) {
+    player.maxHealth = 200;
+  }
+  if (progress.playerHealthLevel === 4) {
+    player.maxHealth = 250;
+  }
+
+  if (progress.creditsLevel === 0) {
+    creditGain = 1;
+  }
+  if (progress.creditsLevel === 1) {
+    creditGain = 2;
+  }
+//Apply the new max health to the player
+  playerHealth = player.maxHealth;
+}
