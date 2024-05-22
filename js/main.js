@@ -5,78 +5,50 @@ let playerEngineFireIdle; //idle engine fire sprite
 let shipBaseEngineImg; //standard engine sprite
 let shipBaseEngine; //standard engine variable
 let playScreenSpaceBackground; //background image
-let hudbackground; //hud background image
-let hudbackgroundImg; //hud background image
+let hudbackground, hudbackgroundImg; //hudbackground spritesheet and img for preload
 let healthBarBorderSprite; //sprite sheet for the healthbar border
-let healthBarSprite; // sprite sheet for the healthbar
-let livesSprite;
-let startscreenBackgroundSprite, startscreenBackgroundImg;
-let creditsSprite;
-let allCreditContainers;
-let asteroidSpriteImg;
-let asteroidFlameImg;
+let healthBarSprite; //sprite sheet for the healthbar
+let livesSprite; //sprite sheet for the hearts
+let startscreenBackgroundSprite, startscreenBackgroundImg; //Spritesheet for background and Img for preload
+let creditsSprite, creditContainer; //Sprite for credits icon and container to hold the text and icon.
 let progress = { bulletDamageLevel: 0, bulletReloadSpeedLevel: 0, playerHealthLevel: 0, creditsLevel: 0, highscore: 0, creditsValue: 0 }; //progress object that stores all the progress of the player.
-let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 1, spawnRate: 90 };
-let asteroidHealthGroup = [];
 let difficultyKillCounter = 0; //Counter for the amount of kills that is reset for every 5 kills.
 let killCount = 0; //Counter for the amount of kills that is reset for every game.
-let asteroidBaseGroup = [];
-let asteroidColliderGroup = [];
-let asteroidFlameGroup = [];
-let pauseButtonImg;
-let pauseButtonSprite;
-let mainProjectileImg;
-let bulletObject = { base: "", collider: "", group: "" };
-let bulletGroup = [];
-let healthBarImg;
-let gameOverContainer, gameOverDarkBackground;
-let pauseMenuBackgroundImg, pauseMenuBackgroundSprite, pauseMenuBackgroundDarkerSprite, pauseMenuContainer, launchGameContainer;
-let numberOfBullets;
-let pauseMenuLogo;
-let y1 = -650;
-let y2 = -1650;
-let gameIsRunning = false; //if a stage is currently being played. Used to set if the cursor should be showned.
-let gameIsPaused = false; //if a stage is currently being played but the player has paused it. Used to set if the cursor should be showed.
-let creditText;
-let startMenuContainer;
-let alertExitBox, alertResetBox;
-let alertAnswer = "";
-let alertExitBoxIsVisible = false;
-let alertResetBoxIsVisible = false;
-let mainMenuSong, playScreenSong, gunShotSound, asteroidExplosionSound, asteroidHitSound, gameOverSound, playerDamageSound, confirmSound, cancelSound, playerLoseLifeSound;
-let mainMenuHasBeenToggled = false;
-let startButton,
-  resumeButton,
-  exitGameButton,
-  shopButton,
-  alertExitBoxYesButton,
-  alertExitBoxNoButton,
-  alertResetBoxYesButton,
-  alertResetBoxNoButton,
-  gameOverButton,
-  launchGameButton,
-  upgradeHealthButton,
-  upgradeDamageButton,
-  upgradeFireRateButton,
-  upgradeCreditsDoublerButton,
-  exitShopButton,
-  resetProgressButton;
-let gameOverScore, gameOverScoreContainer, playScreenScore, playScreenScoreContainer;
-let gameHasBeenLaunched = false;
-let bulletDamageLevelSprite;
-let bulletReloadSpeedLevelSprite;
-let playerHealthLevelSprite;
-let creditLevelSprite;
-let creditGain = 1;
-let shopScreenContainer,
-  shopIsOpen = false;
-let asteroidBottomCollider;
-let priceDamageLevel, priceReloadSpeedLevel, priceHealthLevel, priceCreditsLevel, priceContainer;
-let priceDamageLevelTextElement, priceReloadSpeedLevelTextElement, priceHealthLevelTextElement, priceCreditsLevelTextElement;
+let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 1, spawnRate: 90 }; //Object that stores group, sprites, velocity and spawnrate
+let asteroidSpriteImg, asteroidFlameImg; //Variables for asteroid image preloading
+let asteroidHealthGroup = []; //Array to store the health of the asteroids
+let asteroidBaseGroup = [], asteroidColliderGroup = [], asteroidFlameGroup = []; //Arrays containing sprites for the elements of an asteroid
+let pauseButtonImg, pauseButtonSprite; //Sprite for pause icon and img for preload
+let mainProjectileImg; //Variable for preloading bullet sprite img.
+let bulletObject = {base: "", collider: "", group: ""};
+let bulletGroup = []; //Array for storing all the bullets
+let healthBarImg; //Variable for preloading healthbar sprite img.
+let gameOverContainer, gameOverDarkBackground; //Game over container and dark background
+let pauseMenuBackgroundImg, pauseMenuBackgroundSprite, pauseMenuBackgroundDarkerSprite, pauseMenuContainer, launchGameContainer; //Containers for pause menu and sprite for background
+let background1Yposition = -650, background2Yposition = -1650; //Variables containing y coordinates for the background. The background is looped therefore there are two y positions
+let gameIsRunning = false; //if a stage is currently being played. Used to start the game and display different screens
+let gameIsPaused = false; //if a stage is currently being played but the player has paused it. Used to set if the cursor should be showed and to show pausescreen
+let startMenuContainer; //Container for the start menu
+let alertExitBox, alertResetBox; //Containers for the alert boxes
+let alertExitBoxIsVisible = false, alertResetBoxIsVisible = false; //Used to display the alert boxes
+let mainMenuSong, playScreenSong, gunShotSound, asteroidExplosionSound, asteroidHitSound, gameOverSound, playerDamageSound, confirmSound, cancelSound, playerLoseLifeSound; //Variables to store music and sound fx
+let mainMenuHasBeenToggled = false; //Used to toggle the main menu music
+let startButton, resumeButton, exitGameButton, shopButton, alertExitBoxYesButton, alertExitBoxNoButton, alertResetBoxYesButton, alertResetBoxNoButton,
+  gameOverButton, launchGameButton, upgradeHealthButton, upgradeDamageButton, upgradeFireRateButton, upgradeCreditsDoublerButton, exitShopButton, resetProgressButton;
+let gameOverScore, gameOverScoreContainer, playScreenScore, playScreenScoreContainer; //Variables for storing score and containers for the score
+let gameHasBeenLaunched = false; //Variable to check if player has clicked "launch game", required to make sure sounds are played
+let bulletDamageLevelSprite, bulletReloadSpeedLevelSprite, playerHealthLevelSprite, creditLevelSprite; //Sprites in the shop that display upgrade level
+let creditGain = 1; //Variable for credit multiplier upgrade
+let creditText; //Variable for storing the text element of credits
+let shopScreenContainer, shopIsOpen = false; //Container for shop and bool to check if its open
+let asteroidBottomCollider; //Collider to check if the asteroid has left the canvas
+let priceDamageLevel, priceReloadSpeedLevel, priceHealthLevel, priceCreditsLevel, priceContainer; //Variable for prices of upgrades and container to store all price elements
+let priceDamageLevelTextElement, priceReloadSpeedLevelTextElement, priceHealthLevelTextElement, priceCreditsLevelTextElement; //Variables for storing the text elements of the prices
 
 //Buttons Class is created
 class Button {
-  constructor(width, height, text, type, onclick, sound) {
+  
+  constructor(width, height, text, type, onclick, sound) { //Constructor method
     this.width = width;
     this.height = height;
     this.text = text;
@@ -85,13 +57,15 @@ class Button {
     this.backgroundColor = "rgba(0,0,0,0)";
     this.sound = sound;
   }
+
+  //draw method is created to draw different buttons depending on which type they're set as
   draw() {
     //A standard div and p element is created for the button
     let button = document.createElement("div");
     let textElement = document.createElement("p");
     textElement.innerHTML = this.text;
 
-    //Depending on the type of button it is assigned different classes and appended to different containers
+    //Depending on the type of button it is assigned different css classes and appended to different containers
     if (this.type === "startScreenButton") {
       document.querySelector("#startButtonGridContainer").appendChild(button);
       button.classList.add("startScreenButton");
@@ -124,7 +98,6 @@ class Button {
       //draw launch game button
       document.querySelector("#launchButtonGridContainer").appendChild(button);
       button.classList.add("startScreenButton");
-      button.style.backgroundColor = this.backgroundColor;
     }
 
     if (this.type == "shopButton") {
@@ -149,13 +122,15 @@ class Button {
     button.style.height = this.height + "px";
   }
 }
-class Redbutton extends Button {
+//A redbutton class is created that extends the button class, this is for buttons that have the unique red background color.
+class Redbutton extends Button { 
   constructor(width, height, text, type, onclick) {
     super(width, height, text, type, onclick);
     this.backgroundColor = "rgba(255,0,0,1)";
   }
 }
 
+//All images and sounds used have to be preloaded before the game can start
 function preload() {
   startscreenBackgroundImg = loadImage("./assets/backgrounds/startscreen.png");
   playerFullHealthImg = loadImage("./assets/sprites/player/base_ship/base_ship_full_health.png");
@@ -183,13 +158,17 @@ function preload() {
   mainMenuSong.loop();
   playScreenSong.loop();
 }
+
 function setup() {
   new Canvas(225, 350, "pixelated x2"); //pixelated x2 upscales the sprites to become the correct size and resolution.
   allSprites.pixelPerfect = true;
-  canvasLeftCollider = new Sprite(-1, 0, 1, 700, "static"); //colliders to keep the character inside the canvas
+  //colliders to keep the character inside the canvas
+  canvasLeftCollider = new Sprite(-1, 0, 1, 700, "static"); 
   canvasTopCollider = new Sprite(-1, 0, 450, 1, "static");
   canvasRightCollider = new Sprite(226, 0, 1, 700, "static");
   canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
+
+  //groups objects and variables can be defined in setup to be used in the game
   bulletObject.group = new Group();
   asteroidObject.group = new Group();
   alertExitBox = document.querySelector("#alertBoxExitContainer"); //defining the alert box
@@ -203,7 +182,6 @@ function setup() {
   shopScreenContainer = document.querySelector("#shopScreenContainer"); //defining the shop screen container
   gameOverScore = document.createElement("p"); //creating a p element for the game score in Game Over Screen
   gameOverScoreContainer.appendChild(gameOverScore); //appending the game score to the game score container
-
   highscoreContainer = document.querySelector("#highscoreContainer");
   priceContainer = document.querySelector("#priceContainer");
   priceDamageLevelTextElement = document.querySelector("#damagePrice");
@@ -211,6 +189,7 @@ function setup() {
   priceHealthLevelTextElement = document.querySelector("#healthPrice");
   priceCreditsLevelTextElement = document.querySelector("#doubleCreditsPrice");
 
+  //Buttons are defined in setup as well
   alertExitBoxYesButton = new Button(100, 30, "Yes", "alertScreenExitButton", "gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver(); confirmSound.play();");
   alertExitBoxNoButton = new Button(100, 30, "No", "alertScreenExitButton", "toggleExitAlertBox(); cancelSound.play();");
   resetProgressButton = new Button(250, 50, "Reset Progress", "resetProgress", "toggleResetAlertBox(); cancelSound.play();");
@@ -227,7 +206,8 @@ function setup() {
   upgradeFireRateButton = new Button(150, 30, "Fire Rate", "shopButton", "confirmSound.play(); upgradeButton('firerate');");
   upgradeCreditsDoublerButton = new Button(150, 30, "Double Credits", "shopButton", "confirmSound.play(); upgradeButton('doubleCredits');");
   exitShopButton = new Redbutton(150, 30, "Exit Shop", "exitShopButton", "toggleShop(); cancelSound.play();");
-  //exitShopButton = new Redbutton(150, 30, "Exit Shop", "exitShopButton",  "cancelSound.play();");
+  
+  //The button draw function is run
   resumeButton.draw();
   exitGameButton.draw();
   startButton.draw();
@@ -245,22 +225,14 @@ function setup() {
   alertResetBoxYesButton.draw();
   alertResetBoxNoButton.draw();
 
+  //The game is set to run at 60 frames per second and external load functions are run
   frameRate(60);
   loadPlayer();
   loadEnemies();
   loadGUI();
 }
 
-function toggleExitAlertBox() {
-  if (alertExitBoxIsVisible) {
-    alertExitBox.style.display = "none";
-    alertExitBoxIsVisible = false;
-  } else {
-    alertExitBox.style.display = "block";
-    alertExitBoxIsVisible = true;
-  }
-}
-
+//GUI is loaded in a separate function to keep the setup function cleaner
 function loadGUI() {
   hudbackground = new Sprite(112, 334, 225, 32, "static"); //hud background sprite
   hudbackground.img = hudbackgroundImg;
@@ -271,9 +243,9 @@ function loadGUI() {
     border: { col: 0, frames: 1 },
   });
 
+  //Animation with 16 frames is added to healthbar defining different health states
   healthBarSprite = new Sprite(66, 334, 96, 16, "none"); //healthbar sprite
   healthBarSprite.spriteSheet = healthBarImg;
-
   healthBarSprite.addAnis({
     //adding a state for every sprite
     health100: { col: 1, frames: 1 },
@@ -293,7 +265,7 @@ function loadGUI() {
     health13: { col: 15, frames: 1 },
     health6: { col: 16, frames: 1 },
   });
-  healthBarSprite.changeAni("health100");
+  healthBarSprite.changeAni("health100"); //By default the healthbar is set to 100%
 
   livesSprite = new Sprite(140, 334, 48, 16, "none"); //lives sprite
   livesSprite.spriteSheet = "./assets/sprites/interface/hearts.png";
@@ -314,12 +286,11 @@ function loadGUI() {
     lives3: { col: 0, frames: 1 },
   });
 
-  allCreditContainers = document.querySelector(".creditsContainer");
+  creditContainer = document.querySelector(".creditsContainer");
   creditText = document.createElement("p");
-  allCreditContainers.appendChild(creditText);
+  creditContainer.appendChild(creditText);
 
   playScreenScoreContainer = document.querySelector("#gameScoreContainer"); //defining the play screen score container
-
   playScreenScore = document.createElement("p"); //creating a p element for the game score in Play Screen
   playScreenScoreContainer.appendChild(playScreenScore); //appending the game score to the game score container
 
@@ -400,14 +371,19 @@ function loadGUI() {
 function draw() {
   clear();
 
+  //If the player has played the game before, the progress is loaded from the local storage
   localStorage.progress = JSON.stringify(progress);
+  //gameLaunch function is run to make the player click "launch" allowing sounds to be played
   gameLaunch();
+
+  //If escape is pressed or the pause button is clicked, the game is paused and unpaused, shop and alert boxes are also closed using this
+  //This part is only for the escape key and pause button
   if (kb.presses("escape") || pauseButtonSprite.mouse.presses()) {
-    //pause or unpause the game.
-    if (gameIsRunning) {
-      gameIsPaused = !gameIsPaused;
+    //Game can only be paused if game is running
+    if (gameIsRunning) {//If game is running
+      gameIsPaused = !gameIsPaused; //Toggle pause
       cancelSound.play();
-      if (!gameIsPaused) {
+      if (!gameIsPaused) { //If game is paused, unpause the game.
         unpauseGame();
       }
     }
@@ -423,28 +399,32 @@ function draw() {
       toggleShop();
     }
   }
-  if (gameIsRunning && gameIsPaused === false) {
-    canvas.style.setProperty("--cursorMode", "none");
+  
+  if (gameIsRunning && gameIsPaused === false) { //If game is running and not paused, everything runs
+    canvas.style.setProperty("--cursorMode", "none"); //Custom css variable cursorMode is toggled to hide cursor
     playscreen();
-  } else if (gameIsRunning || gameIsPaused) {
+  } else if (gameIsPaused) { //If game is paused, everything is paused
     pauseGame();
-  } else if (gameIsRunning === false && gameHasBeenLaunched === true) {
-    canvas.style.setProperty("--cursorMode", "auto");
+  } else if (gameIsRunning === false && gameHasBeenLaunched === true) { //If the game has been launched but isn't played, main menu is shown
+    canvas.style.setProperty("--cursorMode", "auto"); 
     startscreen();
   }
   allSprites.draw(); //To draw all sprites before drawing the text, making sure the text stays on top of the sprites.
 }
+
 function updateCredits() {
   creditText.innerHTML = progress.creditsValue;
 }
 
+//Main function for main menu and shop screen
 function startscreen() {
-  if (!mainMenuHasBeenToggled) {
+  if (!mainMenuHasBeenToggled) { 
     playScreenSong.stop();
     mainMenuSong.play();
     mainMenuHasBeenToggled = true;
   }
   toggleMainMenu();
+  //Display shop
   if (shopIsOpen) {
     shopScreenContainer.style.display = "flex";
     startMenuContainer.style.display = "none";
@@ -457,8 +437,9 @@ function startscreen() {
   }
 }
 
+//Playscreen contains functions of the game that is continuously drawn when the game is running
 function playscreen() {
-  backgroundMovement();
+  backgroundMovement(); 
   playerMovement();
   enemySpawner();
   asteroidCollision();
@@ -467,13 +448,15 @@ function playscreen() {
   updateHealth();
   increaseDifficulty();
 }
-function pauseGame() {
+
+function pauseGame() { //When game is paused
   creditText.style.opacity = "30%";
   canvas.style.setProperty("--cursorMode", "auto");
   player.sprite.vel.y = 0;
   player.sprite.vel.x = 0;
-  playerEngineFireIdle.animation.pause();
+  playerEngineFireIdle.animation.pause(); //Pause animation
   bulletObject.group.vel.y = 0;
+  //All asteroids and bullets are paused
   for (let asteroidIndex in asteroidBaseGroup) {
     asteroidBaseGroup[asteroidIndex].vel.y = 0;
     asteroidBaseGroup[asteroidIndex].vel.x = 0;
@@ -488,12 +471,13 @@ function pauseGame() {
     bulletGroup[bulletIndex].life = 0;
     bulletGroup[bulletIndex].layer = 0;
   }
-  image(playScreenSpaceBackground, 0, y1, 225, 1000);
-  image(playScreenSpaceBackground, 0, y2, 225, 1000);
+  //Background image is set to the current position of the looping background
+  image(playScreenSpaceBackground, 0, background1Yposition, 225, 1000);
+  image(playScreenSpaceBackground, 0, background2Yposition, 225, 1000);
   pauseMenuBackgroundSprite.visible = true;
   pauseMenuBackgroundDarkerSprite.visible = true;
   pauseMenuContainer.style.display = "block";
-  playScreenSong.setVolume(0.2);
+  playScreenSong.setVolume(0.15);
   asteroidExplosionSound.setVolume(0.05);
   gunShotSound.setVolume(0.1);
 }
@@ -503,16 +487,9 @@ function unpauseGame() {
   playerEngineFireIdle.animation.play();
   bulletObject.group.vel.y = -3;
   bulletObject.base.animation.play();
+  //Reset asteroids and bullets when game is unpaused. Life is extended and animations are played.
   for (let asteroidIndex in asteroidBaseGroup) {
     asteroidBaseGroup[asteroidIndex].vel.y = asteroidObject.velY;
-    if (asteroidBaseGroup[asteroidIndex].x < 90) {
-      asteroidBaseGroup[asteroidIndex].vel.x = -asteroidObject.velX;
-    }
-    if (asteroidBaseGroup[asteroidIndex].x > 144) {
-      asteroidBaseGroup[asteroidIndex].vel.x = asteroidObject.velX;
-    } else {
-      asteroidBaseGroup[asteroidIndex].vel.x = 0;
-    }
     asteroidFlameGroup[asteroidIndex].life = 1000;
     asteroidColliderGroup[asteroidIndex].life = 1000;
     asteroidBaseGroup[asteroidIndex].life = 1000;
@@ -526,10 +503,23 @@ function unpauseGame() {
   pauseMenuBackgroundSprite.visible = false;
   pauseMenuBackgroundDarkerSprite.visible = false;
   pauseMenuContainer.style.display = "none";
-  playScreenSong.setVolume(0.9);
-  asteroidExplosionSound.setVolume(0.3);
-  gunShotSound.setVolume(0.5);
+  playScreenSong.setVolume(0.3);
+  asteroidExplosionSound.setVolume(0.1);
+  gunShotSound.setVolume(0.3);
 }
+
+//Alert box for "Are you sure you want to exit?"
+function toggleExitAlertBox() {
+  if (alertExitBoxIsVisible) {
+    alertExitBox.style.display = "none";
+    alertExitBoxIsVisible = false;
+  } else {
+    alertExitBox.style.display = "block";
+    alertExitBoxIsVisible = true;
+  }
+}
+
+//Main menu visibility is toggled
 function toggleMainMenu() {
   playScreenScoreContainer.style.display = "none";
   startscreenBackgroundSprite.visible = true;
@@ -549,8 +539,11 @@ function toggleMainMenu() {
   startMenuContainer.style.display = "flex";
   creditText.style.opacity = "100%";
   creditsSprite.visible = true;
+  //Updatecredits is run to make sure the credits are updated when using the shop
   updateCredits();
 }
+
+//Game is started
 function startGame() {
   highscoreContainer.style.display = "none";
   mainMenuSong.stop();
@@ -583,17 +576,20 @@ function startGame() {
   frameCount = 0;
   upgradeChecker();
 }
-function backgroundMovement() {
-  image(playScreenSpaceBackground, 0, y1, 225, 1000);
-  image(playScreenSpaceBackground, 0, y2, 225, 1000);
-  y1 += 1;
-  y2 += 1;
 
-  if (y1 == 350) {
-    y1 = -1650;
+//Background movement function to loop the background
+function backgroundMovement() {
+  image(playScreenSpaceBackground, 0, background1Yposition, 225, 1000);
+  image(playScreenSpaceBackground, 0, background2Yposition, 225, 1000);
+  background1Yposition += 1;
+  background2Yposition += 1;
+
+  //When the background reaches the bottom of the canvas, it is reset to the top
+  if (background1Yposition == 350) {
+    background1Yposition = -1650;
   }
-  if (y2 == 350) {
-    y2 = -1650;
+  if (background2Yposition == 350) {
+    background2Yposition = -1650;
   }
 }
 
@@ -603,7 +599,7 @@ function updateScore() {
 
 function increaseDifficulty() {
   if (frameCount % 600 === 0) {
-    //every 10 seconds
+    //every 10 seconds (60 frames per second)
     if (asteroidObject.velY < 12) {
       asteroidObject.velY += 0.25; //increase the Y speed of the asteroids
     }
@@ -617,7 +613,7 @@ function increaseDifficulty() {
 
   if (frameCount % 1800 === 0) {
     //every 30 seconds
-    if (asteroidObject.health < 15) {
+    if (asteroidObject.health < 15) {//increase the health of the asteroids
       asteroidObject.health += 1;
     }
   }
@@ -646,6 +642,7 @@ function gameOver() {
   gameOverContainer.style.display = "flex";
   gameOverDarkBackground.style.display = "block";
   gameOverScore.innerHTML = "Score: " + killCount;
+  //All asteroids and bullets are removed from the canvas
   for (let asteroidIndex in asteroidBaseGroup) {
     asteroidBaseGroup[asteroidIndex].remove();
     asteroidFlameGroup[asteroidIndex].remove();
@@ -654,6 +651,7 @@ function gameOver() {
   for (let bulletIndex in bulletGroup) {
     bulletGroup[bulletIndex].remove();
   }
+  //Arrays are emptied.
   asteroidBaseGroup = [];
   asteroidColliderGroup = [];
   asteroidFlameGroup = [];
@@ -662,12 +660,14 @@ function gameOver() {
   highScore();
 }
 
+//Highscore is set if the player has a higher score than the current highscore
 function highScore() {
   if (killCount > progress.highscore) {
     progress.highscore = killCount;
   }
 }
 
+//If game has not been launched, the launch game screen is displayed
 function gameLaunch() {
   if (!gameHasBeenLaunched) {
     startscreenBackgroundSprite.visible = true;
@@ -680,7 +680,6 @@ function gameLaunch() {
     gameOverDarkBackground.style.display = "none";
     launchGameContainer.style.display = "flex";
     creditText.style.opacity = "100%";
-    document.getElementById("creditsPlayscreen").style.display = "block";
     mainMenuSong.setVolume(0.3);
     playScreenSong.setVolume(0.3);
     cancelSound.setVolume(0.2);
@@ -689,6 +688,7 @@ function gameLaunch() {
   }
 }
 
+//Check for what upgrades are bought and update the player stats accordingly
 function upgradeChecker() {
   if (progress.bulletReloadSpeedLevel === 0) {
     player.reloadspeed = 70;
@@ -744,16 +744,9 @@ function upgradeChecker() {
   if (progress.creditsLevel === 1) {
     creditGain = 2;
   }
-
+//Apply the new max health to the player
   playerHealth = player.maxHealth;
 }
-
-window.addEventListener("load", function () {
-  //Check if there is any progress saved in the local storage, if so, load it.
-  if (localStorage.progress) {
-    progress = JSON.parse(localStorage.progress);
-  }
-});
 
 function toggleResetAlertBox() {
   if (alertResetBoxIsVisible) {
@@ -765,6 +758,7 @@ function toggleResetAlertBox() {
   }
 }
 
+//If reset button is clicked, all progress is reset and localstorage is cleared
 function resetProgress() {
   console.log("Progress reset");
   localStorage.clear();
@@ -777,3 +771,10 @@ function resetProgress() {
     creditsValue: 0,
   };
 }
+
+window.addEventListener("load", function () {
+  //Check if there is any progress saved in the local storage, if so, load it.
+  if (localStorage.progress) {
+    progress = JSON.parse(localStorage.progress);
+  }
+});
