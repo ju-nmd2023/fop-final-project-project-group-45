@@ -1,0 +1,364 @@
+canvas {
+  --cursorMode: auto;
+}
+@font-face {
+  font-family: smallFont;
+  src: url("../smallFont.TTF");
+}
+html,
+body {
+  background-color: black;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overscroll-behavior: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+canvas:hover {
+  cursor: var(--cursorMode);
+}
+
+#highscoreContainer {
+  display: none;
+  position: absolute;
+  color: white;
+  font-family: "smallFont";
+  font-size: large;
+  text-align: center;
+  height: 40px;
+  margin-top: 655px;
+  margin-left: -240px;
+}
+
+/*all credits containers are display none by default and are shown individually by their ID's*/
+.creditsContainer {
+  display: block;
+  position: absolute;
+  color: white;
+  font-family: "smallFont";
+  font-size: large;
+  text-align: center;
+  height: 40px;
+  margin-top: 623px;
+  margin-left: 355px;
+}
+.creditsContainer {
+  cursor: none;
+}
+.creditsContainer p {
+  cursor: none;
+}
+#pauseScreenContainer {
+  display: none;
+}
+.pauseSceenLogoContainer {
+  position: absolute;
+  margin-top: -210px;
+  margin-left: 138px;
+}
+.pauseSceenLogoContainer img {
+  width: 175px;
+}
+.pauseScreenTitle {
+  position: absolute;
+  margin-top: -120px;
+  margin-left: 155px;
+  color: white;
+  font-family: "smallFont";
+  font-size: 15px;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+#pauseButtonGridContainer {
+  display: grid;
+  position: absolute;
+  width: 180px;
+  margin-top: -69px;
+  margin-left: 148px;
+  grid-template-rows: 1fr 1fr;
+  row-gap: 100px;
+}
+.pauseScreenButton {
+  border: white 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0px 8px 0px 0px rgba(0, 0, 0, 0.75);
+  transition: all 0.1s ease;
+}
+.pauseScreenButton:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.75);
+}
+.pauseScreenButton p {
+  color: white;
+  font-family: "smallFont";
+  font-size: 14px;
+  text-align: center;
+}
+p::selection {
+  background-color: transparent;
+}
+#exitButton {
+  background-color: red;
+}
+
+#startScreenContainer {
+  display: none;
+  width: 450px;
+  height: 700px;
+  position: absolute;
+  align-items: center;
+  flex-direction: column;
+}
+.startScreenLogoContainer {
+  display: flex;
+  margin-top: 100px;
+}
+.startScreenLogoContainer img {
+  width: 330px;
+}
+#startButtonGridContainer {
+  display: grid;
+  margin-top: 69px;
+  grid-template-rows: 1fr 1fr 1fr;
+  row-gap: 40px;
+}
+.startScreenButton {
+  width: 250px;
+  height: 50px;
+  border: rgb(32, 142, 237) 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: all 0.1s ease;
+}
+.startScreenButton:hover {
+  background-color: rgba(19, 39, 88, 0.8);
+}
+.startScreenButton p {
+  color: rgb(119, 219, 254);
+  font-family: "smallFont";
+  font-size: 20px;
+  text-align: center;
+}
+
+#alertBoxExitContainer {
+  display: none;
+  position: absolute;
+  width: 300px;
+  height: 150px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: white 2px solid;
+  border-radius: 10px;
+  margin-top: 0;
+}
+#alertBoxResetContainer {
+  display: none;
+  position: absolute;
+  width: 300px;
+  height: 170px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: white 2px solid;
+  border-radius: 10px;
+  margin-top: 0;
+}
+#alertBoxText {
+  color: white;
+  font-family: "smallFont";
+  font-size: 20px;
+  text-align: center;
+  margin-top: 20px;
+}
+#alertBoxExitButtonGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+}
+#alertBoxResetButtonGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+}
+.alertBoxButton {
+  width: 100px;
+  height: 30px;
+  border: white 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: all 0.1s ease;
+  margin-top: 15px;
+  margin-left: 25px;
+}
+.alertBoxButton:hover {
+  background-color: rgba(19, 39, 88, 0.8);
+}
+.alertBoxButton p {
+  color: rgb(119, 219, 254);
+  font-family: "smallFont";
+  font-size: 14px;
+  text-align: center;
+}
+
+#gameOverContainer {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  flex-direction: column;
+  width: 175px;
+  height: 300px;
+  background-size: contain;
+  background-image: url("../assets/sprites/interface/pauseMenuBackground.png");
+  background-repeat: no-repeat;
+  margin-bottom: 100px;
+}
+
+#gameOverContainer p {
+  color: white;
+  font-family: "smallFont";
+  font-size: 14px;
+  text-align: center;
+}
+
+.gameOverButton {
+  border: white 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0px 8px 0px 0px rgba(0, 0, 0, 0.75);
+  transition: all 0.1s ease;
+  margin-top: 30px;
+}
+.gameOverButton:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.75);
+}
+
+#gameOverLogoContainer img {
+  width: 120px;
+  margin-top: -20px;
+}
+#gameOverDarkBackground {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+#launchGameContainer {
+  display: none;
+  width: 450px;
+  height: 700px;
+  position: absolute;
+  align-items: center;
+  flex-direction: column;
+}
+#launchGameContainer img {
+  width: 330px;
+}
+#launchButtonGridContainer {
+  display: grid;
+  grid-template-rows: 1fr;
+  row-gap: 40px;
+  margin-top: 150px;
+}
+#shopScreenContainer {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  justify-content: center;
+  height: 700px;
+  align-items: center;
+  gap: 20px;
+}
+#shopGrid {
+  display: grid;
+  height: 40%;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 20px;
+  row-gap: 20px;
+}
+
+.shopScreenButton {
+  width: 200px;
+  padding: 5px;
+  padding-bottom: 82px;
+  border: rgb(32, 142, 237) 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: all 0.1s ease;
+}
+.shopScreenButton:hover {
+  background-color: rgba(19, 39, 88, 0.8);
+}
+.shopScreenButton p {
+  color: rgb(119, 219, 254);
+  font-family: "smallFont";
+  font-size: 20px;
+  text-align: center;
+  margin: 0;
+}
+.shopTitleText {
+  color: white;
+  font-family: "smallFont";
+  font-size: 35px;
+  text-align: center;
+  margin-top: 20px;
+}
+.shopExitButton {
+  display: flex;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
+  border: white 2px solid;
+  font-family: "smallFont";
+  color: white;
+  cursor: pointer;
+}
+#priceContainer {
+  position: absolute;
+  display: none;
+  width: 350px;
+  padding-top: 45px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  row-gap: 100px;
+}
+
+.priceText {
+  color: gold;
+  font-family: "smallFont";
+  font-size: 15px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+#gameScoreContainer{
+  display: none;
+  position: absolute;
+  text-align: center;
+  flex-direction: column;
+  margin-top: -600px;
+  margin-left: -270px;
+}
+#gameScoreContainer p{
+  color: white;
+  font-family: "smallFont";
+  font-size: large;
+}
+

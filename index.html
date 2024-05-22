@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Galactic Fury</title>
+    <script src="p5.min.js"></script>
+    <script src="p5.sound.min.js"></script>
+    <script src="planck.min.js"></script>
+    <script src="p5play.min.js"></script>
+    <script src="./js/main.js" defer></script>
+    <script src="./js/player.js" defer></script>
+    <script src="./js/combat.js" defer></script>
+    <script src="./js/shop.js" defer></script>
+    <script src="./js/buttons.js" defer></script>
+  </head>
+
+  <body>
+    <div id="gameScoreContainer"></div>
+    <div id="highscoreContainer"></div>
+    <div class="creditsContainer"></div>
+    <div id="pauseScreenContainer">
+      <div class="pauseSceenLogoContainer">
+        <img src="./assets/sprites/interface/logo.png" alt="logo" />
+      </div>
+      <p class="pauseScreenTitle">GAME PAUSED</p>
+      <div id="pauseButtonGridContainer"></div>
+    </div>
+    <div id="priceContainer">
+      <p id="healthPrice" class="priceText"></p>
+      <p id="damagePrice" class="priceText"></p>
+      <p id="fireRatePrice" class="priceText"></p>
+      <p id="doubleCreditsPrice" class="priceText"></p>
+    </div>
+    <div id="shopScreenContainer">
+      <p class="shopTitleText">SHOP</p>
+      <div id="shopGrid"></div>
+    </div>
+    <div id="startScreenContainer">
+      <div class="startScreenLogoContainer">
+        <img src="./assets/sprites/interface/logo.png" alt="logo" />
+      </div>
+      <div id="startButtonGridContainer"></div>
+    </div>
+    <div id="launchGameContainer">
+      <div class="startScreenLogoContainer">
+        <img src="./assets/sprites/interface/logo.png" alt="logo" />
+      </div>
+      <div id="launchButtonGridContainer"></div>
+    </div>
+    <div id="alertBoxExitContainer">
+      <p id="alertBoxText">Are you sure you want to exit?</p>
+      <div id="alertBoxExitButtonGrid"></div>
+    </div>
+    <div id="alertBoxResetContainer">
+      <p id="alertBoxText">Are you sure you want to reset your progress?</p>
+      <div id="alertBoxResetButtonGrid"></div>
+    </div>
+    <div id="gameOverDarkBackground"></div>
+    <div id="gameOverContainer">
+      <div id="gameOverLogoContainer">
+        <img id="gameOverLogo" src="./assets/sprites/interface/gameover.png" alt="gameover" />
+      </div>
+      <div id="gameScore"></div>
+      <!--Collected credits, Total credits & Back to Menu-->
+    </div>
+  </body>
+</html>
