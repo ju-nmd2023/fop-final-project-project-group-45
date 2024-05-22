@@ -14,7 +14,7 @@ function toggleShop() {
     }
   }
   
-  //Change prices depending on what upgrade level that player has.
+  //Change prices depending on what upgrade level that player has
   function updatePrices() {
     if (progress.bulletDamageLevel === 0) {
       bulletDamageLevelSprite.changeAni("level0");
