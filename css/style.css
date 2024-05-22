@@ -34,7 +34,7 @@ canvas:hover {
 
 /*all credits containers are display none by default and are shown individually by their ID's*/
 .creditsContainer {
-  display: none;
+  display: block;
   position: absolute;
   color: white;
   font-family: "smallFont";
