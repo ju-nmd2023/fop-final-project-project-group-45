@@ -280,6 +280,7 @@ p::selection {
   justify-content: center;
   height: 700px;
   align-items: center;
+  gap: 20px;
 }
 #shopGrid {
   display: grid;

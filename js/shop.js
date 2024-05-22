@@ -103,25 +103,25 @@ function toggleShop() {
   //Depending on what upgrade button is pressed, the function recieves a string and checks if the player has enough credits to buy the upgrade.
   function upgradeButton(upgrade) {
     if (upgrade === "damage") {
-      if (progress.creditsValue >= priceDamageLevel) {
+      if (progress.creditsValue >= priceDamageLevel && progress.bulletDamageLevel < 4) {
         progress.bulletDamageLevel++;
         progress.creditsValue = progress.creditsValue - priceDamageLevel;
       }
     }
     if (upgrade === "firerate") {
-      if (progress.creditsValue >= priceReloadSpeedLevel) {
+      if (progress.creditsValue >= priceReloadSpeedLevel && progress.bulletReloadSpeedLevel < 4) {
         progress.bulletReloadSpeedLevel++;
         progress.creditsValue = progress.creditsValue - priceReloadSpeedLevel;
       }
     }
     if (upgrade === "health") {
-      if (progress.creditsValue >= priceHealthLevel) {
+      if (progress.creditsValue >= priceHealthLevel && progress.playerHealthLevel < 4) {
         progress.playerHealthLevel++;
         progress.creditsValue = progress.creditsValue - priceHealthLevel;
       }
     }
     if (upgrade === "doubleCredits") {
-      if (progress.creditsValue >= priceCreditsLevel) {
+      if (progress.creditsValue >= priceCreditsLevel && progress.creditsLevel < 1) {
         progress.creditsLevel++;
         progress.creditsValue = progress.creditsValue - priceCreditsLevel;
       }
