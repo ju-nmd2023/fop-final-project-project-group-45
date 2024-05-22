@@ -685,6 +685,7 @@ function gameLaunch() {
     cancelSound.setVolume(0.2);
     confirmSound.setVolume(0.2);
     gameOverSound.setVolume(0.1);
+    creditsValue = 200;
   }
 }
 
@@ -760,7 +761,6 @@ function toggleResetAlertBox() {
 
 //If reset button is clicked, all progress is reset and localstorage is cleared
 function resetProgress() {
-  console.log("Progress reset");
   localStorage.clear();
   progress = {
     highscore: 0,

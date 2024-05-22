@@ -7,7 +7,7 @@ function asteroidCollision() {
       playerHealth -= 50; //Reduce player health by 50
       asteroidBaseGroup[asteroidIndex].changeAni("explosion"); //Change the asteroid animation to explosion
       killAsteroid(asteroidBaseGroup[asteroidIndex], asteroidFlameGroup[asteroidIndex], asteroidColliderGroup[asteroidIndex]); //Remove all the asteroid sprites
-      //remove the asteroid from the all the arrays
+      //remove the asteroid from all the arrays
       asteroidBaseGroup.splice(asteroidIndex, 1);
       asteroidFlameGroup.splice(asteroidIndex, 1);
       asteroidColliderGroup.splice(asteroidIndex, 1);
