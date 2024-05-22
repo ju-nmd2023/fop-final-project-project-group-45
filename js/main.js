@@ -11,7 +11,7 @@ let healthBarSprite; //sprite sheet for the healthbar
 let livesSprite; //sprite sheet for the hearts
 let startscreenBackgroundSprite, startscreenBackgroundImg; //Spritesheet for background and Img for preload
 let creditsSprite, creditContainer; //Sprite for credits icon and container to hold the text and icon.
-let progress = { bulletDamageLevel: 0, bulletReloadSpeedLevel: 0, playerHealthLevel: 0, creditsLevel: 0, highscore: 0, creditsValue: 0 }; //progress object that stores all the progress of the player.
+let progress = { bulletDamageLevel: 0, bulletReloadSpeedLevel: 0, playerHealthLevel: 0, creditsLevel: 0, highscore: 0, creditsValue: 1000}; //progress object that stores all the progress of the player.
 let difficultyKillCounter = 0; //Counter for the amount of kills that is reset for every 5 kills.
 let killCount = 0; //Counter for the amount of kills that is reset for every game.
 let asteroidObject = { base: "", flame: "", collider: "", group: "", velY: 3, velX: 0, health: 1, spawnRate: 90 }; //Object that stores group, sprites, velocity and spawnrate
@@ -45,90 +45,6 @@ let asteroidBottomCollider; //Collider to check if the asteroid has left the can
 let priceDamageLevel, priceReloadSpeedLevel, priceHealthLevel, priceCreditsLevel, priceContainer; //Variable for prices of upgrades and container to store all price elements
 let priceDamageLevelTextElement, priceReloadSpeedLevelTextElement, priceHealthLevelTextElement, priceCreditsLevelTextElement; //Variables for storing the text elements of the prices
 
-//Buttons Class is created
-class Button {
-  
-  constructor(width, height, text, type, onclick, sound) { //Constructor method
-    this.width = width;
-    this.height = height;
-    this.text = text;
-    this.type = type;
-    this.onclick = onclick;
-    this.backgroundColor = "rgba(0,0,0,0)";
-    this.sound = sound;
-  }
-
-  //draw method is created to draw different buttons depending on which type they're set as
-  draw() {
-    //A standard div and p element is created for the button
-    let button = document.createElement("div");
-    let textElement = document.createElement("p");
-    textElement.innerHTML = this.text;
-
-    //Depending on the type of button it is assigned different css classes and appended to different containers
-    if (this.type === "startScreenButton") {
-      document.querySelector("#startButtonGridContainer").appendChild(button);
-      button.classList.add("startScreenButton");
-    }
-    if (this.type === "pauseScreenButton") {
-      //draw pause screen button
-      document.querySelector("#pauseButtonGridContainer").appendChild(button);
-      button.classList.add("pauseScreenButton");
-      button.style.backgroundColor = this.backgroundColor;
-    }
-    if (this.type === "alertScreenExitButton") {
-      //draw exit button
-      document.querySelector("#alertBoxExitButtonGrid").appendChild(button);
-      button.classList.add("alertBoxButton");
-      button.style.backgroundColor = this.backgroundColor;
-    }
-    if (this.type === "alertScreenResetButton") {
-      //draw reset button
-      document.querySelector("#alertBoxResetButtonGrid").appendChild(button);
-      button.classList.add("alertBoxButton");
-      button.style.backgroundColor = this.backgroundColor;
-    }
-    if (this.type === "gameOverButton") {
-      //draw exit button
-      document.querySelector("#gameOverContainer").appendChild(button);
-      button.classList.add("gameOverButton");
-      button.style.backgroundColor = this.backgroundColor;
-    }
-    if (this.type === "launchButton") {
-      //draw launch game button
-      document.querySelector("#launchButtonGridContainer").appendChild(button);
-      button.classList.add("startScreenButton");
-    }
-
-    if (this.type == "shopButton") {
-      document.querySelector("#shopGrid").appendChild(button);
-      button.classList.add("shopScreenButton");
-      button.style.backgroundColor = this.backgroundColor;
-    }
-    if (this.type == "exitShopButton") {
-      document.querySelector("#shopScreenContainer").appendChild(button);
-      button.classList.add("shopExitButton");
-      button.style.backgroundColor = this.backgroundColor;
-    }
-    if (this.type == "resetProgress") {
-      document.querySelector("#startButtonGridContainer").appendChild(button);
-      button.classList.add("startScreenButton");
-    }
-
-    //The button is styled and assigned an onclick function
-    button.setAttribute("onclick", this.onclick);
-    button.appendChild(textElement);
-    button.style.width = this.width + "px";
-    button.style.height = this.height + "px";
-  }
-}
-//A redbutton class is created that extends the button class, this is for buttons that have the unique red background color.
-class Redbutton extends Button { 
-  constructor(width, height, text, type, onclick) {
-    super(width, height, text, type, onclick);
-    this.backgroundColor = "rgba(255,0,0,1)";
-  }
-}
 
 //All images and sounds used have to be preloaded before the game can start
 function preload() {
@@ -777,4 +693,5 @@ window.addEventListener("load", function () {
   if (localStorage.progress) {
     progress = JSON.parse(localStorage.progress);
   }
+  
 });
