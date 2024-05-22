@@ -181,7 +181,6 @@ function preload() {
   playerLoseLifeSound = loadSound("./assets/audio/sfx/playerLoseLife.wav");
   gameOverSound = loadSound("./assets/audio/sfx/gameOver.wav");
   asteroidHitSound = loadSound("./assets/audio/sfx/asteroidHit.mp3");
-  playScreenSong.setVolume(0.9);
   mainMenuSong.loop();
   playScreenSong.loop();
 }
@@ -540,8 +539,8 @@ function pauseGame() {
   pauseMenuBackgroundSprite.visible = true;
   pauseMenuBackgroundDarkerSprite.visible = true;
   pauseMenuContainer.style.display = "block";
-  playScreenSong.setVolume(0.4);
-  asteroidExplosionSound.setVolume(0.1);
+  playScreenSong.setVolume(0.2);
+  asteroidExplosionSound.setVolume(0.05);
   gunShotSound.setVolume(0.1);
 }
 function unpauseGame() {
@@ -715,32 +714,34 @@ function spawnAsteroid(x, y) {
 function increaseDifficulty() {
   if (frameCount % 600 === 0) {
     //every 10 seconds
-    if (asteroidObject.velY < 9) {
-      asteroidObject.velY += 0.2; //increase the Y speed of the asteroids
+    if (asteroidObject.velY < 12) {
+      asteroidObject.velY += 0.25; //increase the Y speed of the asteroids
     }
-    if (asteroidObject.spawnRate > 30) {
-      asteroidObject.spawnRate -= 0.3; //decrease the spawn rate of the asteroids
+    if (asteroidObject.spawnRate > 24) {
+      asteroidObject.spawnRate -= 0.4; //increase the spawn rate of the asteroids
     }
     if (asteroidObject.velX > -3) {
-      asteroidObject.velX -= 0.1; //increase the X speed of the asteroids
+      asteroidObject.velX -= 0.15; //increase the X speed of the asteroids
     }
   }
 
   if (frameCount % 1800 === 0) {
     //every 30 seconds
-    asteroidObject.health += 1;
+    if (asteroidObject.health < 15) {
+      asteroidObject.health += 1;
+    }
   }
 
   if (difficultyKillCounter % 5 === 0 && difficultyKillCounter !== 0) {
     //every 5 kills
-    if (asteroidObject.velY < 9) {
-      asteroidObject.velY += 0.1; //increase the Y speed of the asteroids
+    if (asteroidObject.velY < 12) {
+      asteroidObject.velY += 0.12; //increase the Y speed of the asteroids
     }
-    if (asteroidObject.spawnRate > 30) {
-      asteroidObject.spawnRate -= 0.15; //decrease the spawn rate of the asteroids
+    if (asteroidObject.spawnRate > 24) {
+      asteroidObject.spawnRate -= 0.2; //decrease the spawn rate of the asteroids
     }
     if (asteroidObject.velX > -3) {
-      asteroidObject.velX += 0.02; //increase the X speed of the asteroids
+      asteroidObject.velX += 0.075; //increase the X speed of the asteroids
     }
     difficultyKillCounter = 0; //reset the kill count
   }
@@ -790,6 +791,11 @@ function gameLaunch() {
     launchGameContainer.style.display = "flex";
     creditText.style.opacity = "100%";
     document.getElementById("creditsPlayscreen").style.display = "block";
+    mainMenuSong.setVolume(0.3);
+    playScreenSong.setVolume(0.3);
+    cancelSound.setVolume(0.2);
+    confirmSound.setVolume(0.2);
+    gameOverSound.setVolume(0.1);
   }
 }
 
