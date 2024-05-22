@@ -39,24 +39,28 @@ let gameIsRunning = false; //if a stage is currently being played. Used to set i
 let gameIsPaused = false; //if a stage is currently being played but the player has paused it. Used to set if the cursor should be showed.
 let creditText;
 let startMenuContainer;
-let alertBox;
+let alertExitBox, alertResetBox;
 let alertAnswer = "";
-let alertBoxIsVisible = false;
+let alertExitBoxIsVisible = false;
+let alertResetBoxIsVisible = false;
 let mainMenuSong, playScreenSong, gunShotSound, asteroidExplosionSound, asteroidHitSound, gameOverSound, playerDamageSound, confirmSound, cancelSound, playerLoseLifeSound;
 let mainMenuHasBeenToggled = false;
 let startButton,
   resumeButton,
   exitGameButton,
   shopButton,
-  alertBoxYesButton,
-  alertBoxNoButton,
+  alertExitBoxYesButton,
+  alertExitBoxNoButton,
+  alertResetBoxYesButton,
+  alertResetBoxNoButton,
   gameOverButton,
   launchGameButton,
   upgradeHealthButton,
   upgradeDamageButton,
   upgradeFireRateButton,
   upgradeCreditsDoublerButton,
-  exitShopButton;
+  exitShopButton,
+  resetProgressButton;
 let gameScore, gameScoreContainer;
 let gameHasBeenLaunched = false;
 let bulletDamageLevelSprite;
@@ -98,9 +102,15 @@ class Button {
       button.classList.add("pauseScreenButton");
       button.style.backgroundColor = this.backgroundColor;
     }
-    if (this.type === "alertScreenButton") {
+    if (this.type === "alertScreenExitButton") {
       //draw exit button
-      document.querySelector("#alertBoxButtonGrid").appendChild(button);
+      document.querySelector("#alertBoxExitButtonGrid").appendChild(button);
+      button.classList.add("alertBoxButton");
+      button.style.backgroundColor = this.backgroundColor;
+    }
+    if (this.type === "alertScreenResetButton") {
+      //draw reset button
+      document.querySelector("#alertBoxResetButtonGrid").appendChild(button);
       button.classList.add("alertBoxButton");
       button.style.backgroundColor = this.backgroundColor;
     }
@@ -125,6 +135,11 @@ class Button {
     if (this.type == "exitShopButton") {
       document.querySelector("#shopScreenContainer").appendChild(button);
       button.classList.add("shopExitButton");
+      button.style.backgroundColor = this.backgroundColor;
+    }
+    if (this.type == "resetProgress") {
+      document.querySelector("#startButtonGridContainer").appendChild(button);
+      button.classList.add("startScreenButton");
       button.style.backgroundColor = this.backgroundColor;
     }
 
@@ -179,16 +194,17 @@ function setup() {
   canvasBottomCollider = new Sprite(0, 351, 450, 1, "static");
   bulletObject.group = new Group();
   asteroidObject.group = new Group();
-  alertBox = document.querySelector("#alertBoxContainer"); //defining the alert box
-  gameOverContainer = document.querySelector("#gameOverContainer");
-  pauseMenuContainer = document.querySelector("#pauseScreenContainer");
-  gameOverDarkBackground = document.querySelector("#gameOverDarkBackground");
-  gameScoreContainer = document.querySelector("#gameScore");
-  startMenuContainer = document.querySelector("#startScreenContainer");
-  launchGameContainer = document.querySelector("#launchGameContainer");
-  shopScreenContainer = document.querySelector("#shopScreenContainer");
-  gameScore = document.createElement("p");
-  gameScoreContainer.appendChild(gameScore);
+  alertExitBox = document.querySelector("#alertBoxExitContainer"); //defining the alert box
+  alertResetBox = document.querySelector("#alertBoxResetContainer"); //defining the alert box
+  gameOverContainer = document.querySelector("#gameOverContainer"); //defining the game over container
+  pauseMenuContainer = document.querySelector("#pauseScreenContainer"); //defining the pause menu container
+  gameOverDarkBackground = document.querySelector("#gameOverDarkBackground"); //defining the dark background for the game over screen
+  gameScoreContainer = document.querySelector("#gameScore"); //defining the game score container
+  startMenuContainer = document.querySelector("#startScreenContainer"); //defining the start menu container
+  launchGameContainer = document.querySelector("#launchGameContainer"); //defining the launch game container
+  shopScreenContainer = document.querySelector("#shopScreenContainer"); //defining the shop screen container
+  gameScore = document.createElement("p"); //creating a p element for the game score
+  gameScoreContainer.appendChild(gameScore); //appending the game score to the game score container
   highscoreContainer = document.querySelector("#highscoreContainer");
   priceContainer = document.querySelector("#priceContainer");
   priceDamageLevelTextElement = document.querySelector("#damagePrice");
@@ -196,19 +212,16 @@ function setup() {
   priceHealthLevelTextElement = document.querySelector("#healthPrice");
   priceCreditsLevelTextElement = document.querySelector("#doubleCreditsPrice");
 
-  alertBoxYesButton = new Button(100, 30, "Yes", "alertScreenButton", "gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver(); confirmSound.play();");
-  alertBoxNoButton = new Button(100, 30, "No", "alertScreenButton", "toggleExitAlertBox(); cancelSound.play();");
+  alertExitBoxYesButton = new Button(100, 30, "Yes", "alertScreenExitButton", "gameIsRunning = false; gameIsPaused = false; toggleExitAlertBox(); gameOver(); confirmSound.play();");
+  alertExitBoxNoButton = new Button(100, 30, "No", "alertScreenExitButton", "toggleExitAlertBox(); cancelSound.play();");
+  resetProgressButton = new Button(250, 50, "Reset Progress", "resetProgress", "toggleResetAlertBox(); cancelSound.play();");
+  alertResetBoxYesButton = new Button(100, 30, "Yes", "alertScreenResetButton", "resetProgress(); toggleResetAlertBox(); confirmSound.play();");
+  alertResetBoxNoButton = new Button(100, 30, "No", "alertScreenResetButton", "toggleResetAlertBox(); cancelSound.play();");
   startButton = new Button(250, 50, "Start", "startScreenButton", "startGame(); confirmSound.play();");
   shopButton = new Button(250, 50, "Shop", "startScreenButton", "toggleShop(); confirmSound.play();");
   resumeButton = new Button(150, 30, "Resume", "pauseScreenButton", "gameIsPaused = false; unpauseGame(); cancelSound.play();");
   exitGameButton = new Redbutton(150, 30, "Exit", "pauseScreenButton", "toggleExitAlertBox(); cancelSound.play();");
-  gameOverButton = new Button(
-    120,
-    30,
-    "Main Menu",
-    "gameOverButton",
-    "document.querySelector('#gameOverContainer').style.display = 'none'; document.querySelector('#gameOverDarkBackground').style.display = 'none'; confirmSound.play();"
-  );
+  gameOverButton = new Button(120, 30, "Main Menu", "gameOverButton", "document.querySelector('#gameOverContainer').style.display = 'none'; document.querySelector('#gameOverDarkBackground').style.display = 'none'; confirmSound.play();");
   launchGameButton = new Button(300, 70, "Launch Game", "launchButton", "confirmSound.play(); gameHasBeenLaunched = true; launchGameContainer.style.display = 'none';");
   upgradeHealthButton = new Button(150, 30, "Health", "shopButton", "confirmSound.play(); upgradeButton('health');");
   upgradeDamageButton = new Button(150, 30, "Damage", "shopButton", "confirmSound.play(); upgradeButton('damage');");
@@ -220,8 +233,8 @@ function setup() {
   exitGameButton.draw();
   startButton.draw();
   shopButton.draw();
-  alertBoxYesButton.draw();
-  alertBoxNoButton.draw();
+  alertExitBoxYesButton.draw();
+  alertExitBoxNoButton.draw();
   gameOverButton.draw();
   launchGameButton.draw();
   upgradeHealthButton.draw();
@@ -229,6 +242,9 @@ function setup() {
   upgradeFireRateButton.draw();
   upgradeCreditsDoublerButton.draw();
   exitShopButton.draw();
+  resetProgressButton.draw();
+  alertResetBoxYesButton.draw();
+  alertResetBoxNoButton.draw();
 
   frameRate(60);
   loadPlayer();
@@ -237,12 +253,12 @@ function setup() {
 }
 
 function toggleExitAlertBox() {
-  if (alertBoxIsVisible) {
-    alertBox.style.display = "none";
-    alertBoxIsVisible = false;
+  if (alertExitBoxIsVisible) {
+    alertExitBox.style.display = "none";
+    alertExitBoxIsVisible = false;
   } else {
-    alertBox.style.display = "block";
-    alertBoxIsVisible = true;
+    alertExitBox.style.display = "block";
+    alertExitBoxIsVisible = true;
   }
 }
 
@@ -443,9 +459,16 @@ function draw() {
         unpauseGame();
       }
     }
-    if (alertBoxIsVisible) {
-      alertBox.style.display = "none";
-      alertBoxIsVisible = false;
+    if (alertExitBoxIsVisible) {
+      alertExitBox.style.display = "none";
+      alertExitBoxIsVisible = false;
+    }
+    if (alertResetBoxIsVisible) {
+      alertResetBox.style.display = "none";
+      alertResetBoxIsVisible = false;
+    }
+    if (shopIsOpen) {
+      toggleShop();
     }
   }
   if (gameIsRunning && gameIsPaused === false) {
@@ -966,3 +989,26 @@ window.addEventListener("load", function () {
     progress = JSON.parse(localStorage.progress);
   }
 });
+
+function toggleResetAlertBox() {
+  if (alertResetBoxIsVisible) {
+    alertResetBox.style.display = "none";
+    alertResetBoxIsVisible = false;
+  } else if (!alertResetBoxIsVisible) {
+    alertResetBox.style.display = "block";
+    alertResetBoxIsVisible = true;
+  }
+}
+
+function resetProgress() {
+  console.log("Progress reset");
+  localStorage.clear();
+  progress = {
+    highscore: 0,
+    bulletDamageLevel: 0,
+    bulletReloadSpeedLevel: 0,
+    playerHealthLevel: 0,
+    creditsLevel: 0,
+    creditsValue: 0,
+  };
+}

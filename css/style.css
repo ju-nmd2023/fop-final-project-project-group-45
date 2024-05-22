@@ -125,7 +125,7 @@ p::selection {
 #startButtonGridContainer {
   display: grid;
   margin-top: 69px;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   row-gap: 40px;
 }
 .startScreenButton {
@@ -149,11 +149,21 @@ p::selection {
   text-align: center;
 }
 
-#alertBoxContainer {
+#alertBoxExitContainer {
   display: none;
   position: absolute;
   width: 300px;
   height: 150px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: white 2px solid;
+  border-radius: 10px;
+  margin-top: 0;
+}
+#alertBoxResetContainer {
+  display: none;
+  position: absolute;
+  width: 300px;
+  height: 170px;
   background-color: rgba(0, 0, 0, 0.8);
   border: white 2px solid;
   border-radius: 10px;
@@ -166,7 +176,12 @@ p::selection {
   text-align: center;
   margin-top: 20px;
 }
-#alertBoxButtonGrid {
+#alertBoxExitButtonGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+}
+#alertBoxResetButtonGrid {
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1fr;
