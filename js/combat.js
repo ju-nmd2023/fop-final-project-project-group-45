@@ -2,19 +2,18 @@
 function asteroidCollision() {
   //assign asteroidindex to all asteroids and loop through
   for (let asteroidIndex in asteroidBaseGroup) {
-    //If the player collides with an asteroid, reduce the player's health and remove the asteroid.
+    //If the player overlaps with an asteroid, reduce the player's health and remove the asteroid.
     if (player.sprite.overlaps(asteroidColliderGroup[asteroidIndex])) {
-      if (player.sprite.overlaps(asteroidColliderGroup[asteroidIndex])) {
-        playerHealth -= 50;
-        asteroidBaseGroup[asteroidIndex].changeAni("explosion");
-        killAsteroid(asteroidBaseGroup[asteroidIndex], asteroidFlameGroup[asteroidIndex], asteroidColliderGroup[asteroidIndex]);
-        asteroidBaseGroup.splice(asteroidIndex, 1);
-        asteroidFlameGroup.splice(asteroidIndex, 1);
-        asteroidColliderGroup.splice(asteroidIndex, 1);
-        asteroidHealthGroup.splice(asteroidIndex, 1);
-        if (playerHealth > 0) {
-          playerDamageSound.play();
-        }
+      playerHealth -= 50; //Reduce player health by 50
+      asteroidBaseGroup[asteroidIndex].changeAni("explosion"); //Change the asteroid animation to explosion
+      killAsteroid(asteroidBaseGroup[asteroidIndex], asteroidFlameGroup[asteroidIndex], asteroidColliderGroup[asteroidIndex]); //Remove all the asteroid sprites
+      //remove the asteroid from the all the arrays
+      asteroidBaseGroup.splice(asteroidIndex, 1);
+      asteroidFlameGroup.splice(asteroidIndex, 1);
+      asteroidColliderGroup.splice(asteroidIndex, 1);
+      asteroidHealthGroup.splice(asteroidIndex, 1);
+      if (playerHealth > 0) {
+        playerDamageSound.play();
       }
     }
   }
